@@ -1,4 +1,4 @@
-# <div style="display:flex; flex-direction: row; justify-content: center;"><div><img src="logo.png" width="30" alt="the mod's logo" /></div> <div>RusDash</div></div>
+# <div style="display:flex; flex-direction: row; align-content: center;"><div style="width: max-content;"><img src="logo.png" width="30" alt="the mod's logo" /></div> <div>RusDash</div></div>
 This is where she makes a mod.
 
 *Update logo.png to change your mod's icon (please)*
