@@ -1,4 +1,4 @@
-# <img src="logo.png" width="35" alt="the mod's logo" /> RusDash
+# <img src="logo.png" width="30" alt="the mod's logo" /> RusDash
 This is where she makes a mod.
 
 *Update logo.png to change your mod's icon (please)*
