@@ -46,11 +46,19 @@ class $modify(MyMenuLayer, MenuLayer)
             menu_selector(MyMenuLayer::onOpenSettings)
         );
 
+        auto holyShit = CCMenuItemSpriteExtra::create(
+            CCSprite::createWithSpriteFrameName("tabsek.png"_spr),
+            this,
+            menu_selector(MyMenuLayer::onOpenSettings)
+        );
+
         auto menu = this->getChildByID("bottom-menu");
         if (menu)
         {
             menu->addChild(myButton);
+            menu->addChild(holyShit);
             myButton->setID("rusdash-settings-btn"_spr);
+            holyShit->setID("rusdash-holy-shit-btn"_spr);
             menu->updateLayout();
         }
 
