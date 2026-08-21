@@ -1,33 +1,45 @@
 {
-	"geode": "5.9.0",
-	"gd": {
-		"win": "2.2081",
-		"android": "2.2081",
-		"mac": "2.2081",
-		"ios": "2.2081"
-	},
-	"id": "tabz.rusdash",
-	"name": "RusDash",
-	"version": "v1.0.0",
-	"developer": "Tabz",
-	"description": "All In One GDPS Mod",
-	"dependencies": {
-		"geode.node-ids": ">=v1.23.3",
-		"km7dev.server_api": ">=4.0.0"
-	},
-	"settings": {
-		"use-mirror": {
-			"name": "Mirror Mode",
-			"description": "Use www.rustps.online as the primary server.",
-			"type": "bool",
-			"default": false
-		}
-	},
-	"resources": {
-		"spritesheets": {
-			"RD_modSheet01": [
-				"resources/*.png"
-			]
-		}
-	}
+    "geode": "5.9.0",
+    "gd": {
+        "win": "2.2081",
+        "android": "2.2081",
+        "mac": "2.2081",
+        "ios": "2.2081"
+    },
+    "id": "tabz.rusdash",
+    "name": "RusDash",
+    "version": "v1.0.0",
+    "developer": "Tabz",
+    "description": "All In One GDPS Mod",
+    "dependencies": {
+        "geode.node-ids": ">=v1.23.3",
+        "km7dev.server_api": {
+            "version": ">=4.0.0",
+            "required": true
+        }
+    },
+    "settings": {
+        "use-mirror": {
+            "name": "Mirror Mode",
+            "description": "Use www.rustps.online as the primary server.",
+            "type": "bool",
+            "default": false
+        },
+        "custom-olevels": {
+            "name": "Custom Main Levels",
+            "description": "Enable Replace RobTop's Main Levels With RusDash's Community Levels",
+            "type": "bool",
+            "default": true
+        }
+    },
+    "resources": {
+        "spritesheets": {
+            "RD_modSheet01": [
+                "resources/*.png"
+            ]
+        },
+        "files": [
+            "resources/levels.txt"
+        ]
+    }
 }

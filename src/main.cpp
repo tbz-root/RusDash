@@ -40,14 +40,8 @@ class $modify(MyMenuLayer, MenuLayer)
             return false;
         }
 
-        auto myButton = CCMenuItemSpriteExtra::create(
-            CCSprite::createWithSpriteFrameName("GJ_rateDiffBtnMod_001.png"),
-            this,
-            menu_selector(MyMenuLayer::onOpenSettings)
-        );
-
         auto holyShit = CCMenuItemSpriteExtra::create(
-            CCSprite::createWithSpriteFrameName("tabsek.png"_spr),
+            CircleButtonSprite::createWithSpriteFrameName("tabsek.png"_spr, 0.85f, geode::CircleBaseColor::Blue, geode::CircleBaseSize::MediumAlt),
             this,
             menu_selector(MyMenuLayer::onOpenSettings)
         );
@@ -55,9 +49,7 @@ class $modify(MyMenuLayer, MenuLayer)
         auto menu = this->getChildByID("bottom-menu");
         if (menu)
         {
-            menu->addChild(myButton);
             menu->addChild(holyShit);
-            myButton->setID("rusdash-settings-btn"_spr);
             holyShit->setID("rusdash-holy-shit-btn"_spr);
             menu->updateLayout();
         }
