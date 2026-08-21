@@ -11,10 +11,24 @@
 *.gch
 *.pch
 
+<<<<<<< HEAD
+=======
+# Linker files
+*.ilk
+
+# Debugger Files
+*.pdb
+
+>>>>>>> 5bdd4a550f5b16b15359042a181fbd657d271313
 # Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
+<<<<<<< HEAD
+=======
+*.so.*
+
+>>>>>>> 5bdd4a550f5b16b15359042a181fbd657d271313
 
 # Fortran module files
 *.mod
@@ -31,6 +45,7 @@
 *.out
 *.app
 
+<<<<<<< HEAD
 # Macos be like
 **/.DS_Store
 
@@ -66,3 +81,33 @@ build-*/
 .geode/
 geode_mod.json.user
 *.user
+=======
+# Build directories
+build/
+Build/
+build-*/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+install_manifest.txt
+compile_commands.json
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+*.swp
+
+# vcpkg
+vcpkg_installed/
+
+# debug information files
+*.dwo
+
+# test output & cache
+Testing/
+.cache/
+>>>>>>> 5bdd4a550f5b16b15359042a181fbd657d271313
