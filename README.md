@@ -1,4 +1,5 @@
-# <table border="0"> <tr style="border: none;"> <td style="border: none; padding: 0; vertical-align: middle;"> <img src="logo.png" width="40" alt="RusDash Logo"></td><td style="border: none; padding-left: 10px; vertical-align: middle;"><h1>RusDash</h1></td></tr></table>
+# <h1 align="center"><img src="путь_к_иконке.png" width="32" valign="middle"> RusDash</h1>
+
 
 
 This is where she makes a mod.
