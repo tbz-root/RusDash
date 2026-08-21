@@ -1,4 +1,4 @@
-# <h1 align="center"><img src="путь_к_иконке.png" width="32" valign="middle"> RusDash</h1>
+# <h1 align="center"><img src="icon.png" width="32" valign="middle"> RusDash</h1>
 
 
 
