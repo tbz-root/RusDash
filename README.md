@@ -1,4 +1,5 @@
-# <img src="logo.png" width="30" alt="the mod's logo" />RusDash
+# <p align="center"> <img src="logo.png" alt="RusDash Logo" width="32" height="32" style="vertical-align: middle;"> <span style="font-size: 2em; font-weight: bold; vertical-align: middle; margin-left: 10px;">RusDash</span></p>
+
 This is where she makes a mod.
 
 *Update logo.png to change your mod's icon (please)*
