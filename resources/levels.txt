@@ -1,13 +1,16 @@
 [1]
 m_levelName = "My First Level"
-m_difficulty = 3
+m_difficulty = GJDifficulty::Normal
 m_stars = 10
-m_audioTrack = 1
-m_levelString = ""
+m_requiredCoins = 0
+m_audioTrack = 1S
 
 [2]
 m_levelName = "Second Epic Level"
-m_difficulty = 5
+m_difficulty = GJDifficulty::Harder
 m_stars = 12
+m_requiredCoins = 0
 m_audioTrack = 2
-m_levelString = "kS38,1_50_2_60,..."
+
+[Config]
+levels = 2

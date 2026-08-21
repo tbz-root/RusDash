@@ -41,5 +41,10 @@
         "files": [
             "resources/levels.txt"
         ]
-    }
+    },
+	"api": {
+		"include": [
+			"resources/tabz.rusdash/levels/*.txt"
+		]
+	}
 }
