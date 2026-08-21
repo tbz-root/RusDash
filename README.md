@@ -1,4 +1,4 @@
-# <h1 align="center"><img src="logo.png" width="32" valign="middle"> RusDash</h1>
+# <img src="logo.png" width="32" valign="middle"> RusDash
 
 
 
