@@ -41,7 +41,7 @@ class $modify(MyMenuLayer, MenuLayer)
         }
 
         auto holyShit = CCMenuItemSpriteExtra::create(
-            CircleButtonSprite::createWithSpriteFrameName("tabsek.png"_spr, 0.85f, geode::CircleBaseColor::Blue, geode::CircleBaseSize::MediumAlt),
+            CircleButtonSprite::createWithSpriteFrameName("tabsek.png"_spr, 0.85f, CircleBaseColor::Blue, CircleBaseSize::MediumAlt),
             this,
             menu_selector(MyMenuLayer::onOpenSettings)
         );

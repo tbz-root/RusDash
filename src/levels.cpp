@@ -1,9 +1,7 @@
-#include <Geode/Geode.hpp>
-#include <fstream>
-#include <unordered_map>
-
 using namespace geode::prelude;
 
+#include <fstream>
+#include <unordered_map>
 struct LevelData {
     std::string levelName;
     GJDifficulty difficulty = GJDifficulty::Normal;
@@ -14,6 +12,7 @@ struct LevelData {
 
 static int g_levelsCount = 0;
 
+#include <Geode/loader/Log.hpp>
 static std::unordered_map<int, LevelData> loadLevels() {
     if(!Mod::get()->getSettingValue<bool>("custom-olevels")) {
         return {};
@@ -59,7 +58,7 @@ static std::unordered_map<int, LevelData> loadLevels() {
                 inConfig = true;
             }
             else {
-                currentID = geode::utils::numFromString<int>(section).unwrapOr(0);;
+                currentID = utils::numFromString<int>(section).unwrapOr(0);;
                 inConfig = false;
                 current = LevelData{};
             }
@@ -96,12 +95,7 @@ static std::unordered_map<int, LevelData> loadLevels() {
 
         if (inConfig) {
             if (key == "levels") {
-                g_levelsCount = geode::utils::numFromString<int>(value).unwrapOr(0);;
-
-                log::info(
-                    "Configured levels: {}",
-                    g_levelsCount
-                );
+                g_levelsCount = utils::numFromString<int>(value).unwrapOr(0);
             }
 
             continue;
@@ -137,15 +131,15 @@ static std::unordered_map<int, LevelData> loadLevels() {
         }
 
         else if (key == "m_stars") {
-            current.stars = geode::utils::numFromString<int>(value).unwrapOr(0);;
+            current.stars = utils::numFromString<int>(value).unwrapOr(0);;
         }
 
         else if (key == "m_requiredCoins") {
-            current.requiredCoins = geode::utils::numFromString<int>(value).unwrapOr(0);;
+            current.requiredCoins = utils::numFromString<int>(value).unwrapOr(0);;
         }
 
         else if (key == "m_audioTrack") {
-            current.audioTrack = geode::utils::numFromString<int>(value).unwrapOr(0);;
+            current.audioTrack = utils::numFromString<int>(value).unwrapOr(0);;
         }
     }
 
@@ -154,17 +148,91 @@ static std::unordered_map<int, LevelData> loadLevels() {
     return levels;
 }
 
-#include <Geode/modify/LevelTools.hpp>
+static const std::unordered_map<int, std::string> g_levelHashes = {
+    {1, "2405686F092C6831B5191CADB960D99BD7551A1BA83F8B9E7A026EED84534601"},
+    {2, "CF277853141AD06CBF83DEE3A9FAB56FFC085D9567128D6F32A79B372DCE0E5F"},
+    {3, "16E64BD3203E32710C62FC3AF4E37B5B4424998813E889128DF64A2CA571342F"},
+    {5001, "B25A37281E632BF3A369F05298D8E2BC49C3D5B445A53F16C01795E59FA3D4B6"},
+    {5002, "C9DB9E016DE3E95BFA37B7272ED9EFBBDEE6F00E1657ED3992EF810AEA8501A2"},
+    {5003, "2025625A20170E025CD0FC34C63CC054BD92DA5CB0A6C09B711EA706BD69B77F"},
+    {5004, "4F7BE8D5E3AAA41ED010872D847E37A04ACB423587C5D054A4B5A6EB97B67C6F"},
+};
 
+#include <Geode/utils/hash.hpp>
+static bool verifyCustomLevel(int levelID) {
+    auto it = g_levelHashes.find(levelID);
+
+    if (it == g_levelHashes.end()) {
+        log::error("No hash registered for level {}", levelID);
+        return false;
+    }
+
+    auto file =
+        Mod::get()->getResourcesDir() /
+        "levels" /
+        fmt::format("{}.txt", levelID);
+
+    std::ifstream stream(file, std::ios::binary);
+
+    if (!stream.is_open()) {
+        log::error("Failed to open level: {}", file);
+        return false;
+    }
+
+    Sha256Hasher hasher;
+
+    std::array<char, 8192> buffer;
+
+    while (stream.read(buffer.data(), buffer.size()) ||
+           stream.gcount() > 0) {
+        hasher.update(
+            buffer.data(),
+            static_cast<size_t>(stream.gcount())
+        );
+    }
+
+    auto hash = hasher.finish();
+
+    std::string calculatedHash = hash.toString();
+
+    std::string expectedHash = it->second;
+
+    std::transform(
+        expectedHash.begin(),
+        expectedHash.end(),
+        expectedHash.begin(),
+        [](unsigned char c) {
+            return static_cast<char>(std::tolower(c));
+        }
+    );
+
+    if (calculatedHash != expectedHash) {
+        log::error(
+            "Level {} integrity check failed",
+            levelID
+        );
+
+        log::info(
+            "Level {}: expected={}, calculated={}",
+            levelID,
+            expectedHash,
+            calculatedHash
+        );
+
+        return false;
+    }
+
+    return true;
+}
+
+#include <Geode/modify/LevelTools.hpp>
 class $modify(LevelTools) {
-    static bool verifyLevelIntegrity(
-        gd::string verifyString,
-        int levelID
-    ) {
+    static bool verifyLevelIntegrity(gd::string verifyString, int levelID) {
         if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
             return LevelTools::verifyLevelIntegrity(verifyString, levelID);
+        } else {
+            return verifyCustomLevel(levelID);
         }
-        return true;
     }
 
     static GJGameLevel* getLevel(int levelID, bool loaded) {
@@ -197,8 +265,6 @@ class $modify(LevelTools) {
 };
 
 #include <Geode/modify/LevelSelectLayer.hpp>
-#include <Geode/modify/LocalLevelManager.hpp>
-
 class $modify(LevelSelectLayer) {
     bool init(int page) {
         if (!LevelSelectLayer::init(page))
@@ -261,7 +327,8 @@ class $modify(LevelSelectLayer) {
     }
 };
 
-class $modify(MLE_LocalLevelManager, LocalLevelManager) {
+#include <Geode/modify/LocalLevelManager.hpp>
+class $modify(LocalLevelManager) {
     gd::string getMainLevelString(int id) {
         if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
             return LocalLevelManager::getMainLevelString(id);
