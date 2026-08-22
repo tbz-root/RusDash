@@ -47,5 +47,15 @@
 		"include": [
 			"resources/tabz.rusdash/levels/*.txt"
 		]
-	}
+	},
+    "tags": ["offline", "online", "gameplay", "utility"],
+    "links": {
+        "homepage": "https://rustps.online",
+        "community": "https://t.me/RusDash",
+        "source": "https://github.com/tbz-root/RusDash"
+    },
+    "issues": {
+        "info": "Have Problems With Mod Or Found Bugs?",
+        "url": "https://github.com/tbz-root/RusDash/issues"
+    }
 }
