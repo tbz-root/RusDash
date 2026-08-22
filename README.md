@@ -7,6 +7,7 @@ All In One GDPS Mod!
 - Replacement Of The Main Levels
 
 # Credits
-* soon....
+* [lil2kki](https://github.com/lil2kki) - Explained Something
+* [km7dev](https://github.com/Kingminer7) - Server API
 
 Have The Best Game!
