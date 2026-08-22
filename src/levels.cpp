@@ -15,6 +15,10 @@ struct LevelData {
 static int g_levelsCount = 0;
 
 static std::unordered_map<int, LevelData> loadLevels() {
+    if(!Mod::get()->getSettingValue<bool>("custom-olevels")) {
+        return {};
+    }
+
     std::unordered_map<int, LevelData> levels;
 
     auto path = Mod::get()->getResourcesDir() / "levels.txt";
@@ -55,7 +59,7 @@ static std::unordered_map<int, LevelData> loadLevels() {
                 inConfig = true;
             }
             else {
-                currentID = std::stoi(section);
+                currentID = geode::utils::numFromString<int>(section).unwrapOr(0);;
                 inConfig = false;
                 current = LevelData{};
             }
@@ -92,7 +96,7 @@ static std::unordered_map<int, LevelData> loadLevels() {
 
         if (inConfig) {
             if (key == "levels") {
-                g_levelsCount = std::stoi(value);
+                g_levelsCount = geode::utils::numFromString<int>(value).unwrapOr(0);;
 
                 log::info(
                     "Configured levels: {}",
@@ -133,15 +137,15 @@ static std::unordered_map<int, LevelData> loadLevels() {
         }
 
         else if (key == "m_stars") {
-            current.stars = std::stoi(value);
+            current.stars = geode::utils::numFromString<int>(value).unwrapOr(0);;
         }
 
         else if (key == "m_requiredCoins") {
-            current.requiredCoins = std::stoi(value);
+            current.requiredCoins = geode::utils::numFromString<int>(value).unwrapOr(0);;
         }
 
         else if (key == "m_audioTrack") {
-            current.audioTrack = std::stoi(value);
+            current.audioTrack = geode::utils::numFromString<int>(value).unwrapOr(0);;
         }
     }
 
@@ -151,16 +155,24 @@ static std::unordered_map<int, LevelData> loadLevels() {
 }
 
 #include <Geode/modify/LevelTools.hpp>
+
 class $modify(LevelTools) {
     static bool verifyLevelIntegrity(
         gd::string verifyString,
         int levelID
     ) {
+        if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
+            return LevelTools::verifyLevelIntegrity(verifyString, levelID);
+        }
         return true;
     }
 
     static GJGameLevel* getLevel(int levelID, bool loaded) {
         auto level = LevelTools::getLevel(levelID, loaded);
+
+        if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
+            return level;
+        }
 
         static auto levels = loadLevels();
 
@@ -185,15 +197,20 @@ class $modify(LevelTools) {
 };
 
 #include <Geode/modify/LevelSelectLayer.hpp>
+#include <Geode/modify/LocalLevelManager.hpp>
+
 class $modify(LevelSelectLayer) {
     bool init(int page) {
         if (!LevelSelectLayer::init(page))
             return false;
 
+        if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
+            return true;
+        }
+
         m_scrollLayer->m_dynamicObjects->removeAllObjects();
 
-        auto dotsArray =
-            CCArrayExt<CCSprite*>(m_scrollLayer->m_dots);
+        auto dotsArray = CCArrayExt<CCSprite*>(m_scrollLayer->m_dots);
 
         for (CCSprite* dot : dotsArray) {
             dot->removeFromParent();
@@ -202,13 +219,10 @@ class $modify(LevelSelectLayer) {
         m_scrollLayer->m_dots->removeAllObjects();
 
         for (int i = 1; i <= g_levelsCount; i++) {
-            auto level =
-                GameLevelManager::get()
-                    ->getMainLevel(i, true);
+            auto level = GameLevelManager::get()->getMainLevel(i, true);
 
             if (level) {
-                m_scrollLayer->m_dynamicObjects
-                    ->addObject(level);
+                m_scrollLayer->m_dynamicObjects->addObject(level);
             }
         }
 
@@ -238,7 +252,6 @@ class $modify(LevelSelectLayer) {
 
         this->updatePageWithObject(
             m_scrollLayer->m_pages->objectAtIndex(page % 3),
-
             m_scrollLayer->m_dynamicObjects->objectAtIndex(page)
         );
 
@@ -248,12 +261,15 @@ class $modify(LevelSelectLayer) {
     }
 };
 
-#include <Geode/modify/LocalLevelManager.hpp>
-class $modify(LocalLevelManager) {
+class $modify(MLE_LocalLevelManager, LocalLevelManager) {
     gd::string getMainLevelString(int id) {
-        auto file = Mod::get()->getResourcesDir() / "levels" / fmt::format("{}.txt", id);
+        if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
+            return LocalLevelManager::getMainLevelString(id);
+        }
 
-        std::ifstream stream(file);
+        std::filesystem::path file = Mod::get()->getResourcesDir() / "levels" / fmt::format("{}.txt", id);
+
+        std::ifstream stream(file, std::ios::binary);
 
         if (!stream.is_open()) {
             return LocalLevelManager::getMainLevelString(id);
@@ -261,7 +277,10 @@ class $modify(LocalLevelManager) {
 
         std::stringstream buffer;
         buffer << stream.rdbuf();
+        std::string content = buffer.str();
 
-        return gd::string(buffer.str());
+        content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
+
+        return gd::string(content.c_str());
     }
 };

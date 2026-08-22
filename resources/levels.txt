@@ -1,16 +1,23 @@
 [1]
-m_levelName = "My First Level"
-m_difficulty = GJDifficulty::Normal
-m_stars = 10
+m_levelName = "The Challenge"
+m_difficulty = GJDifficulty::Hard
+m_stars = 4
 m_requiredCoins = 0
-m_audioTrack = 1S
+m_audioTrack = 4
 
 [2]
-m_levelName = "Second Epic Level"
-m_difficulty = GJDifficulty::Harder
-m_stars = 12
+m_levelName = "Ya jumper"
+m_difficulty = GJDifficulty::Hard
+m_stars = 5
 m_requiredCoins = 0
-m_audioTrack = 2
+m_audioTrack = 6
+
+[3]
+m_levelName = "electro after base"
+m_difficulty = GJDifficulty::Hard
+m_stars = 4
+m_requiredCoins = 0
+m_audioTrack = 4
 
 [Config]
-levels = 2
+levels = 3
