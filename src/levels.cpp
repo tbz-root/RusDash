@@ -14,9 +14,6 @@ static int g_levelsCount = 0;
 
 #include <Geode/loader/Log.hpp>
 static std::unordered_map<int, LevelData> loadLevels() {
-    if(!Mod::get()->getSettingValue<bool>("custom-olevels")) {
-        return {};
-    }
 
     std::unordered_map<int, LevelData> levels;
 
@@ -228,19 +225,11 @@ static bool verifyCustomLevel(int levelID) {
 #include <Geode/modify/LevelTools.hpp>
 class $modify(LevelTools) {
     static bool verifyLevelIntegrity(gd::string verifyString, int levelID) {
-        if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
-            return LevelTools::verifyLevelIntegrity(verifyString, levelID);
-        } else {
-            return verifyCustomLevel(levelID);
-        }
+        return verifyCustomLevel(levelID);
     }
 
     static GJGameLevel* getLevel(int levelID, bool loaded) {
         auto level = LevelTools::getLevel(levelID, loaded);
-
-        if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
-            return level;
-        }
 
         static auto levels = loadLevels();
 
@@ -269,10 +258,6 @@ class $modify(LevelSelectLayer) {
     bool init(int page) {
         if (!LevelSelectLayer::init(page))
             return false;
-
-        if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
-            return true;
-        }
 
         m_scrollLayer->m_dynamicObjects->removeAllObjects();
 
@@ -330,9 +315,6 @@ class $modify(LevelSelectLayer) {
 #include <Geode/modify/LocalLevelManager.hpp>
 class $modify(LocalLevelManager) {
     gd::string getMainLevelString(int id) {
-        if (!Mod::get()->getSettingValue<bool>("custom-olevels")) {
-            return LocalLevelManager::getMainLevelString(id);
-        }
 
         std::filesystem::path file = Mod::get()->getResourcesDir() / "levels" / fmt::format("{}.txt", id);
 

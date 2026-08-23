@@ -25,12 +25,6 @@
             "description": "Use www.rustps.online as the primary server.",
             "type": "bool",
             "default": false
-        },
-        "custom-olevels": {
-            "name": "Custom Main Levels",
-            "description": "Enable Replace RobTop's Main Levels With RusDash's Community Levels",
-            "type": "bool",
-            "default": true
         }
     },
     "resources": {
