@@ -13,11 +13,7 @@
     "developer": "Tabz",
     "description": "All In One GDPS Mod",
     "dependencies": {
-        "geode.node-ids": ">=v1.23.3",
-        "km7dev.server_api": {
-            "version": ">=4.0.0",
-            "required": true
-        }
+        "geode.node-ids": ">=v1.23.3"
     },
     "settings": {
         "use-mirror": {
@@ -34,7 +30,8 @@
             ]
         },
         "files": [
-            "resources/levels.txt"
+            "resources/levels.txt",
+            "resources/badges/*.png"
         ]
     },
 	"api": {
