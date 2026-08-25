@@ -1,23 +1,80 @@
 [1]
-m_levelName = "The Challenge"
-m_difficulty = GJDifficulty::Hard
-m_stars = 4
+m_levelName = "Easy Level"
+m_difficulty = GJDifficulty::Easy
+m_stars = 2
 m_requiredCoins = 0
 m_audioTrack = 4
 
 [2]
-m_levelName = "Ya jumper"
-m_difficulty = GJDifficulty::Hard
-m_stars = 5
+m_levelName = "Cycling"
+m_difficulty = GJDifficulty::Easy
+m_stars = 2
 m_requiredCoins = 0
-m_audioTrack = 6
+m_audioTrack = 8
 
 [3]
-m_levelName = "electro after base"
+m_levelName = "Stereo Pink"
+m_difficulty = GJDifficulty::Normal
+m_stars = 3
+m_requiredCoins = 0
+m_audioTrack = 0
+
+[4]
+m_levelName = "Stereo Upgradness"
+m_difficulty = GJDifficulty::Hard
+m_stars = 4
+m_requiredCoins = 0
+m_audioTrack = 0
+
+[5]
+m_levelName = "PolarShift"
+m_difficulty = GJDifficulty::Hard
+m_stars = 4
+m_requiredCoins = 0
+m_audioTrack = 2
+
+[6]
+m_levelName = "Back On Tabz"
 m_difficulty = GJDifficulty::Hard
 m_stars = 4
 m_requiredCoins = 0
 m_audioTrack = 4
 
+[7]
+m_levelName = "ToyTou"
+m_difficulty = GJDifficulty::Hard
+m_stars = 5
+m_requiredCoins = 0
+m_audioTrack = 18
+
+[8]
+m_levelName = "Jumping Adventure"
+m_difficulty = GJDifficulty::Harder
+m_stars = 7
+m_requiredCoins = 0
+m_audioTrack = 12
+
+[9]
+m_levelName = "Metrical Trical"
+m_difficulty = GJDifficulty::Insane
+m_stars = 8
+m_requiredCoins = 0
+m_audioTrack = 18
+
+[10]
+m_levelName = "SPEED BLAST"
+m_difficulty = GJDifficulty::Insane
+m_stars = 9
+m_requiredCoins = 0
+m_audioTrack = 14
+
+[11]
+m_levelName = "Unnamed 1"
+m_difficulty = GJDifficulty::Auto
+m_stars = 1
+m_requiredCoins = 0
+m_audioTrack = 0
+
+
 [Config]
-levels = 3
+levels = 11

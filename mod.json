@@ -10,10 +10,11 @@
     "id": "tabz.rusdash",
     "name": "RusDash",
     "version": "v1.0.0",
-    "developer": "Tabz",
+    "developer": "Tabz & GMDxus",
     "description": "All In One GDPS Mod",
     "dependencies": {
-        "geode.node-ids": ">=v1.23.3"
+        "geode.node-ids": ">=v1.23.3",
+        "dasshu.badgified": ">=1.0.0"
     },
     "settings": {
         "use-mirror": {
