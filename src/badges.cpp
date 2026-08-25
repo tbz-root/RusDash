@@ -14,13 +14,11 @@ static std::unordered_set<int> s_pendingRequests;
 static std::unordered_map<int, TaskHolder<web::WebResponse>> s_globalTasks;
 
 void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
-    // Если запрос уже летит — просто ждем его завершения
     if (s_pendingRequests.count(accountID)) {
         onComplete();
         return;
     }
 
-    // Если данные уже есть в кэше и мы не принудительно обновляем — отдаем их
     if (s_userBadgesCache.find(accountID) != s_userBadgesCache.end()) {
         onComplete();
         return;
@@ -104,14 +102,12 @@ void handleBadgeCheck(const Badge& badge, const std::string& badgeID, const std:
     });
 }
 
-// Хук на открытие профиля: принудительно сбрасываем кэш для этого игрока
 class $modify(MyProfilePage, ProfilePage) {
     bool init(int accountID, bool something) {
         if (!ProfilePage::init(accountID, something)) {
             return false;
         }
 
-        // Удаляем старый кэш при каждом входе в профиль, чтобы данные гружались заново
         s_userBadgesCache.erase(accountID);
 
         return true;
