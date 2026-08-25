@@ -5,7 +5,7 @@ using namespace geode::prelude;
 #include <Geode/loader/Event.hpp>
 #include <Geode/modify/ProfilePage.hpp>
 #include "server.hpp"
-#include "../includes/badgified.hpp"
+#include "../includes/Badgified.hpp"
 
 using namespace dasshu::badgified;
 
