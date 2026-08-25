@@ -14,7 +14,10 @@
     "description": "All In One GDPS Mod",
     "dependencies": {
         "geode.node-ids": ">=v1.23.3",
-        "dasshu.badgified": ">=1.0.0"
+        "dasshu.badgified": {
+			"version": ">=1.0.0",
+        	"required": true
+		}
     },
     "settings": {
         "use-mirror": {
