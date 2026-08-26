@@ -10,7 +10,7 @@
     "id": "tabz.rusdash",
     "name": "RusDash",
     "version": "v1.0.0",
-    "developer": "Tabz & GMDxus",
+    "developer": "Tabz & CMDs",
     "description": "All In One GDPS Mod",
     "dependencies": {
         "geode.node-ids": ">=v1.23.3",
