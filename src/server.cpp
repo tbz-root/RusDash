@@ -2,8 +2,8 @@ using namespace geode::prelude;
 
 #include "server.hpp"
 #include <Geode/Geode.hpp>
-std::string m_primary_url = "https://rustps.online/database/";
-std::string m_fallback_url = "https://www.rustps.online/database/";
+std::string m_primary_url = "rustps.online/database/////";
+std::string m_fallback_url = "www.rustps.online/database/";
 std::string m_value;
 
 void applyServerEndpoint() {
@@ -19,8 +19,8 @@ class $modify(CCHttpClient) {
     void send(CCHttpRequest* req) {
         std::string url = req->getUrl();
 
-        url = string::replace( url, "www.boomlings.com/database", m_value);
-        url = string::replace(url,"boomlings.com/database", m_value);
+        url = string::replace(url, "www.boomlings.com/database/", m_value);
+        url = string::replace(url,"boomlings.com/database/", m_value);
 
         req->setUrl(url.c_str());
 
@@ -33,8 +33,8 @@ class $modify(CCApplication) {
     void openURL(const char* psz) {
         std::string url = psz;
 
-        url = string::replace(url, "www.boomlings.com/database", m_value);
-        url = string::replace(url, "boomlings.com/database", m_value);
+        url = string::replace(url, "www.boomlings.com/database/", m_value);
+        url = string::replace(url, "boomlings.com/database/", m_value);
 
         return CCApplication::openURL(url.c_str());
     }
