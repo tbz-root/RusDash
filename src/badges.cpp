@@ -5,7 +5,8 @@ using namespace geode::prelude;
 #include <Geode/loader/Event.hpp>
 #include <Geode/modify/ProfilePage.hpp>
 #include "server.hpp"
-#include "../includes/Badgified.hpp"
+#include <dasshu.badgified/include/Badgified.hpp>
+
 using namespace dasshu::badgified;
 
 static std::unordered_map<int, std::vector<std::string>> s_userBadgesCache;
