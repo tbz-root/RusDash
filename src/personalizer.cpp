@@ -82,6 +82,7 @@ void handleBadgeCheck(const Badge& badge, const std::string& badgeID, const std:
         if (std::find(badges.begin(), badges.end(), badgeID) != badges.end()) {
             showBadge(badge, CCSprite::create(spriteName.c_str()));
         }
+
         return;
     }
 
@@ -109,12 +110,12 @@ class $modify(MyProfilePage, ProfilePage) {
             s_userBadgesCache.erase(m_score->m_accountID);
             s_pendingRequests.erase(m_score->m_accountID);
         }
+
         ProfilePage::onUpdate(sender);
         
         if (m_score) {
             int accId = m_score->m_accountID;
-            fetchBadgesForUser(accId, [this]() {
-            });
+            fetchBadgesForUser(accId, [this]() {});
         }
     }
 };
@@ -216,7 +217,7 @@ $execute {
     );
 
     registerBadge(
-        "YT01"_spr, "Youtuber Badge", "The badge for the RusDash youtuber. Must have > 500 subscribers and invite > 30 players by your videos!",
+        "YT01"_spr, "Youtuber Badge", "The badge for the RusDash youtuber.Must have > 500 subscribers and invite > 30 players by your videos!",
         [] (const Badge& badge) { handleBadgeCheck(badge, "YT01", "YT01_badge.png"_spr); }
     );
 };
