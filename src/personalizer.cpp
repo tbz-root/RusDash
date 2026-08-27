@@ -217,7 +217,12 @@ $execute {
     );
 
     registerBadge(
-        "YT01"_spr, "Youtuber Badge", "The badge for the RusDash youtuber.Must have > 500 subscribers and invite > 30 players by your videos!",
+        "YT01"_spr, "Youtuber Badge", "The badge for the RusDash youtuber. Must have > 500 subscribers on youtube and invite > 30 players by your videos!",
         [] (const Badge& badge) { handleBadgeCheck(badge, "YT01", "YT01_badge.png"_spr); }
+    );
+
+    registerBadge(
+        "tt01"_spr, "TickToker Badge", "The badge for the RusDash ticktoker. Must have > 1000 subscribers on tiktok and invite > 50 players by your videos!",
+        [] (const Badge& badge) { handleBadgeCheck(badge, "tt01", "YT01_badge.png"_spr); }
     );
 };
