@@ -28,6 +28,9 @@
         "spritesheets": {
             "RD_modSheet01": [
                 "resources/*.png"
+            ],
+            "RD_profileSheet01": [
+                "resources/profile/*.png"
             ]
         },
         "files": [

@@ -2,7 +2,7 @@
 
 using namespace geode::prelude;
 
-class DiscordPopup : public geode::Popup {
+class DiscordPopup : public Popup {
 protected:
     CCLabelBMFont* m_tagLabel = nullptr;
     std::string m_value;
@@ -27,10 +27,10 @@ protected:
         );
 
         m_tagLabel->setPosition(CCDirector::sharedDirector()->getWinSize()/2);
-        btn->setLayout(SimpleAxisLayout::create(geode::Axis::Row)
-            ->setMainAxisScaling(geode::AxisScaling::ScaleDownGaps)
-            ->setCrossAxisScaling(geode::AxisScaling::None)
-            ->setMainAxisAlignment(geode::MainAxisAlignment::Center));
+        btn->setLayout(SimpleAxisLayout::create(Axis::Row)
+            ->setMainAxisScaling(AxisScaling::ScaleDownGaps)
+            ->setCrossAxisScaling(AxisScaling::None)
+            ->setMainAxisAlignment(MainAxisAlignment::Center));
 		
 
 		m_closeBtn->setVisible(false);
@@ -64,7 +64,7 @@ protected:
     }
 
     void onCopytoClipboard(CCObject*) {
-        geode::utils::clipboard::write(m_value);
+        utils::clipboard::write(m_value);
         Notification::create("Copied to clipboard")->show();
     }
 

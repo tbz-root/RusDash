@@ -8,7 +8,6 @@ using namespace geode::prelude;
 #include "server.hpp"
 #include <dasshu.badgified/include/Badgified.hpp>
 #include "ds.cpp"
-#include "own.h"
 
 using namespace dasshu::badgified;
 
@@ -16,8 +15,7 @@ static std::unordered_map<int, std::vector<std::string>> s_userBadgesCache;
 static std::unordered_set<int> s_pendingRequests;
 static std::unordered_map<int, TaskHolder<web::WebResponse>> s_globalTasks;
 
-void fetchBadgesForUser(int accountID, std::function<void()> onComplete)
-{
+void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
     if (s_userBadgesCache.find(accountID) != s_userBadgesCache.end())
     {
         onComplete();
@@ -43,21 +41,18 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete)
 
     s_globalTasks[accountID].spawn(
         req.post(url),
-        [accountID, onComplete](web::WebResponse res)
-        {
+        [accountID, onComplete](web::WebResponse res) {
             s_pendingRequests.erase(accountID);
             s_globalTasks.erase(accountID);
 
-            if (!res.ok())
-            {
+            if (!res.ok()) {
                 s_userBadgesCache[accountID] = {};
                 onComplete();
                 return;
             }
 
             auto jsonResult = res.json();
-            if (!jsonResult)
-            {
+            if (!jsonResult) {
                 s_userBadgesCache[accountID] = {};
                 onComplete();
                 return;
@@ -66,8 +61,7 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete)
             auto json = jsonResult.unwrap();
             std::vector<std::string> userBadges;
 
-            if (json.isObject() && json.contains("badges") && json["badges"].isArray())
-            {
+            if (json.isObject() && json.contains("badges") && json["badges"].isArray()) {
                 for (auto const &bVal : json["badges"])
                 {
                     if (auto idResult = bVal.asString())
@@ -82,19 +76,17 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete)
         });
 }
 
-void handleBadgeCheck(const Badge &badge, const std::string &badgeID, const std::string &spriteName)
-{
+void handleBadgeCheck(const Badge &badge, const std::string &badgeID, const std::string &spriteName) {
     if (!badge.user)
         return;
     int accountID = badge.user->m_accountID;
 
-    if (s_userBadgesCache.find(accountID) != s_userBadgesCache.end())
-    {
+    if (s_userBadgesCache.find(accountID) != s_userBadgesCache.end()) {
         auto &badges = s_userBadgesCache[accountID];
-        if (std::find(badges.begin(), badges.end(), badgeID) != badges.end())
-        {
+        if (std::find(badges.begin(), badges.end(), badgeID) != badges.end()) {
             showBadge(badge, CCSprite::create(spriteName.c_str()));
         }
+
         return;
     }
 
@@ -109,40 +101,32 @@ void handleBadgeCheck(const Badge &badge, const std::string &badgeID, const std:
         } });
 }
 
-class $modify(MyProfilePage, ProfilePage)
-{
-    bool init(int accountID, bool something)
-    {
-        if (!ProfilePage::init(accountID, something))
-        {
+class $modify(ProfilePage) {
+    bool init(int accountID, bool something) {
+        if (!ProfilePage::init(accountID, something)) {
             return false;
         }
-
 
         return true;
     }
 
-    void onUpdate(cocos2d::CCObject *sender)
-    {
-        if (m_score)
-        {
+    void onUpdate(cocos2d::CCObject *sender) {
+        if (m_score) {
             s_userBadgesCache.erase(m_score->m_accountID);
             s_pendingRequests.erase(m_score->m_accountID);
         }
+
         ProfilePage::onUpdate(sender);
 
-        if (m_score)
-        {
+        if (m_score) {
             int accId = m_score->m_accountID;
             fetchBadgesForUser(accId, [this]() {});
         }
     }
 };
 
-class $modify(CustomProfilesPage,ProfilePage) {
-
-    struct Fields
-    {
+class $modify(MyProfilePage, ProfilePage) {
+    struct Fields {
         gd::string discordUsername;
     };
     static void onModify(auto& self) {
@@ -159,21 +143,13 @@ class $modify(CustomProfilesPage,ProfilePage) {
         DiscordPopup::create(m_fields->discordUsername.c_str())->show();
     }
 
-    void setupCommentsBrowser(CCArray* array) {
-    
-        ProfilePage::setupCommentsBrowser(array);
-
-        ownUtils::FixLayer(m_mainLayer, 340, 100);
-    }
-
 
     void loadPageFromUserInfo(GJUserScore* score) {
         ProfilePage::loadPageFromUserInfo(score);
 
-
         auto winSize = CCDirector::sharedDirector()->getWinSize();
 
-        if (auto socialsMenu = m_mainLayer->getChildByID("socials-menu")) {
+      if (auto socialsMenu = m_mainLayer->getChildByID("socials-menu")) {
 
             if (!Mod::get()->getSettingValue<bool>("Disable-discord-button")) {
 
@@ -189,7 +165,7 @@ class $modify(CustomProfilesPage,ProfilePage) {
                             discordSpr,
                             discordSpr,
                             this,
-                            menu_selector(CustomProfilesPage::onDiscordProfile)
+                            menu_selector(MyProfilePage::onDiscordProfile)
                         );
 
                         float referenceScale = 1.f;
@@ -214,6 +190,7 @@ class $modify(CustomProfilesPage,ProfilePage) {
                             discordButton->setAnchorPoint({ 0.5,0.45 });
                             discordButton->setContentHeight(discordButton->getContentHeight() - 2);
                         }
+
                         else if (buttonCount == 5) {
                             discordSpr->setScale(0.825f);
                             discordButton->setAnchorPoint({ 0.5,0.4 });
@@ -221,7 +198,7 @@ class $modify(CustomProfilesPage,ProfilePage) {
                         }
 
                         if (buttonCount == 1) {
-                            auto loader = geode::Loader::get();
+                            auto loader = Loader::get();
                
                                 if (auto statsMenu = m_mainLayer->getChildByID("stats-menu")) {
                                     if (!loader->isModLoaded("itzkiba.better_progression")) {
@@ -239,7 +216,6 @@ class $modify(CustomProfilesPage,ProfilePage) {
                         socialsMenu->addChild(discordButton);
 
                         if (!m_mainLayer->getChildByID("my-stuff-hint")) {
-
                             auto myStuffHint = CCSprite::createWithSpriteFrameName("GJ_stuffTxt_001.png");
                             myStuffHint->setPosition({ (winSize.width / 2) + 139.f, (winSize.height / 2) + 124.1f });
 
@@ -253,120 +229,37 @@ class $modify(CustomProfilesPage,ProfilePage) {
                         }
 
                     }
+
                     socialsMenu->updateLayout();
+
+                    m_mainLayer->getChildByID("background")->setVisible(false);
+
+                    auto rdBackground = CCSprite::createWithSpriteFrameName("profile01_card.png"_spr);
+
+                    rdBackground->setID("rd-background");
+                    rdBackground->setPosition({m_mainLayer->getChildByID("background")->getPosition().x, m_mainLayer->getChildByID("background")->getPosition().y + 10.f});
+                    rdBackground->setScaleX(m_mainLayer->getChildByID("background")->getContentSize().width * m_mainLayer->getChildByID("background")->getScaleX() / rdBackground->getContentSize().width);
+                    rdBackground->setScaleY(m_mainLayer->getChildByID("background")->getContentSize().height * m_mainLayer->getChildByID("background")->getScaleY() / rdBackground->getContentSize().height);
+
+                    m_mainLayer->addChild(rdBackground);
+
+                    m_mainLayer->getChildByID("icon-background")->setVisible(false);
+
+                    auto rdIconBackground = CCSprite::createWithSpriteFrameName("profile01_kit.png"_spr);
+
+                    rdIconBackground->setID("rd-icon-background");
+                    rdIconBackground->setPosition({m_mainLayer->getChildByID("icon-background")->getPosition().x, m_mainLayer->getChildByID("icon-background")->getPosition().y + 10.f});
+                    rdIconBackground->setScaleX(m_mainLayer->getChildByID("icon-background")->getContentSize().width * m_mainLayer->getChildByID("icon-background")->getScaleX() / rdIconBackground->getContentSize().width);
+                    rdIconBackground->setScaleY(m_mainLayer->getChildByID("icon-background")->getContentSize().height * m_mainLayer->getChildByID("icon-background")->getScaleY() / rdIconBackground->getContentSize().height);
+
+                    m_mainLayer->addChild(rdIconBackground);
                 }
             }
         }
-
-        if (m_ownProfile) {
-            auto bottomMenu = (CCMenu*)m_mainLayer->getChildByID("bottom-menu");
-            auto settingsButton = (CCMenuItemSpriteExtra*)bottomMenu->getChildByID("settings-button");
-            settingsButton->setTarget(this, menu_selector(ProfilePage::onSettings));
-        }
-
-        if (Mod::get()->getSettingValue<bool>("Disable-info-button")) {
-            auto menu = m_mainLayer->getChildByID("main-menu");
-            auto infobutton = menu->getChildByID("info-button");
-            if (infobutton) infobutton->setPositionY(100000);
-        }
-
-        if (m_mainLayer->getChildByTag(3)) return;
-
-        auto Layer = m_mainLayer;
-        auto brownBG = (CCSprite*)Layer->getChildByID("background");
-        brownBG->setVisible(false);
-        ownUtils::FixLayerv2(Layer, 340, 45);
-
-        int color1 = score->m_color1;
-        int color2 = score->m_color2;
-        auto col1 = ownUtils::ToColor4B(GameManager::sharedState()->colorForIdx(color1));
-        auto col2 = ownUtils::ToColor4B(GameManager::sharedState()->colorForIdx(color2));
-
-        auto normalGradient = CCLayerGradient::create(col1, col2);
-        auto invertGradient = CCLayerGradient::create(col2, col1);
-
-        color1 = score->m_color1;
-        color2 = score->m_color2;
-        col1 = ownUtils::ToColor4B(GameManager::sharedState()->colorForIdx(color1));
-        col2 = ownUtils::ToColor4B(GameManager::sharedState()->colorForIdx(color2));
-        normalGradient = CCLayerGradient::create(col1, col2);
-        invertGradient = CCLayerGradient::create(col2, col1);
-        invertGradient->runAction(CCRepeatForever::create(CCSequence::create(CCFadeOut::create(1.8f), CCFadeIn::create(1.8f), nullptr)));
-        Layer->addChild(normalGradient);
-        Layer->addChild(invertGradient);
-
-        normalGradient->setID("normal-gradient"_spr);
-        invertGradient->setID("invert-gradient"_spr);
-        normalGradient->setTag(3);
-        normalGradient->setZOrder(-5);
-        normalGradient->setContentSize({ 435, 288 });
-        normalGradient->setPosition(winSize.width / 2 - 217, winSize.height / 2 - 145);
-
-        invertGradient->setZOrder(-3);
-        invertGradient->setContentSize(normalGradient->getContentSize());
-        invertGradient->setPosition(normalGradient->getPosition());
-
-        // Corners
-        auto roundCorner = cocos2d::extension::CCScale9Sprite::create("GJ_square07.png");
-        roundCorner->setContentSize({ 438, 293 });
-        roundCorner->setPosition(winSize / 2);
-        roundCorner->setPositionY(roundCorner->getPositionY() - 1);
-        roundCorner->setScale(1.006);
-        roundCorner->setZOrder(7);
-
-        auto whiteCorner = CCLayerGradient::create({ 255,255,255,255 }, { 255,255,255,255 });
-        whiteCorner->setContentSize({ 435, 290 });
-        whiteCorner->setPosition(normalGradient->getPosition());
-        whiteCorner->setPositionY(whiteCorner->getPositionY() - 1);
-        whiteCorner->setScale(1.02);
-        whiteCorner->setZOrder(-7);
-
-        auto blackCorner = CCLayerGradient::create({ 0,0,0,255 }, { 0,0,0,255 });
-        blackCorner->setContentSize(whiteCorner->getContentSize());
-        blackCorner->setPosition(whiteCorner->getPosition());
-        blackCorner->setScale(1.01);
-        blackCorner->setZOrder(-6);
-
-        Layer->addChild(roundCorner); 
-
-        auto blackBG = cocos2d::extension::CCScale9Sprite::create("square02b_001.png");
-        blackBG->setPosition(winSize.width / 2, winSize.height / 2 - 1);
-        blackBG->setColor(ccBLACK);
-        blackBG->setOpacity(50);
-        blackBG->setZOrder(-1);
-        blackBG->setContentSize({ 850, 559 });
-        blackBG->setScale(0.5f);
-        Layer->addChild(blackBG);
-
-        auto iconsContainer = cocos2d::extension::CCScale9Sprite::create("square02c_001.png");
-        iconsContainer->setPosition(winSize.width / 2, winSize.height / 2 + 40);
-        iconsContainer->setContentSize({ 356, 56 });
-        iconsContainer->setColor({ 154,154,154 });
-        iconsContainer->setOpacity(77);
-        iconsContainer->setID("ccscale-icons"_spr);
-        iconsContainer->setZOrder(-2);
-        Layer->addChild(iconsContainer);
-
-        auto commentsContainer = cocos2d::extension::CCScale9Sprite::create("square02c_001.png");
-        commentsContainer->setPosition(winSize.width / 2, winSize.height / 2 - 53);
-        commentsContainer->setContentSize({ 356, 106 });
-        commentsContainer->setColor({ 154,154,154 });
-        commentsContainer->setOpacity(77);
-        commentsContainer->setID("ccscale-comments"_spr);
-        commentsContainer->setZOrder(-2);
-        Layer->addChild(commentsContainer);
-  
     }
-
-    void onSettings(CCObject* sender) { 
-        geode::openSettingsPopup(Mod::get()); 
-    }
-
-   
 };
 
-$execute
-{
+$execute {
     registerBadge(
         "example_badge"_spr, "Example Badge", "Description here",
         [](const Badge &badge)
