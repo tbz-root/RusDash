@@ -223,6 +223,6 @@ $execute {
 
     registerBadge(
         "tt01"_spr, "TickToker Badge", "The badge for the RusDash ticktoker. Must have > 1000 subscribers on tiktok and invite > 50 players by your videos!",
-        [] (const Badge& badge) { handleBadgeCheck(badge, "tt01", "YT01_badge.png"_spr); }
+        [] (const Badge& badge) { handleBadgeCheck(badge, "tt01", "tt01_badge.png"_spr); }
     );
 };
