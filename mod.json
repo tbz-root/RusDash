@@ -9,12 +9,13 @@
     },
     "id": "tabz.rusdash",
     "name": "RusDash",
-    "version": "v1.0.0",
+    "version": "v1.0.1",
     "developer": "Tabz & CMDs",
     "description": "All In One GDPS Mod",
     "dependencies": {
         "geode.node-ids": ">=v1.23.3",
-        "dasshu.badgified": ">=1.0.0"
+        "dasshu.badgified": ">=1.0.0",
+        "bitz.customprofiles": ">=1.0.0"
     },
     "settings": {
         "use-mirror": {
@@ -22,6 +23,12 @@
             "description": "Use www.rustps.online as the primary server.",
             "type": "bool",
             "default": false
+        },
+        "profile-theme": {
+            "name": "Profile Theme",
+            "description": "Choose appearance of your profile main card.",
+            "type": "string",
+            "default": "default"
         }
     },
     "resources": {
