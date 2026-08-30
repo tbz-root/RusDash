@@ -298,8 +298,6 @@ class $modify(MyProfilePage, ProfilePage)
                             }
                         }
 
-                        auto Value = (button->getID() == "my-levels-button" && themeID == "creator03") ? 0.2 : 0.3;
-
                         float targetSize = 42.0f;
                         button->setContentSize({targetSize, targetSize});
 
@@ -308,7 +306,7 @@ class $modify(MyProfilePage, ProfilePage)
                         float scaleY = targetSize / newSize.height;
                         float finalScale = std::min(scaleX, scaleY);
 
-                        replacement->setScale(finalScale + Value);
+                        replacement->setScale(finalScale + 0.25f);
                         replacement->setPosition({targetSize / 2, targetSize / 2});
                         replacement->setVisible(true);
 

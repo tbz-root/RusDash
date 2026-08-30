@@ -19,6 +19,22 @@ static std::unordered_map<int, LevelData> loadLevels() {
 
     auto path = Mod::get()->getResourcesDir() / "levels.txt";
 
+    std::ifstream hashFile(path, std::ios::binary);
+    if (hashFile.is_open()) {
+        Sha256Hasher configHasher;
+        std::array<char, 8192> buffer;
+        while (hashFile.read(buffer.data(), buffer.size()) || hashFile.gcount() > 0) {
+            configHasher.update(buffer.data(), static_cast<size_t>(hashFile.gcount()));
+        }
+        std::string currentHash = configHasher.finish().toString();
+
+        std::string expectedHash = "4a8fe851243ae14150c6acb4d65cbbbbe7fa6f27ea84dca7ec3cf6a8bf28c51f";
+
+        if (currentHash != expectedHash) {
+            return levels;
+        }
+    }
+
     std::ifstream file(path);
     if (!file.is_open()) {
         log::error("Failed to open {}", path);
