@@ -54,14 +54,7 @@ class $modify(MyMenuLayer, MenuLayer)
                         )->show();
                     });
 
-                    CCDirector::sharedDirector()->getScheduler()->scheduleSelector(
-                        schedule_selector(MyMenuLayer::onForceCloseGame),
-                        CCDirector::sharedDirector()->getRunningScene(),
-                        1.0f,
-                        0,
-                        0.0f,
-                        false
-                    );
+                    std::terminate();
                 }
             }
         );
@@ -91,10 +84,5 @@ class $modify(MyMenuLayer, MenuLayer)
     void onOpenSettings(CCObject *)
     {
         openSettingsPopup(Mod::get());
-    }
-
-    void onForceCloseGame(float dt)
-    {
-        exit(0); 
     }
 };
