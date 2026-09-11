@@ -14,7 +14,6 @@ static int g_levelsCount = 0;
 
 #include <Geode/loader/Log.hpp>
 static std::unordered_map<int, LevelData> loadLevels() {
-
     std::unordered_map<int, LevelData> levels;
 
     auto path = Mod::get()->getResourcesDir() / "levels.txt";

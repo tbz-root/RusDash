@@ -1,21 +1,19 @@
 {
-    "geode": "5.9.0",
+    "geode": "5.10.1",
     "early-load": true,
     "gd": {
         "win": "2.2081",
-        "android": "2.2081",
-        "mac": "2.2081",
-        "ios": "2.2081"
+        "android": "2.2081"
     },
     "id": "tabz.rusdash",
     "name": "RusDash",
     "version": "v1.0.2",
-    "developer": "Tabz & CMDs",
+    "developers": ["Tabz", "CMDs"],
     "description": "All In One GDPS Mod",
     "dependencies": {
         "geode.node-ids": ">=v1.23.3",
-        "dasshu.badgified": ">=1.0.0",
-        "bitz.customprofiles": ">=1.0.0"
+        "dasshu.badgified": ">=1.0.3",
+        "bitz.customprofiles": ">=1.1.5"
     },
     "settings": {
         "use-mirror": {
@@ -57,7 +55,7 @@
         "source": "https://github.com/tbz-root/RusDash"
     },
     "issues": {
-        "info": "Have Problems With Mod Or Found Bugs?",
+        "info": "Have Problems With Mod or Found Bugs?",
         "url": "https://github.com/tbz-root/RusDash/issues"
     }
 }

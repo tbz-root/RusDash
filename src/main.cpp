@@ -1,6 +1,7 @@
 #include <matjson.hpp>
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
+#include <Geode/Geode.hpp>
 #include <chrono>
 
 using namespace geode::prelude;
@@ -8,16 +9,11 @@ using namespace geode::prelude;
 static TaskHolder<web::WebResponse> s_themeTask;
 
 #include <Geode/modify/MenuLayer.hpp>
-class $modify(MyMenuLayer, MenuLayer)
-{
-    bool init()
-    {
+class $modify(MyMenuLayer, MenuLayer) {
+    bool init() {
+        std::string modVersion = "v1.0.2";
 
-        std::string myVersion = "v1.0.2";
-
-        matjson::Value json = matjson::makeObject({
-            {"modVersion", myVersion},
-        });
+        matjson::Value json = matjson::makeObject({{"modVersion", modVersion}});
 
         auto req = web::WebRequest();
         req.header("Content-Type", "application/json");
@@ -45,7 +41,6 @@ class $modify(MyMenuLayer, MenuLayer)
                 }
 
                 if (!isSuccess) {
-
                     Loader::get()->queueInMainThread([]() {
                         FLAlertLayer::create(
                             "Update Required",                       
@@ -60,9 +55,7 @@ class $modify(MyMenuLayer, MenuLayer)
         );
 
         if (!MenuLayer::init())
-        {
             return false;
-        }
 
         auto holyShit = CCMenuItemSpriteExtra::create(
             CircleButtonSprite::createWithSpriteFrameName("tabsek.png"_spr, 0.85f, CircleBaseColor::Blue, CircleBaseSize::MediumAlt),

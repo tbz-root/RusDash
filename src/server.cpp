@@ -11,7 +11,7 @@ void applyServerEndpoint() {
 
     m_value = useMirror ? m_fallback_url : m_primary_url;
 
-    log::info("RusDash: Applying server -> {}", m_value);
+    log::info("Applying server -> {}", m_value);
 }
 
 #include <Geode/modify/CCHttpClient.hpp>
