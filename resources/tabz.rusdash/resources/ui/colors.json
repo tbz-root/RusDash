@@ -1,0 +1,176 @@
+{
+    "play-loading-outer": {
+        "r": 0,
+        "g": 68,
+        "b": 76,
+        "a": 255
+    },
+    "play-loading-center": {
+        "r": 0,
+        "g": 68,
+        "b": 76,
+        "a": 255
+    },
+    "play-loading-inner": {
+        "r": 0,
+        "g": 114,
+        "b": 127,
+        "a": 255
+    },
+    "play-loading-progress": {
+        "r": 3,
+        "g": 48,
+        "b": 226,
+        "a": 255
+    },
+    "info-description-bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 90
+    },
+    "edit-description-bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 100
+    },
+    "edit-name-bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 150
+    },
+    "level-search-bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 120
+    },
+    "level-search-bar-bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 120
+    },
+    "quick-search-bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 120
+    },
+    "difficulty-filters-bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 120
+    },
+    "length-filters-bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "a": 120
+    },
+    "comment-list-layer-bg": {
+        "r": 0,
+        "g": 9,
+        "b": 45,
+        "a": 255
+    },
+    "comment-list-outline-brown": {
+        "r": 0,
+        "g": 14,
+        "b": 67,
+        "a": 255
+    },
+    "comment-list-outline-blue": {
+        "r": 0,
+        "g": 68,
+        "b": 76,
+        "a": 255
+    },
+    "chest-opened-overlay": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 0
+    },
+    "25-chest-opened-overlay": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 0
+    },
+    "50-chest-opened-overlay": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 0
+    },
+    "100-chest-opened-overlay": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 0
+    },
+    "comment-cell-odd": {
+        "r": 1,
+        "g": 19,
+        "b": 90,
+        "a": 255
+    },
+    "comment-cell-even": {
+        "r": 0,
+        "g": 91,
+        "b": 102,
+        "a": 255
+    },
+    "comment-cell-small-odd": {
+        "r": 1,
+        "g": 19,
+        "b": 90,
+        "a": 255
+    },
+    "comment-cell-small-even": {
+        "r": 0,
+        "g": 91,
+        "b": 102,
+        "a": 255
+    },
+    "comment-cell-bg-odd": {
+        "r": 1,
+        "g": 19,
+        "b": 90,
+        "a": 255
+    },
+    "comment-cell-bg-even": {
+        "r": 0,
+        "g": 91,
+        "b": 102,
+        "a": 255
+    },
+    "list-layer-bg": {
+        "r": 0,
+        "g": 9,
+        "b": 45,
+        "a": 255
+    },
+    "list-cell-odd": {
+        "r": 0,
+        "g": 14,
+        "b": 67,
+        "a": 255
+    },
+    "list-cell-even": {
+        "r": 0,
+        "g": 68,
+        "b": 76,
+        "a": 255
+    },
+    "list-cell-selected": {
+        "r": 3,
+        "g": 48,
+        "b": 226,
+        "a": 255
+    }
+}

@@ -21,6 +21,10 @@
         "alphalaneous.tinker": {
             "breaking": true,
             "version": "*"
+        },
+        "techstudent10.settings_plus": {
+            "breaking": true,
+            "version": "*"
         }
     },
     "settings": {

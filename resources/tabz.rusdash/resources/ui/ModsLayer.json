@@ -1,0 +1,50 @@
+{
+    "children": {
+        "node": {
+            "mod-list-frame": {
+                "children": {
+                    "node": {
+                        "frame-bg": {
+                            "attributes": {
+                                "color": {
+                                    "r": 0,
+                                    "g": 68,
+                                    "b": 76
+                                }
+                            }
+                        },
+                        "ModList": {
+                            "children": {
+                                "node": {
+                                    "top-container": {
+                                        "children": {
+                                            "node": {
+                                                "search-menu": {
+                                                    "children": {
+                                                        "node": {
+                                                            "search-id": {
+                                                                "attributes": {
+                                                                    "color": {
+                                                                        "r": 0,
+                                                                        "g": 0,
+                                                                        "b": 0
+                                                                    },
+                                                                    "opacity": 120,
+                                                                    "update-layout": "parent"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

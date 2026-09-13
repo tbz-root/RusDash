@@ -1,0 +1,223 @@
+PackGen log
+=============================================
+
+Generation Details:
+- Pack Name: My Pack
+- Primary Color: #0330e2 (RGB: 3, 48, 226)
+- Secondary Color: #00e5ff (RGB: 0, 229, 255)
+- Glow Color: #ffffff (RGB: 255, 255, 255)
+- Brightness/Luminance Value: 160
+- Transparent Lists: false
+- Generated: 9/13/2026, 10:03:55 AM
+
+Processing Results:
+- Files with overlays processed: 142
+- Files without overlays (copied as-is): 4
+- Total files: 146
+
+
+Detailed Log:
+- Error processing overlay2 for GJ_button_01-uhd.png: undefined
+- Error processing overlay1 for GJ_button_02-uhd.png: undefined
+- Error processing overlay1 for GJ_button_03-uhd.png: undefined
+- Error processing overlay1 for GJ_button_04-uhd.png: undefined
+- Error processing overlay2 for GJ_button_04-uhd.png: undefined
+- Error processing overlay1 for GJ_button_05-uhd.png: undefined
+- Error processing overlay2 for GJ_button_05-uhd.png: undefined
+- Error processing overlay2 for GJ_button_06-uhd.png: undefined
+- Error processing GJ_GameSheet03-uhd.plist: undefined
+- Error processing GJ_GameSheet04-uhd.plist: undefined
+- Error processing GJ_LaunchSheet-uhd.plist: undefined
+- Error processing overlay2 for GJ_LaunchSheet-uhd.png: undefined
+- Error processing overlay2 for GJ_moveBtn-uhd.png: undefined
+- Error processing overlay1 for GJ_moveSBtn-uhd.png: undefined
+- Error processing overlay2 for GJ_square01-uhd.png: undefined
+- Error processing overlay1 for GJ_square02-uhd.png: undefined
+- Error processing overlay1 for GJ_square03-uhd.png: undefined
+- Error processing overlay2 for GJ_square04-uhd.png: undefined
+- Error processing overlay1 for GJ_square05-uhd.png: undefined
+- Error processing overlay2 for GJ_square05-uhd.png: undefined
+- Error processing overlay1 for GJ_square07-uhd.png: undefined
+- Error processing overlay2 for GJ_square07-uhd.png: undefined
+- Error processing overlay2 for sliderBar-uhd.png: undefined
+- Error processing overlay1 for slidergroove-uhd.png: undefined
+- Error processing overlay1 for sliderthumb-uhd.png: undefined
+- Error processing overlay2 for square01_001-uhd.png: undefined
+- Error processing TreasureRoomSheet-uhd.plist: undefined
+- Error processing overlay1 for TreasureRoomSheet-uhd.png: undefined
+- Error processing overlay2 for TreasureRoomSheet-uhd.png: undefined
+- Error processing overlay2 for absolllute.megahack/iconic-uhd.png: undefined
+- Error processing overlay2 for absolllute.megahack/MH_menu-uhd.png: undefined
+- Error processing overlay1 for absolllute.megahack/MH_new-uhd.png: undefined
+- Error processing overlay1 for absolllute.megahack/MH_open-uhd.png: undefined
+- Error processing overlay2 for absolllute.megahack/MH_rec-uhd.png: undefined
+- Error processing overlay2 for absolllute.megahack/MH_recStop-uhd.png: undefined
+- Error processing overlay2 for absolllute.megahack/MH_replay-uhd.png: undefined
+- Error processing overlay1 for absolllute.megahack/MH_save-uhd.png: undefined
+- Error processing overlay1 for alphadev.custom_profile_image/borderProfile-uhd.png: undefined
+- Error processing overlay2 for alphadev.custom_profile_image/borderProfile-uhd.png: undefined
+- Error processing overlay1 for alphalaneous.tinker/edit_extras-uhd.png: undefined
+- Error processing overlay2 for alphalaneous.tinker/edit_extras-uhd.png: undefined
+- No overlays found for: alphalaneous.tinker/edit_extras-uhd.png
+- Error processing overlay1 for alphalaneous.tinker/toggleLink-off-uhd.png: undefined
+- Error processing overlay2 for alphalaneous.tinker/toggleLink-off-uhd.png: undefined
+- No overlays found for: alphalaneous.tinker/toggleLink-off-uhd.png
+- Error processing overlay1 for alphalaneous.tinker/toggleLink-on-uhd.png: undefined
+- Error processing overlay2 for alphalaneous.tinker/toggleLink-on-uhd.png: undefined
+- No overlays found for: alphalaneous.tinker/toggleLink-on-uhd.png
+- Error processing overlay1 for alphalaneous.trail_pro_max/button-icon-uhd.png: undefined
+- Error processing overlay1 for arcticwoof.servers_status/wifiIcon-uhd.png: undefined
+- Error processing overlay2 for catgirldev.titlelogotweaks/merged_atlas-hd.png: undefined
+- Error processing overlay2 for catgirldev.titlelogotweaks/merged_atlas-uhd.png: undefined
+- Error processing overlay2 for catgirldev.titlelogotweaks/merged_atlas.png: undefined
+- Error processing overlay1 for catgirldev.titlelogotweaks/underlay_atlas-hd.png: undefined
+- Error processing overlay2 for catgirldev.titlelogotweaks/underlay_atlas-hd.png: undefined
+- Error processing overlay1 for catgirldev.titlelogotweaks/underlay_atlas-uhd.png: undefined
+- Error processing overlay2 for catgirldev.titlelogotweaks/underlay_atlas-uhd.png: undefined
+- Error processing overlay1 for catgirldev.titlelogotweaks/underlay_atlas.png: undefined
+- Error processing overlay2 for catgirldev.titlelogotweaks/underlay_atlas.png: undefined
+- Error processing overlay2 for cdc.level_thumbnails/thumbnailButton-uhd.png: undefined
+- Error processing overlay2 for config/hiimjustin000.more_icons/trail/packgen_primary-color-trail.png: undefined
+- Error processing overlay1 for config/hiimjustin000.more_icons/trail/packgen_secondary-color-trail.png: undefined
+- Error processing overlay1 for cvolton.betterinfo/BI_altBtn_001-uhd.png: undefined
+- Error processing overlay2 for cvolton.betterinfo/BI_altBtn_001-uhd.png: undefined
+- Error processing overlay1 for cvolton.betterinfo/BI_blueTab_001-uhd.png: undefined
+- Error processing overlay1 for cvolton.betterinfo/BI_blueTab_002-uhd.png: undefined
+- Error processing overlay2 for cvolton.betterinfo/BI_featuredBtn_001-uhd.png: undefined
+- Error processing overlay2 for cvolton.betterinfo/BI_mainButton_001-uhd.png: undefined
+- Error processing overlay1 for cvolton.betterinfo/BI_randomBtn_001-uhd.png: undefined
+- Error processing overlay2 for cvolton.betterinfo/GJ_bonusBtn_001-uhd.png: undefined
+- Error processing overlay2 for cvolton.betterinfo/GJ_fameBtn_001-uhd.png: undefined
+- Error processing cvolton.betterinfo/SearchButtons-410-uhd.plist: undefined
+- Error processing overlay1 for cvolton.betterinfo/SearchButtons-410-uhd.png: undefined
+- Error processing dankmeme.globed2/globedsheet1-uhd.plist: undefined
+- Error processing overlay1 for dankmeme.globed2/slider-end-uhd.png: undefined
+- Error processing overlay2 for dankmeme.globed2/slider-fill-uhd.png: undefined
+- Error processing overlay1 for dankmeme.globed2/slider-middle-uhd.png: undefined
+- Error processing overlay1 for dankmeme.globed2/slider-start-uhd.png: undefined
+- Error processing overlay1 for dankmeme.globed2/slider-thumb-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/add-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/blacklist-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/copy-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/favorite-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/hold-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/playlist-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/prev-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/regen-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/settings-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for elnexreal.menuloop_randomizer/shuffle-btn-sprite-uhd.png: undefined
+- Error processing overlay1 for firee.object-workshop/blueButton-uhd.png: undefined
+- Error processing overlay1 for firee.object-workshop/redBG-uhd.png: undefined
+- Error processing overlay2 for firee.object-workshop/redBG-uhd.png: undefined
+- No overlays found for: firee.object-workshop/redBG-uhd.png
+- Error processing fleym.nongd/JukeboxSheet-uhd.plist: undefined
+- Error processing overlay2 for fleym.nongd/JukeboxSheet-uhd.png: undefined
+- Error processing flingus.geometry_pride/WokeSheet-uhd.plist: undefined
+- Error processing overlay1 for flingus.geometry_pride/WokeSheet-uhd.png: undefined
+- Error processing overlay2 for flingus.geometry_pride/WokeSheet-uhd.png: undefined
+- Error processing geode.loader/APISheet-uhd.plist: undefined
+- Error processing geode.loader/BlankSheet-uhd.plist: undefined
+- Error processing overlay1 for geode.loader/GE_button_01-uhd.png: undefined
+- Error processing overlay2 for geode.loader/GE_button_01-uhd.png: undefined
+- Error processing overlay1 for geode.loader/GE_button_02-uhd.png: undefined
+- Error processing overlay2 for geode.loader/GE_button_02-uhd.png: undefined
+- Error processing overlay1 for geode.loader/GE_button_03-uhd.png: undefined
+- Error processing overlay2 for geode.loader/GE_button_03-uhd.png: undefined
+- Error processing overlay1 for geode.loader/GE_button_04-uhd.png: undefined
+- Error processing overlay2 for geode.loader/GE_button_04-uhd.png: undefined
+- Error processing overlay1 for geode.loader/GE_button_05-uhd.png: undefined
+- Error processing overlay2 for geode.loader/GE_button_05-uhd.png: undefined
+- Error processing overlay1 for geode.loader/GE_square01-uhd.png: undefined
+- Error processing overlay2 for geode.loader/GE_square01-uhd.png: undefined
+- Error processing overlay1 for geode.loader/GE_square02-uhd.png: undefined
+- Error processing overlay2 for geode.loader/GE_square02-uhd.png: undefined
+- Error processing overlay1 for geode.loader/GE_square03-uhd.png: undefined
+- Error processing overlay2 for geode.loader/GE_square03-uhd.png: undefined
+- Error processing overlay2 for geode.loader/inverseborder-uhd.png: undefined
+- Error processing geode.loader/LogoSheet-uhd.plist: undefined
+- Error processing overlay1 for geode.loader/LogoSheet-uhd.png: undefined
+- Error processing overlay1 for geode.loader/slider-groove-uhd.png: undefined
+- Error processing overlay2 for geode.loader/tab-gradient-uhd.png: undefined
+- Error processing hjfod.betteredit/UISheet-uhd.plist: undefined
+- Error processing overlay2 for hjfod.betteredit/UISheet-uhd.png: undefined
+- Error processing hjfod.gdshare/GDShare-uhd.plist: undefined
+- Error processing itzkiba.better_progression/badgeSpritesheet-uhd.plist: undefined
+- Error processing overlay2 for jarvisdevil.the_map/worlds-uhd.png: undefined
+- Error processing overlay1 for khronophobia.inputs_viewer/settingsIcon-uhd.png: undefined
+- Error processing minemaker0430.gddp_integration/Menu-uhd.plist: undefined
+- Error processing overlay2 for ml5.icon-gallery/AllModesOn-uhd.png: undefined
+- Error processing overlay1 for ml5.icon-gallery/GalleryIcon-uhd.png: undefined
+- Error processing overlay1 for ml5.icon-gallery/SearchAuthor-uhd.png: undefined
+- Error processing overlay1 for ml5.icon-gallery/WebsiteIcon-uhd.png: undefined
+- Error processing overlay2 for ml5.icon-gallery/WebsiteIcon-uhd.png: undefined
+- Error processing overlay1 for ninxout.prntscrn/screenshot-uhd.png: undefined
+- Error processing overlay1 for omgrod.garage_plus/GaragePlus_feedbackBtn-uhd.png: undefined
+- Error processing overlay2 for omgrod.garage_plus/GaragePlus_kofiBtn-uhd.png: undefined
+- Error processing overlay1 for omgrod.garage_plus/GaragePlus_modSettingsBtn-uhd.png: undefined
+- Error processing overlay2 for omgrod.garage_plus/GaragePlus_shopsBtn-uhd.png: undefined
+- Error processing raydeeux.deathscreentweaks/newBestFont-hd.fnt: undefined
+- Error processing overlay1 for raydeeux.deathscreentweaks/newBestFont-hd.png: undefined
+- Error processing overlay2 for raydeeux.deathscreentweaks/newBestFont-hd.png: undefined
+- Error processing raydeeux.deathscreentweaks/newBestFont-uhd.fnt: undefined
+- Error processing overlay1 for raydeeux.deathscreentweaks/newBestFont-uhd.png: undefined
+- Error processing overlay2 for raydeeux.deathscreentweaks/newBestFont-uhd.png: undefined
+- Error processing raydeeux.deathscreentweaks/newBestFont.fnt: undefined
+- Error processing overlay1 for raydeeux.deathscreentweaks/newBestFont.png: undefined
+- Error processing overlay2 for raydeeux.deathscreentweaks/newBestFont.png: undefined
+- Error processing raydeeux.endscreentweaks/levelCompleteFont-hd.fnt: undefined
+- Error processing overlay2 for raydeeux.endscreentweaks/levelCompleteFont-hd.png: undefined
+- Error processing raydeeux.endscreentweaks/levelCompleteFont-uhd.fnt: undefined
+- Error processing overlay2 for raydeeux.endscreentweaks/levelCompleteFont-uhd.png: undefined
+- Error processing raydeeux.endscreentweaks/levelCompleteFont.fnt: undefined
+- Error processing overlay2 for raydeeux.endscreentweaks/levelCompleteFont.png: undefined
+- Error processing raydeeux.endscreentweaks/levelCompleteFont_underlay-hd.fnt: undefined
+- Error processing overlay1 for raydeeux.endscreentweaks/levelCompleteFont_underlay-hd.png: undefined
+- Error processing overlay2 for raydeeux.endscreentweaks/levelCompleteFont_underlay-hd.png: undefined
+- Error processing raydeeux.endscreentweaks/levelCompleteFont_underlay-uhd.fnt: undefined
+- Error processing overlay1 for raydeeux.endscreentweaks/levelCompleteFont_underlay-uhd.png: undefined
+- Error processing overlay2 for raydeeux.endscreentweaks/levelCompleteFont_underlay-uhd.png: undefined
+- Error processing raydeeux.endscreentweaks/levelCompleteFont_underlay.fnt: undefined
+- Error processing overlay1 for raydeeux.endscreentweaks/levelCompleteFont_underlay.png: undefined
+- Error processing overlay2 for raydeeux.endscreentweaks/levelCompleteFont_underlay.png: undefined
+- Error processing overlay1 for raydeeux.pausemenuloop/btn-uhd.png: undefined
+- Error processing raydeeux.variouscommenttweaks/spritesheetOne-uhd.plist: undefined
+- Error processing raydeeux.xeroxedhalloffame/OneSpritesheet-uhd.plist: undefined
+- Error processing overlay1 for raydeeux.xeroxedhalloffame/OneSpritesheet-uhd.png: undefined
+- Error processing raydeeux_limegradient.warbledcompletions/ButtonAssets-uhd.plist: undefined
+- Error processing raydeeux_limegradient.warbledcompletions/OtherSocialMediaButtons-uhd.plist: undefined
+- Error processing overlay1 for raydeeux_limegradient.warbledcompletions/OtherSocialMediaButtons-uhd.png: undefined
+- Error processing overlay2 for raydeeux_limegradient.warbledcompletions/OtherSocialMediaButtons-uhd.png: undefined
+- Error processing overlay1 for saritahhh.icon_preview/reload-uhd.png: undefined
+- Error processing overlay1 for saritahhh.offset_assist/renderIcon-uhd.png: undefined
+- Error processing overlay1 for satrik.achievements_plus/button-icon-uhd.png: undefined
+- Error processing overlay2 for satrik.achievements_plus/gold-square-uhd.png: undefined
+- Error processing overlay2 for satrik.achievements_plus/green-checkmark-uhd.png: undefined
+- Error processing spaghettdev.gd-roulette/ListBorder-uhd.plist: undefined
+- Error processing overlay1 for spaghettdev.gd-roulette/ListBorder-uhd.png: undefined
+- Error processing overlay2 for spaghettdev.gd-roulette/ListBorder-uhd.png: undefined
+- Error processing overlay2 for spaghettdev.gd-roulette/RL_btn_big-uhd.png: undefined
+- Error processing uproxide.textures/TWSSheet-uhd.plist: undefined
+- Error processing overlay1 for uproxide.textures/TWSSheet-uhd.png: undefined
+- Error processing overlay2 for uproxide.textures/TWSSheet-uhd.png: undefined
+- Error processing overlay1 for uproxide.textures/TWS_Box-uhd.png: undefined
+- Error processing overlay2 for uproxide.textures/TWS_Box-uhd.png: undefined
+- Added font file: goldFont-hd.fnt
+- Added font file: goldFont-uhd.fnt
+- Added font file: raydeeux.deathscreentweaks/newBestFont-hd.fnt
+- Added font file: raydeeux.deathscreentweaks/newBestFont-uhd.fnt
+- Added font file: raydeeux.deathscreentweaks/newBestFont.fnt
+- Added font file: raydeeux.endscreentweaks/levelCompleteFont-hd.fnt
+- Added font file: raydeeux.endscreentweaks/levelCompleteFont-uhd.fnt
+- Added font file: raydeeux.endscreentweaks/levelCompleteFont.fnt
+- Added font file: raydeeux.endscreentweaks/levelCompleteFont_underlay-hd.fnt
+- Added font file: raydeeux.endscreentweaks/levelCompleteFont_underlay-uhd.fnt
+- Added font file: raydeeux.endscreentweaks/levelCompleteFont_underlay.fnt
+
+Info:
+- Luminance calc: 0.3*R + 0.59*G + 0.11*B
+- Darkening factors: 0.5, 0.4, 0.3, 0.2
+- Blending: Alpha composite
+- UI colors generated: 29 color definitions
+
+Generated with PackGen by Asterveila (Sarah)
+Hope you enjoy! :3
