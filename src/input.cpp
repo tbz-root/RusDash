@@ -10,7 +10,6 @@ static bool containsCyrillic(char const* text, int len) {
         if (c >= 0xC0) i += (c >= 0xE0) ? 3 : 2;
         else ++i;
     }
-    
     return false;
 }
 
@@ -22,15 +21,14 @@ class $modify(CCTextInputNode) {
         }
 
         std::string current = this->getString();
-
-        int maxLen = m_maxLabelLength;
-
         std::string toInsert(text, text + nLen);
 
-        if (maxLen > 0 && static_cast<int>(current.size() + toInsert.size()) > maxLen * 2) {}
+        if (m_maxLabelLength > 0 &&
+            static_cast<int>(current.size() + toInsert.size()) > m_maxLabelLength * 2) {
+            return true;
+        }
 
         current += toInsert;
-
         this->setString(current.c_str());
         this->refreshLabel();
 
@@ -42,20 +40,17 @@ class $modify(CCTextInputNode) {
     }
 };
 
-#include <Geode/modify/MultilineBitmapFont.hpp>
 static bool utf8Next(char const*& it, char const* end, char32_t& out) {
     if (it >= end) return false;
     unsigned char c = static_cast<unsigned char>(*it);
     if (c < 0x80) {
         out = c;
         ++it;
-
         return true;
     }
     if ((c & 0xE0) == 0xC0 && it + 1 < end) {
         out = ((c & 0x1F) << 6) | (static_cast<unsigned char>(it[1]) & 0x3F);
         it += 2;
-
         return true;
     }
     if ((c & 0xF0) == 0xE0 && it + 2 < end) {
@@ -63,7 +58,6 @@ static bool utf8Next(char const*& it, char const* end, char32_t& out) {
             | ((static_cast<unsigned char>(it[1]) & 0x3F) << 6)
             | (static_cast<unsigned char>(it[2]) & 0x3F);
         it += 3;
-
         return true;
     }
     if ((c & 0xF8) == 0xF0 && it + 3 < end) {
@@ -72,11 +66,9 @@ static bool utf8Next(char const*& it, char const* end, char32_t& out) {
             | ((static_cast<unsigned char>(it[2]) & 0x3F) << 6)
             | (static_cast<unsigned char>(it[3]) & 0x3F);
         it += 4;
-
         return true;
     }
     ++it;
-
     return false;
 }
 
@@ -98,6 +90,146 @@ static void utf8Append(std::string& s, char32_t cp) {
     }
 }
 
+static ccColor3B colorFromTag(char tag) {
+    switch (tag) {
+        case 'b': return {0x4A, 0x52, 0xE1};
+        case 'g': return {0x40, 0xE3, 0x48};
+        case 'l': return {0x60, 0xAB, 0xEF};
+        case 'j': return {0x32, 0xC8, 0xFF};
+        case 'y': return {0xFF, 0xFF, 0x00};
+        case 'o': return {0xFF, 0xA5, 0x4B};
+        case 'r': return {0xFF, 0x5A, 0x5A};
+        case 'p': return {0xFF, 0x00, 0xFF};
+        case 'a': return {0x96, 0x32, 0xFF};
+        case 'd': return {0xFF, 0x96, 0xFF};
+        case 'c': return {0xFF, 0xFF, 0x96};
+        case 'f': return {0x96, 0xFF, 0xFF};
+        case 's': return {0xFF, 0xDC, 0x41};
+        default:  return {0xFF, 0x00, 0x00};
+    }
+}
+
+static std::string removeTags(std::string const& str) {
+    std::string out;
+    out.reserve(str.size());
+
+    size_t i = 0;
+    while (i < str.size()) {
+        if (str[i] == '<') {
+            if (i + 3 < str.size() && str[i + 1] == '/' && str[i + 2] == 'c' && str[i + 3] == '>') {
+                i += 4;
+
+                continue;
+            }
+            
+            if (i + 3 < str.size() && str[i + 1] == 'c' && str[i + 3] == '>') {
+                i += 4;
+
+                continue;
+            }
+            
+            if (i + 5 < str.size() && str[i + 1] == 'i' && str[i + 5] == '>') {
+                i += 6;
+
+                continue;
+            }
+            
+            if (i + 3 < str.size() && str[i + 1] == '/' && str[i + 2] == 'i' && str[i + 3] == '>') {
+                i += 4;
+
+                continue;
+            }
+            
+            if (i + 5 < str.size() && str[i + 1] == 'd' && str[i + 5] == '>') {
+                i += 6;
+
+                continue;
+            }
+            
+            if (i + 5 < str.size() && str[i + 1] == 's' && str[i + 5] == '>') {
+                i += 6;
+
+                continue;
+            }
+            
+            if (i + 3 < str.size() && str[i + 1] == '/' && str[i + 2] == 's' && str[i + 3] == '>') {
+                i += 4;
+
+                continue;
+            }
+        }
+        out += str[i];
+        ++i;
+    }
+    return out;
+}
+
+static void applyColorTags(std::string const& original, CCArray* letterSprites) {
+    if (!letterSprites) return;
+
+    ccColor3B current = {255, 255, 255};
+    size_t i = 0;
+    int letterIndex = 0;
+    int const count = letterSprites->count();
+
+    while (i < original.size() && letterIndex < count) {
+        if (original[i] == '<') {
+            if (i + 3 < original.size() && original[i + 1] == '/' && original[i + 2] == 'c' && original[i + 3] == '>') {
+                current = {255, 255, 255};
+                i += 4;
+
+                continue;
+            }
+            
+            if (i + 3 < original.size() && original[i + 1] == 'c' && original[i + 3] == '>') {
+                current = colorFromTag(original[i + 2]);
+                i += 4;
+
+                continue;
+            }
+
+            if (i + 5 < original.size() && original[i + 1] == 'i' && original[i + 5] == '>') {
+                i += 6;
+
+                continue;
+            }
+            if (i + 3 < original.size() && original[i + 1] == '/' && original[i + 2] == 'i' && original[i + 3] == '>') {
+                i += 4;
+
+                continue;
+            }
+            if (i + 5 < original.size() && original[i + 1] == 'd' && original[i + 5] == '>') {
+                i += 6;
+
+                continue;
+            }
+            if (i + 5 < original.size() && original[i + 1] == 's' && original[i + 5] == '>') {
+                i += 6;
+
+                continue;
+            }
+            if (i + 3 < original.size() && original[i + 1] == '/' && original[i + 2] == 's' && original[i + 3] == '>') {
+                i += 4;
+
+                continue;
+            }
+        }
+
+        char const* p = original.data() + i;
+        char const* end = original.data() + original.size();
+        char32_t cp;
+        if (!utf8Next(p, end, cp)) break;
+
+        auto* node = static_cast<CCNode*>(letterSprites->objectAtIndex(letterIndex));
+        if (auto* spr = typeinfo_cast<CCSprite*>(node)) {
+            spr->setColor(current);
+        }
+        ++letterIndex;
+        i = static_cast<size_t>(p - original.data());
+    }
+}
+
+#include <Geode/modify/MultilineBitmapFont.hpp>
 static std::vector<std::string> splitByWidth(std::string const& text, float maxWidth, char const* font) {
     std::vector<std::string> lines;
     if (text.empty()) {
@@ -108,7 +240,6 @@ static std::vector<std::string> splitByWidth(std::string const& text, float maxW
     auto* lbl = CCLabelBMFont::create("", font);
     if (!lbl) {
         lines.push_back(text);
-
         return lines;
     }
     lbl->retain();
@@ -140,7 +271,6 @@ static std::vector<std::string> splitByWidth(std::string const& text, float maxW
 
         while (it < end) {
             char32_t cp;
-            char const* before = it;
             if (!utf8Next(it, end, cp)) break;
 
             utf8Append(current, cp);
@@ -160,7 +290,6 @@ static std::vector<std::string> splitByWidth(std::string const& text, float maxW
                     }
                     lastGood = current;
                     lbl->setString(current.c_str());
-                    if (lbl->getContentSize().width > maxWidth && current.size() > 0) {}
                 } else {
                     lines.push_back(current);
                     current.clear();
@@ -178,14 +307,14 @@ static std::vector<std::string> splitByWidth(std::string const& text, float maxW
 
     lbl->release();
     if (lines.empty()) lines.push_back("");
-
     return lines;
 }
 
 #include <Geode/modify/TextArea.hpp>
 class $modify(TextArea) {
     void setString(gd::string str) {
-        std::string text = str;
+        std::string original = str;
+        std::string plain = removeTags(original);
 
         char const* font = "chatFont.fnt";
         if (!m_fontFile.empty()) {
@@ -197,16 +326,18 @@ class $modify(TextArea) {
             return TextArea::setString(str);
         }
 
-        auto lines = splitByWidth(text, width, font);
+        auto lines = splitByWidth(plain, width, font);
         if (lines.empty()) {
             return TextArea::setString(str);
         }
 
-        std::string dummy(lines.size() > 0 ? lines.size() - 1 : 0, '\n');
+        std::string dummy(lines.size() > 1 ? lines.size() - 1 : 0, '\n');
         TextArea::setString(gd::string(dummy));
 
         auto* children = m_label ? m_label->getChildren() : nullptr;
         if (!children) return;
+
+        auto* allLetters = CCArray::create();
 
         int i = 0;
         for (int j = 0; j < children->count(); ++j) {
@@ -217,8 +348,22 @@ class $modify(TextArea) {
             if (i < static_cast<int>(lines.size())) {
                 lbl->setString(lines[i].c_str());
                 lbl->setAnchorPoint({ m_anchorPoint.x, lbl->getAnchorPoint().y });
+
+                if (auto* letters = lbl->getChildren()) {
+                    for (int k = 0; k < letters->count(); ++k) {
+                        allLetters->addObject(letters->objectAtIndex(k));
+                    }
+                }
             }
             ++i;
+        }
+
+        bool disableColor = false;
+#ifdef GEODE_IS_WINDOWS
+
+#endif
+        if (!disableColor) {
+            applyColorTags(original, allLetters);
         }
     }
 };
