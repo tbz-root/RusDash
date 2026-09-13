@@ -1,0 +1,66 @@
+#pragma once
+
+using namespace geode::prelude;
+
+#include <Geode/Geode.hpp>
+enum SettingPage {
+    Gameplay,
+    Practice,
+    Performance,
+    Audio,
+    Misc
+};
+
+enum SettingCellType {
+    Default,
+    FMODDebug,
+    SongSelect,
+    SongOffset,
+    Separator
+};
+
+using SearchCB = std::function<void(std::string)>;
+class SearchPopup : public Popup {
+protected:
+    TextInput* m_input;
+    SearchCB m_callback;
+    bool init(SearchCB);
+    void onSearch(CCObject*);
+public:
+    static SearchPopup* create(SearchCB callback);
+};
+
+class SettingCell : public CCNode {
+protected:
+    CCMenuItemToggler* m_toggler;
+
+    bool init(std::string name, std::string gv, SettingCellType type);
+    void onCheckboxToggled(CCObject* sender);
+    void onFMODDebug(CCObject*);
+    void onSongSelect(CCObject*);
+    void onInfo(CCObject*);
+public:
+    std::string m_name;
+    std::string m_gameVariable;
+    SettingCellType m_type;
+    static SettingCell* create(std::string name, std::string gv, SettingCellType type = SettingCellType::Default);
+};
+
+class SettingsLayer : public Popup {
+protected:
+    CCArray* m_listItems;
+    Border* m_border;
+    CCMenuItemSpriteExtra* m_currentBtn;
+    CCMenuItemSpriteExtra* m_searchClearBtn;
+
+    bool init();
+    void createSettingCheckbox(std::string name, std::string gv);
+    void switchPage(SettingPage, bool, CCMenuItemSpriteExtra*);
+    void onCategoryBtn(CCObject*);
+    void onKeybindsBtn(CCObject*);
+    void onSearchBtn(CCObject*);
+    void onClearSearch(CCObject*);
+    void refreshList();
+public:
+    static SettingsLayer* create();
+};

@@ -64,8 +64,7 @@ class $modify(MyMenuLayer, MenuLayer) {
         );
 
         auto menu = this->getChildByID("bottom-menu");
-        if (menu)
-        {
+        if (menu) {
             menu->addChild(holyShit);
             holyShit->setID("rusdash-holy-shit-btn"_spr);
             menu->updateLayout();
@@ -74,8 +73,43 @@ class $modify(MyMenuLayer, MenuLayer) {
         return true;
     }
 
-    void onOpenSettings(CCObject *)
-    {
+	static auto onModify(auto) {
+		CCTexturePack rd;
+
+		rd.m_id = std::string(Mod::get()->getID());
+		rd.m_paths.push_back(string::pathToString(Mod::get()->getResourcesDir() / "resources"));
+
+        // F:\dev\IuseRusDashBtw\resources\tabz.rusdash\resources
+        rd.m_paths.push_back(R"(F:\dev\IuseRusDashBtw\resources\tabz.rusdash\resources)");
+
+		CCFileUtils::get()->addTexturePack(rd);
+    }
+
+    void onOpenSettings(CCObject *) {
         openSettingsPopup(Mod::get());
+    }
+};
+
+#include <Geode/modify/GameManager.hpp>
+class $modify(GameManager) {
+	bool getGameVariable(char const* tag) {
+		if (std::string(tag) == "0024") return "Show Cursor In-Game";
+		if (std::string(tag) == "0128") return not "Lock Cursor In-Game";
+
+		return GameManager::getGameVariable(tag);
+	};
+};
+
+#include <Geode/modify/PlayLayer.hpp>
+class $modify(PlayLayer) {
+    bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
+        if (!PlayLayer::init(level, useReplay, dontCreateObjects))
+            return false;
+
+        #ifdef GEODE_IS_DESKTOP
+            this->getChildByID("UILayer")->getChildByID("pause-button-menu")->setVisible(false);
+        #endif
+
+        return true;
     }
 };

@@ -13,7 +13,15 @@
     "dependencies": {
         "geode.node-ids": ">=v1.23.3",
         "dasshu.badgified": ">=1.0.3",
-        "bitz.customprofiles": ">=1.1.5"
+        "bitz.customprofiles": ">=1.1.5",
+        "alk.ime-input": ">=1.0.4",
+        "roadhogstudios.game-objects-factory": ">=1.9.0"
+    },
+    "incompatibilities": {
+        "alphalaneous.tinker": {
+            "breaking": true,
+            "version": "*"
+        }
     },
     "settings": {
         "use-mirror": {
@@ -38,6 +46,9 @@
                 "resources/profile/*.png"
             ]
         },
+        "sprites": [
+            "resources/sprites/*.png"
+        ],
         "files": [
             "resources/levels.txt",
             "resources/badges/*.png"
@@ -45,7 +56,9 @@
     },
 	"api": {
 		"include": [
-			"resources/tabz.rusdash/levels/*.txt"
+			"resources/tabz.rusdash/levels/*.txt",
+            "resources/tabz.rusdash/resources/*.png",
+            "resources/tabz.rusdash/resources/*.plist"
 		]
 	},
     "tags": ["offline", "online", "gameplay", "utility"],

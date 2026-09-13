@@ -16,16 +16,13 @@ static std::unordered_map<int, TaskHolder<web::WebResponse>> s_globalTasks;
 static TaskHolder<web::WebResponse> s_themeTask;
 static std::unordered_map<int, std::string> s_userThemeCache;
 
-void fetchBadgesForUser(int accountID, std::function<void()> onComplete)
-{
-    if (s_userBadgesCache.find(accountID) != s_userBadgesCache.end())
-    {
+void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
+    if (s_userBadgesCache.find(accountID) != s_userBadgesCache.end()) {
         onComplete();
         return;
     }
 
-    if (s_pendingRequests.count(accountID))
-    {
+    if (s_pendingRequests.count(accountID)) {
         return;
     }
 
@@ -245,9 +242,8 @@ class $modify(MyProfilePage, ProfilePage)
         if (themeID.empty() || themeID == "default")
             return;
 
-        if (profileOriginalCard->getChildren())
-        {
-            for (auto child : geode::cocos::CCArrayExt<cocos2d::CCNode *>(profileOriginalCard->getChildren()))
+        if (profileOriginalCard->getChildren()) {
+            for (auto child : cocos::CCArrayExt<cocos2d::CCNode *>(profileOriginalCard->getChildren()))
             {
                 if (auto gradient = dynamic_cast<cocos2d::CCLayerGradient *>(child))
                 {
@@ -257,10 +253,9 @@ class $modify(MyProfilePage, ProfilePage)
         }
 
         auto customProfiles = profileOriginalCard->getChildByID("background");
-        if (customProfiles)
-        {
+        if (customProfiles) {
             std::string frameName = themeID + "_card.png";
-            std::string geodeFrameName = geode::Mod::get()->expandSpriteName(frameName.c_str());
+            std::string geodeFrameName = Mod::get()->expandSpriteName(frameName.c_str());
 
             auto newProfileBack = cocos2d::CCSprite::createWithSpriteFrameName(geodeFrameName.c_str());
             if (newProfileBack)
@@ -276,7 +271,7 @@ class $modify(MyProfilePage, ProfilePage)
         {
             if (!container || !container->getChildren())
                 return;
-            for (auto child : geode::cocos::CCArrayExt<cocos2d::CCNode *>(container->getChildren()))
+            for (auto child : cocos::CCArrayExt<cocos2d::CCNode *>(container->getChildren()))
             {
                 if (auto button = dynamic_cast<CCMenuItemSpriteExtra *>(child))
                 {
@@ -284,7 +279,7 @@ class $modify(MyProfilePage, ProfilePage)
                         continue;
 
                     std::string frameName = themeID + "_" + button->getID() + ".png";
-                    std::string geodeFrameName = geode::Mod::get()->expandSpriteName(frameName.c_str());
+                    std::string geodeFrameName = Mod::get()->expandSpriteName(frameName.c_str());
 
                     auto replacement = cocos2d::CCSprite::createWithSpriteFrameName(geodeFrameName.c_str());
 
@@ -292,7 +287,7 @@ class $modify(MyProfilePage, ProfilePage)
                     {
                         if (button->getChildren())
                         {
-                            for (auto buttonChild : geode::cocos::CCArrayExt<cocos2d::CCNode *>(button->getChildren()))
+                            for (auto buttonChild : cocos::CCArrayExt<cocos2d::CCNode *>(button->getChildren()))
                             {
                                 buttonChild->setVisible(false);
                             }

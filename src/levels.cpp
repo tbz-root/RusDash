@@ -338,7 +338,6 @@ class $modify(LevelSelectLayer) {
 #include <Geode/modify/LocalLevelManager.hpp>
 class $modify(LocalLevelManager) {
     gd::string getMainLevelString(int id) {
-
         std::filesystem::path file = Mod::get()->getResourcesDir() / "levels" / fmt::format("{}.txt", id);
 
         std::ifstream stream(file, std::ios::binary);
