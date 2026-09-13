@@ -78,9 +78,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 
 		rd.m_id = std::string(Mod::get()->getID());
 		rd.m_paths.push_back(string::pathToString(Mod::get()->getResourcesDir() / "resources"));
-
-        // F:\dev\IuseRusDashBtw\resources\tabz.rusdash\resources
-        rd.m_paths.push_back(R"(F:\dev\IuseRusDashBtw\resources\tabz.rusdash\resources)");
+     // rd.m_paths.push_back(R"(F:\dev\IuseRusDashBtw\resources\tabz.rusdash\resources)");
 
 		CCFileUtils::get()->addTexturePack(rd);
     }

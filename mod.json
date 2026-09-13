@@ -62,7 +62,8 @@
 		"include": [
 			"resources/tabz.rusdash/levels/*.txt",
             "resources/tabz.rusdash/resources/*.png",
-            "resources/tabz.rusdash/resources/*.plist"
+            "resources/tabz.rusdash/resources/*.plist",
+            "resources/tabz.rusdash/resources/*.fnt"
 		]
 	},
     "tags": ["offline", "online", "gameplay", "utility"],
