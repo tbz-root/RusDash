@@ -9,8 +9,7 @@
 #include <Geode/modify/CCActionInterval.hpp>
 
 static std::string encodeBase64(std::vector<uint8_t> const& data) {
-	static constexpr char kTbl[] =
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	static constexpr char kTbl[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+/";
 	std::string out;
 	out.reserve(((data.size() + 2) / 3) * 4);
 	unsigned int val = 0;
@@ -40,30 +39,9 @@ static CCSprite* makeSpr(char const* name, float target = 40.f) {
 
 static std::string dialogIconName(int frame) {
 	frame = std::clamp(frame, 1, 56);
+	
 	return fmt::format("dialogIcon_{:03}.png", frame);
 }
-class $modify(CCActionInterval) {
-	$override void startWithTarget(CCNode * p0) {
-		if (typeinfo_cast<CCFadeIn*>(this)) if (typeinfo_cast<CCFontSprite*>(p0)) {
-			Ref fade = typeinfo_cast<CCFadeIn*>(this);
-			Ref sprite = typeinfo_cast<CCFontSprite*>(p0);
-			if (sprite) sprite->runAction(CCSequence::createWithTwoActions(
-				CCDelayTime::create(fade ? fade->getDuration() : 0.1f), CallFuncExt::create(
-					[sprite] {
-						if (!sprite) return;
-						sprite->setVisible(1);
-						sprite->setOpacity(255);
-						if (not sprite->getContentSize().isZero()) {
-							FMODAudioEngine::get()->playEffect("_text.ogg");
-						};
-					}
-				)
-			));
-			return;
-		}
-		return CCActionInterval::startWithTarget(p0);
-	}
-};
 
 #include <Geode/modify/TextArea.hpp>
 class $modify(MyTextArea, TextArea) {
@@ -173,7 +151,7 @@ protected:
 		float totalH = pad * 2.f + rows * cell;
 
 		auto menu = CCMenu::create();
-		
+
 		menu->setAnchorPoint({0.f, 0.f});
 		menu->ignoreAnchorPointForPosition(false);
 		menu->setPosition({0.f, 0.f});

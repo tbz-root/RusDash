@@ -26,31 +26,48 @@ class $modify(MyMenuLayer, MenuLayer) {
         s_themeTask.spawn(
             req.post(url),
             [](web::WebResponse res) {
-                bool isSuccess = false;
-
-                if (res.ok()) {
-                    std::string responseStr = res.string().unwrapOr("false");
-                    
-                    while (!responseStr.empty() && (responseStr.back() == '\n' || responseStr.back() == '\r' || responseStr.back() == ' ')) {
-                        responseStr.pop_back();
-                    }
-                    
-                    if (responseStr == "true") {
-                        isSuccess = true;
-                    }
+                if (!res.ok()) {
+                    log::warn("Update request failed: HTTP {}", res.code());
+                    return;
                 }
 
-                if (!isSuccess) {
-                    Loader::get()->queueInMainThread([]() {
-                        FLAlertLayer::create(
-                            "Update Required",                       
-                            "Please, update RusDash Geode Mod or delete it. The game will close now!", 
-                            "OK"                                    
-                        )->show();
-                    });
+                auto body = res.string();
 
-                    std::terminate();
+                if (!body) {
+                    log::warn("Update request returned no body");
+                    return;
                 }
+
+                std::string responseStr = body.unwrap();
+
+                while (!responseStr.empty() &&
+                       std::isspace(
+                           static_cast<unsigned char>(responseStr.back())
+                       )) {
+                    responseStr.pop_back();
+                }
+
+                while (!responseStr.empty() &&
+                       std::isspace(
+                           static_cast<unsigned char>(responseStr.front())
+                       )) {
+                    responseStr.erase(responseStr.begin());
+                }
+
+                if (responseStr == "true") {
+                    return;
+                }
+
+                Loader::get()->queueInMainThread([]() {
+                    auto alert = FLAlertLayer::create(
+                        "Update Required",
+                        "Please, update RusDash Geode Mod or delete it.",
+                        "OK"
+                    );
+
+                    if (alert)
+                        alert->show();
+                });
             }
         );
 
