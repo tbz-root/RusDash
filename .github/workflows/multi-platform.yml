@@ -18,6 +18,7 @@ jobs:
         - name: iOS
           os: macos-latest
           target: iOS
+          extra-flags: -DCMAKE_OSX_SYSROOT=iphoneos
 
         - name: Android32
           os: ubuntu-latest
@@ -38,6 +39,8 @@ jobs:
         with:
           combine: true
           target: ${{ matrix.config.target }}
+        env:
+          CMAKE_ARGS: ${{ matrix.config.extra-flags }}
 
   package:
     name: Package builds
