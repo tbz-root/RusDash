@@ -11,7 +11,7 @@ static TaskHolder<web::WebResponse> s_themeTask;
 #include <Geode/modify/MenuLayer.hpp>
 class $modify(MyMenuLayer, MenuLayer) {
     bool init() {
-        std::string modVersion = "v1.0.2";
+        std::string modVersion = "v1.0.3";
 
         matjson::Value json = matjson::makeObject({{"modVersion", modVersion}});
 
