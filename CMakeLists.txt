@@ -23,6 +23,13 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/geode-download-dependency.cmake")
+
+download_dependency_mod(
+    "Arrhythmiagamer23/geode-game-objects-factory"
+    "roadhogstudios.game-objects-factory"
+)
+
 setup_geode_mod(${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
