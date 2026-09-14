@@ -33,14 +33,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install unindexed dependency
-        run: geode mod install roadhogstudios.game-objects-factory.geode
-
+      # Никаких сторонних шагов, передаем корень напрямую внутрь экшена
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:
           combine: true
           target: ${{ matrix.config.target }}
+        env:
+          GEODE_TRADE_DIR: ${{ github.workspace }}
 
   package:
     name: Package builds
