@@ -933,6 +933,15 @@ class $modify(DialogLayer) {
 			if (m_game) m_game->resumeSchedulerAndActions();
 			if (m_game) m_game->setKeyboardEnabled(true);
 			if (m_game) m_game->setTouchEnabled(true);
+			if (m_game) m_game->setKeypadEnabled(true);
+
+			if (m_game->m_uiLayer) {
+			m_game->m_uiLayer->setKeyboardEnabled(false);
+			m_game->m_uiLayer->setKeyboardEnabled(true);
+			m_game->m_uiLayer->setKeypadEnabled(false);
+			m_game->m_uiLayer->setKeypadEnabled(true);
+			}
+
 			for (auto name : string::split(m_replacedTextures, ",")) {
 				CCFileUtils::get()->m_fullPathCache.erase(name.c_str());
 				auto result = CCTextureCache::get()->reloadTexture(name.c_str());
@@ -1321,6 +1330,14 @@ class $modify(DialogLayer) {
 					), nullptr)));
 
 					if (game and not no_pause) {
+						if (auto playLayer = typeinfo_cast<PlayLayer*>(game)) {
+        					if (playLayer->m_player1) {
+            					playLayer->m_player1->m_platformerXVelocity = 0.f;
+        					}
+        					if (playLayer->m_player2) {
+            					playLayer->m_player2->m_platformerXVelocity = 0.f;
+        					}
+    				}
 						game->setKeyboardEnabled(false);
 						game->setTouchEnabled(false);
 						game->pauseSchedulerAndActions();
@@ -1590,7 +1607,7 @@ class $modify(DialogLayer) {
 	}
 
 	void displayDialogObject(DialogObject * object) {
-		if (typeinfo_cast<Delegate*>(m_delegate)) MyTextArea::ForceWidth = 1200.f;
+		if (typeinfo_cast<Delegate*>(m_delegate)) MyTextArea::ForceWidth = 340.f;
 		if (getUserObject("call-org-display") == object) {
 			DialogLayer::displayDialogObject(object);
 			applyCustomIcon(object);

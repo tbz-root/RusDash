@@ -13,10 +13,10 @@ jobs:
           os: windows-latest
 
         - name: macOS
-          os: macos-latest
+          os: macos-14
 
         - name: iOS
-          os: macos-latest
+          os: macos-14
           target: iOS
 
         - name: Android32
@@ -33,11 +33,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Никаких сторонних шагов, передаем корень напрямую внутрь экшена
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:
           combine: true
           target: ${{ matrix.config.target }}
+        env:
+          GEODE_TRADE_DIR: ${{ github.workspace }}
 
   package:
     name: Package builds
