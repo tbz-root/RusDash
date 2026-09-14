@@ -31,16 +31,10 @@ jobs:
     runs-on: ${{ matrix.config.os }}
 
     steps:
-      - uses: actions/checkout@v4
-
-      # Исправляем окружение: ставим стабильный Xcode для iOS сборки
-      - name: Set up Xcode version
-        if: matrix.config.target == 'iOS'
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+      - uses: actions/checkout@v7
 
       - name: Build the mod
-        # Используем версию экшена за 10 августа
-        uses: geode-sdk/build-geode-mod@d0b5030d7ea2d46e302061e8eb87353f46f05b8a
+        uses: geode-sdk/build-geode-mod@main
         with:
           combine: true
           target: ${{ matrix.config.target }}
@@ -51,12 +45,10 @@ jobs:
     needs: ['build']
 
     steps:
-      - name: Combine builds
-        # Склейку тоже фиксируем на коммите от 10 августа
-        uses: geode-sdk/build-geode-mod/combine@d0b5030d7ea2d46e302061e8eb87353f46f05b8a
+      - uses: geode-sdk/build-geode-mod/combine@main
         id: build
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Build Output
           path: ${{ steps.build.outputs.build-output }}
