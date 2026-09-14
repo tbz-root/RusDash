@@ -90,22 +90,23 @@ static void utf8Append(std::string& s, char32_t cp) {
     }
 }
 
-static ccColor3B colorFromTag(char tag) {
+#include <optional>
+static std::optional<ccColor3B> colorFromTag(char tag) {
     switch (tag) {
-        case 'b': return {0x4A, 0x52, 0xE1};
-        case 'g': return {0x40, 0xE3, 0x48};
-        case 'l': return {0x60, 0xAB, 0xEF};
-        case 'j': return {0x32, 0xC8, 0xFF};
-        case 'y': return {0xFF, 0xFF, 0x00};
-        case 'o': return {0xFF, 0xA5, 0x4B};
-        case 'r': return {0xFF, 0x5A, 0x5A};
-        case 'p': return {0xFF, 0x00, 0xFF};
-        case 'a': return {0x96, 0x32, 0xFF};
-        case 'd': return {0xFF, 0x96, 0xFF};
-        case 'c': return {0xFF, 0xFF, 0x96};
-        case 'f': return {0x96, 0xFF, 0xFF};
-        case 's': return {0xFF, 0xDC, 0x41};
-        default:  return {0xFF, 0x00, 0x00};
+        case 'b': return ccColor3B{0x4A, 0x52, 0xE1};
+        case 'g': return ccColor3B{0x40, 0xE3, 0x48};
+        case 'l': return ccColor3B{0x60, 0xAB, 0xEF};
+        case 'j': return ccColor3B{0x32, 0xC8, 0xFF};
+        case 'y': return ccColor3B{0xFF, 0xFF, 0x00};
+        case 'o': return ccColor3B{0xFF, 0xA5, 0x4B};
+        case 'r': return ccColor3B{0xFF, 0x5A, 0x5A};
+        case 'p': return ccColor3B{0xFF, 0x00, 0xFF};
+        case 'a': return ccColor3B{0x96, 0x32, 0xFF};
+        case 'd': return ccColor3B{0xFF, 0x96, 0xFF};
+        case 'c': return ccColor3B{0xFF, 0xFF, 0x96};
+        case 'f': return ccColor3B{0x96, 0xFF, 0xFF};
+        case 's': return ccColor3B{0xFF, 0xDC, 0x41};
+        default:  return std::nullopt;
     }
 }
 
@@ -182,7 +183,10 @@ static void applyColorTags(std::string const& original, CCArray* letterSprites) 
             }
             
             if (i + 3 < original.size() && original[i + 1] == 'c' && original[i + 3] == '>') {
-                current = colorFromTag(original[i + 2]);
+                if (auto col = colorFromTag(original[i + 2])) {
+                    current = *col;
+                }
+
                 i += 4;
 
                 continue;
@@ -220,12 +224,19 @@ static void applyColorTags(std::string const& original, CCArray* letterSprites) 
         char32_t cp;
         if (!utf8Next(p, end, cp)) break;
 
+        i = static_cast<size_t>(p - original.data());
+
+        if (cp == ' ' || cp == '\n' || cp == '\r' || cp == '\t') {
+            continue;
+        }
+
+        if (letterIndex >= count) break;
+
         auto* node = static_cast<CCNode*>(letterSprites->objectAtIndex(letterIndex));
         if (auto* spr = typeinfo_cast<CCSprite*>(node)) {
             spr->setColor(current);
         }
         ++letterIndex;
-        i = static_cast<size_t>(p - original.data());
     }
 }
 

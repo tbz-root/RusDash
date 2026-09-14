@@ -7,7 +7,7 @@
     },
     "id": "tabz.rusdash",
     "name": "RusDash",
-    "version": "v1.0.2",
+    "version": "v1.0.3",
     "developers": ["Tabz", "CMDs"],
     "description": "All In One GDPS Mod",
     "dependencies": {
@@ -23,7 +23,11 @@
             "version": "*"
         },
         "techstudent10.settings_plus": {
-            "breaking": true,
+            "breaking": false,
+            "version": "*"
+        },
+        "alphalaneous.settings_everywhere": {
+            "breaking": false,
             "version": "*"
         }
     },

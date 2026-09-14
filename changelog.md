@@ -1,4 +1,11 @@
-# v1.0.2
+# v1.0.3
+- Fix crash in main menu (Thanks Benchi for information)
+- Added **Dialog Trigger**!
+- Reimaged settings (Settings plus lol)
+- Added own **Texture Pack**
+- Added **Cyrillic Support** in inputs!
+
+## v1.0.2
 - Added themes for some badges. Fix bugs.
 
 ## v1.0.1
