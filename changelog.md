@@ -1,4 +1,7 @@
-# v1.0.3
+# v1.0.4
+- Заполнить надо.
+
+## v1.0.3
 - Fix crash in main menu (Thanks Benchi for information)
 - Added **Dialog Trigger**!
 - Reimaged settings (Settings plus lol)

@@ -35,11 +35,8 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
     req.bodyJSON(json);
     req.timeout(std::chrono::seconds(15));
 
-    std::string baseUrl = Mod::get()->getSettingValue<bool>("use-mirror") ? "https://www.rustps.online/database" : "https://rustps.online/database";
-    std::string url = baseUrl + "/main.php";
-
     s_globalTasks[accountID].spawn(
-        req.post(url),
+        req.post("https://www.rustps.online/database/main.php"),
         [accountID, onComplete](web::WebResponse res)
         {
             s_pendingRequests.erase(accountID);
@@ -94,11 +91,8 @@ void verifyAndApplyTheme(int accountID, std::string themeID)
     req.bodyJSON(json);
     req.timeout(std::chrono::seconds(15));
 
-    std::string baseUrl = Mod::get()->getSettingValue<bool>("use-mirror") ? "https://www.rustps.online/database" : "https://rustps.online/database";
-    std::string url = baseUrl + "/canUseTheme.php";
-
     s_themeTask.spawn(
-        req.post(url),
+        req.post("https://www.rustps.online/database/canUseTheme.php"),
         [themeID](web::WebResponse res)
         {
             if (!res.ok())
@@ -154,17 +148,13 @@ void handleBadgeCheck(const Badge &badge, const std::string &badgeID, const std:
         } });
 }
 
-class $modify(MyProfilePage, ProfilePage)
-{
-    struct Fields
-    {
+class $modify(MyProfilePage, ProfilePage) {
+    struct Fields {
         TaskHolder<web::WebResponse> profileThemeTask;
     };
 
-    bool init(int accountID, bool something)
-    {
-        if (!ProfilePage::init(accountID, something))
-        {
+    bool init(int accountID, bool something) {
+        if (!ProfilePage::init(accountID, something)) {
             return false;
         }
 
@@ -207,11 +197,8 @@ class $modify(MyProfilePage, ProfilePage)
         req.bodyJSON(json);
         req.timeout(std::chrono::seconds(15));
 
-        std::string baseUrl = Mod::get()->getSettingValue<bool>("use-mirror") ? "https://www.rustps.online/database" : "https://rustps.online/database";
-        std::string url = baseUrl + "/getProfileTheme.php";
-
         m_fields->profileThemeTask.spawn(
-            req.post(url),
+            req.post("https://www.rustps.online/database/getProfileTheme.php"),
             [this, accountID](web::WebResponse res)
             {
                 std::string themeID = "default";

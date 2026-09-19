@@ -1,2 +1,2 @@
-You Can Support Me Using That Links
+You can support Tabz Using that links
 - [Donation Alerts](https://www.donationalerts.com/r/rusdash_tabs)

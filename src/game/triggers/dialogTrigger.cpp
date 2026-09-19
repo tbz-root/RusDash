@@ -1,29 +1,43 @@
-#include <roadhogstudios.game-objects-factory/include/main.hpp>
-#include <roadhogstudios.game-objects-factory/include/impl.hpp>
+using namespace geode::prelude;
+
+#include "../../../include/main.hpp"
+#include "../../../include/impl.hpp"
+#include "../../nodes/TriggerTemplatePopup.hpp"
+#include <Geode/ui/NineSlice.hpp>
 #include <Geode/ui/Popup.hpp>
 #include <Geode/ui/ScrollLayer.hpp>
 #include <Geode/ui/Scrollbar.hpp>
 #include <Geode/ui/TextInput.hpp>
 #include <Geode/binding/ButtonSprite.hpp>
 #include <Geode/utils/file.hpp>
-#include <Geode/modify/CCActionInterval.hpp>
 
 static std::string encodeBase64(std::vector<uint8_t> const& data) {
-	static constexpr char kTbl[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789+/";
+	static constexpr char kTbl[] =
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 	std::string out;
 	out.reserve(((data.size() + 2) / 3) * 4);
-	unsigned int val = 0;
-	int valb = -6;
-	for (uint8_t c : data) {
-		val = (val << 8) + c;
-		valb += 8;
-		while (valb >= 0) {
-			out.push_back(kTbl[(val >> valb) & 0x3F]);
-			valb -= 6;
-		}
+	size_t i = 0;
+	while (i + 2 < data.size()) {
+		uint32_t n = (uint32_t(data[i]) << 16) | (uint32_t(data[i + 1]) << 8) | data[i + 2];
+		out.push_back(kTbl[(n >> 18) & 63]);
+		out.push_back(kTbl[(n >> 12) & 63]);
+		out.push_back(kTbl[(n >> 6) & 63]);
+		out.push_back(kTbl[n & 63]);
+		i += 3;
 	}
-	if (valb > -6) out.push_back(kTbl[((val << 8) >> (valb + 8)) & 0x3F]);
-	while (out.size() % 4) out.push_back('=');
+	if (i + 1 == data.size()) {
+		uint32_t n = uint32_t(data[i]) << 16;
+		out.push_back(kTbl[(n >> 18) & 63]);
+		out.push_back(kTbl[(n >> 12) & 63]);
+		out.push_back('=');
+		out.push_back('=');
+	} else if (i + 2 == data.size()) {
+		uint32_t n = (uint32_t(data[i]) << 16) | (uint32_t(data[i + 1]) << 8);
+		out.push_back(kTbl[(n >> 18) & 63]);
+		out.push_back(kTbl[(n >> 12) & 63]);
+		out.push_back(kTbl[(n >> 6) & 63]);
+		out.push_back('=');
+	}
 	return out;
 }
 
@@ -54,7 +68,7 @@ class $modify(MyTextArea, TextArea) {
 	};
 };
 
-class DialogBgPickerPopup : public geode::Popup {
+class DialogBgPickerPopup : public Popup {
 protected:
 	std::function<void(int)> m_onPick;
 	int m_selected = 1;
@@ -62,6 +76,7 @@ protected:
 	bool init(int selected, std::function<void(int)> onPick) {
 		if (!Popup::init(280.f, 160.f, "GJ_square01.png"))
 			return false;
+
 		m_selected = selected;
 		m_onPick = std::move(onPick);
 		this->setTitle("Dialog Background");
@@ -122,7 +137,7 @@ public:
 	}
 };
 
-class DialogFramePickerPopup : public geode::Popup {
+class DialogFramePickerPopup : public Popup {
 protected:
 	std::function<void(int)> m_onPick;
 	int m_selected = 1;
@@ -130,6 +145,7 @@ protected:
 	bool init(int selected, std::function<void(int)> onPick) {
 		if (!Popup::init(360.f, 260.f, "GJ_square01.png"))
 			return false;
+
 		m_selected = std::clamp(selected, 1, 56);
 		m_onPick = std::move(onPick);
 		this->setTitle("Character Frame");
@@ -139,7 +155,7 @@ protected:
 		float scrollX = win.width / 2.f - scrollSize.width / 2.f;
 		float scrollY = win.height / 2.f - scrollSize.height / 2.f - 8.f;
 
-		auto scroll = geode::ScrollLayer::create(scrollSize, true, true);
+		auto scroll = ScrollLayer::create(scrollSize, true, true);
 		scroll->setID("frame-scroll"_spr);
 		scroll->setPosition({scrollX, scrollY});
 		m_mainLayer->addChild(scroll);
@@ -197,7 +213,7 @@ protected:
 		scroll->m_contentLayer->addChild(menu);
 		scroll->scrollToTop();
 
-		auto bar = geode::Scrollbar::create(scroll);
+		auto bar = Scrollbar::create(scroll);
 		bar->setID("frame-scrollbar"_spr);
 		bar->setPosition({scrollX + scrollSize.width + 6.f, scrollY + scrollSize.height / 2.f});
 
@@ -218,13 +234,14 @@ public:
 	}
 };
 
-class DialogIconModePopup : public geode::Popup {
+class DialogIconModePopup : public Popup {
 protected:
 	std::function<void(int)> m_onPick;
 
 	bool init(std::function<void(int)> onPick) {
 		if (!Popup::init(280.f, 140.f, "GJ_square01.png"))
 			return false;
+			
 		m_onPick = std::move(onPick);
 		this->setTitle("Dialog Icon");
 
@@ -320,7 +337,7 @@ static std::string pagePreview(matjson::Value const& line) {
 	return label + (extra.empty() ? "" : (" — " + extra));
 }
 
-class DialogPagesPopup : public geode::Popup {
+class DialogPagesPopup : public Popup {
 protected:
 	Ref<CCNode> m_dataNode;
 	matjson::Value m_root;
@@ -380,28 +397,37 @@ protected:
 		CCSize scrollSize = {170.f, 210.f};
 		CCPoint scrollPos = {15.f, win.height / 2.f - 115.f};
 
-		auto listBg = CCScale9Sprite::create("square02b_001.png");
+		auto listBg = NineSlice::create("square02b_001.png");
+
 		listBg->setID("pages-list-bg"_spr);
 		listBg->setContentSize(scrollSize);
 		listBg->setColor({0, 0, 0});
 		listBg->setOpacity(80);
 		listBg->setAnchorPoint({0.f, 0.f});
 		listBg->setPosition(scrollPos);
+
 		this->m_mainLayer->addChild(listBg);
 
 		m_scroll = ScrollLayer::create(scrollSize);
 		m_scroll->setID("pages-scroll"_spr);
 		m_scroll->setPosition(scrollPos);
+
 		this->m_mainLayer->addChild(m_scroll);
 
 		auto listCtrl = CCMenu::create();
+
 		listCtrl->setID("pages-list-controls"_spr);
+
 		float listCenterX = scrollPos.x + scrollSize.width * 0.5f;
+
 		listCtrl->setPosition({listCenterX, 55.f});
+
 		this->m_mainLayer->addChild(listCtrl);
 
 		auto plusSpr = CCSprite::createWithSpriteFrameName("GJ_plusBtn_001.png");
+
 		plusSpr->setScale(0.55f);
+
 		auto addBtn = CCMenuItemExt::createSpriteExtra(plusSpr, [this](CCMenuItem*) {
 			this->autoSave();
 			m_root["lines"].asArray().unwrap().push_back(makeEmptyPage("text"));
@@ -410,8 +436,10 @@ protected:
 			this->loadPageToFields();
 			this->autoSave();
 		});
+
 		addBtn->setID("page-add-btn"_spr);
 		addBtn->setPosition({-48.f, 0.f});
+
 		listCtrl->addChild(addBtn);
 
 		auto trashSpr = CCSprite::createWithSpriteFrameName("GJ_trashBtn_001.png");
@@ -431,9 +459,11 @@ protected:
 		listCtrl->addChild(delBtn);
 
 		auto upSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
+
 		upSpr->setScale(0.45f);
 		upSpr->setRotation(-90.f);
 		upSpr->setFlipX(true);
+
 		auto upBtn = CCMenuItemExt::createSpriteExtra(upSpr, [this](CCMenuItem*) {
 			if (m_page <= 0) return;
 			this->autoSave();
@@ -444,13 +474,17 @@ protected:
 			this->loadPageToFields();
 			this->autoSave();
 		});
+
 		upBtn->setID("page-up-btn"_spr);
 		upBtn->setPosition({16.f, 0.f});
+
 		listCtrl->addChild(upBtn);
 
 		auto downSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
+
 		downSpr->setScale(0.45f);
 		downSpr->setRotation(-90.f);
+
 		auto downBtn = CCMenuItemExt::createSpriteExtra(downSpr, [this](CCMenuItem*) {
 			auto& lines = m_root["lines"].asArray().unwrap();
 			if (m_page >= (int)lines.size() - 1) return;
@@ -461,35 +495,44 @@ protected:
 			this->loadPageToFields();
 			this->autoSave();
 		});
+
 		downBtn->setID("page-down-btn"_spr);
 		downBtn->setPosition({48.f, 0.f});
+
 		listCtrl->addChild(downBtn);
 
 		m_editBox = CCNode::create();
 		m_editBox->setID("page-edit-box"_spr);
 		m_editBox->setPosition({300.f, win.height / 2.f});
+
 		this->m_mainLayer->addChild(m_editBox);
 
 		m_pageInfo = CCLabelBMFont::create("Page 1", "bigFont.fnt");
 		m_pageInfo->setID("page-info-label"_spr);
 		m_pageInfo->setScale(0.35f);
 		m_pageInfo->setPosition({0.f, 110.f});
+
 		m_editBox->addChild(m_pageInfo);
 
 		auto typeMenu = CCMenu::create();
+
 		typeMenu->setID("type-menu"_spr);
 		typeMenu->setPosition({0.f, 85.f});
+
 		m_editBox->addChild(typeMenu);
 
 		m_typeLabel = CCLabelBMFont::create("Dialog", "bigFont.fnt");
 		m_typeLabel->setID("type-label"_spr);
 		m_typeLabel->setScale(0.4f);
 		m_typeLabel->setPosition({0.f, 85.f});
+
 		m_editBox->addChild(m_typeLabel);
 
 		auto prevSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
+
 		if (!prevSpr) prevSpr = CCSprite::create("GJ_arrow_03_001.png");
 		if (prevSpr) prevSpr->setScale(0.7f);
+
 		auto tPrev = CCMenuItemExt::createSpriteExtra(prevSpr ? prevSpr : CCNode::create(), [this](CCMenuItem*) {
 			this->autoSave();
 			m_typeIndex = (m_typeIndex - 1 + (int)kPageTypes.size()) % (int)kPageTypes.size();
@@ -508,6 +551,7 @@ protected:
 			nextSpr->setScale(0.7f);
 			nextSpr->setFlipX(true);
 		}
+
 		auto tNext = CCMenuItemExt::createSpriteExtra(nextSpr ? nextSpr : CCNode::create(), [this](CCMenuItem*) {
 			this->autoSave();
 			m_typeIndex = (m_typeIndex + 1) % (int)kPageTypes.size();
@@ -516,6 +560,7 @@ protected:
 			this->autoSave();
 			this->rebuildList();
 		});
+
 		tNext->setID("type-next-btn"_spr);
 		tNext->setPosition({90.f, 0.f});
 		typeMenu->addChild(tNext);
@@ -616,7 +661,7 @@ protected:
 			} else if (mode == 2) {
 				file::FilePickOptions opts;
 				opts.filters = { { "PNG images", { "*.png" } } };
-				geode::async::spawn(
+				async::spawn(
 					file::pick(file::PickMode::OpenFile, opts),
 					[this](Result<std::optional<std::filesystem::path>> result) {
 						if (result.isErr()) {
@@ -918,6 +963,51 @@ public:
 	}
 };
 
+class DialogTriggerPopup : public TriggerTemplatePopup {
+protected:
+	bool setup() override {
+		auto pagesBtn = CCMenuItemExt::createSpriteExtra(ButtonSprite::create("Edit Pages", "bigFont.fnt", "GJ_button_01.png", 0.6f), [this](CCMenuItem*) {
+				if (auto data = typeinfo_cast<CCNode*>(m_trigger->getUserObject("data"_spr))) {
+					if (auto p = DialogPagesPopup::create(data)) {
+						p->show();
+					}
+				}
+			}
+		);
+
+		pagesBtn->setID("edit-pages-btn"_spr);
+		pagesBtn->setPosition({0.f, 40.f});
+
+		m_buttonMenu->addChild(pagesBtn);
+
+		auto run = CCMenuItemExt::createSpriteExtra(
+			ButtonSprite::create("Run"),
+			[this](CCMenuItem*) {
+				m_trigger->triggerObject(GameManager::get()->m_gameLayer, 0, nullptr);
+			}
+		);
+
+		run->setID("run-btn"_spr);
+		run->setPosition({66.f, 0.f});
+
+		m_buttonMenu->addChild(run);
+
+		return true;
+	}
+
+public:
+	static DialogTriggerPopup* create(EffectGameObject* trigger, CCArray* objects = nullptr) {
+		auto ret = new DialogTriggerPopup();
+		if (ret && ret->init(trigger, objects)) {
+			ret->setTitle("Dialog Trigger");
+			ret->autorelease();
+			return ret;
+		}
+		CC_SAFE_DELETE(ret);
+		return nullptr;
+	}
+};
+
 #include <Geode/modify/DialogLayer.hpp>
 class $modify(DialogLayer) {
 	class Delegate : public DialogDelegate, public CCNode {
@@ -938,7 +1028,6 @@ class $modify(DialogLayer) {
 			if (m_game->m_uiLayer) {
 			m_game->m_uiLayer->setKeyboardEnabled(false);
 			m_game->m_uiLayer->setKeyboardEnabled(true);
-			m_game->m_uiLayer->setKeypadEnabled(false);
 			m_game->m_uiLayer->setKeypadEnabled(true);
 			}
 
@@ -1346,49 +1435,19 @@ class $modify(DialogLayer) {
 
 				if(dialog and hide) dialog->removeFromParent();
 
-			},
-			[](EditTriggersPopup* popup, EffectGameObject* trigger, CCArray* objects)
-			{
-				if (!popup) return;
-				if (!trigger) return;
-				if (!objects) return;
-				if (auto data = typeinfo_cast<CCNode*>(trigger->getUserObject("data"_spr))) {
-					if (auto title = popup->getChildByType<CCLabelBMFont*>(0)) {
-						title->setString("Dialog Trigger");
-						title->setAnchorPoint(CCPointMake(0.5f, 0.3f));
-					}
-					if (auto inf = popup->m_buttonMenu->getChildByType<InfoAlertButton*>(0)) {
-						inf->setVisible(false);
-					}
-
-					auto pagesBtn = CCMenuItemExt::createSpriteExtra(
-						ButtonSprite::create("Edit Pages", "bigFont.fnt", "GJ_button_01.png", 0.6f),
-						[data = Ref(data)](CCMenuItem*) {
-							if (auto p = DialogPagesPopup::create(data)) {
-								p->show();
-							}
-						}
-					);
-					pagesBtn->setID("edit-pages-btn"_spr);
-					pagesBtn->setPosition(CCPointMake(0.f, 40.f));
-					popup->m_buttonMenu->addChild(pagesBtn);
-
-					auto run = CCMenuItemExt::createSpriteExtra(
-						ButtonSprite::create("Run"),
-						[trigger = Ref(trigger)](CCMenuItem*) {
-							trigger->triggerObject(GameManager::get()->m_gameLayer, 0, nullptr);
-						}
-					);
-
-					run->setID("run-btn"_spr);
-					run->setPosition(CCPointMake(66.f, 0.f));
-
-					popup->m_buttonMenu->addChild(run);
-				}
 			}
+		)->onEditObject([](EditorUI* ui, GameObject* obj) -> bool {
+					auto trigger = typeinfo_cast<EffectGameObject*>(obj);
+					if (!trigger) return false;
+
+					if (auto p = DialogTriggerPopup::create(trigger)) {
+						p->show();
+					}
+
+					return true;
+				}
 		)->customSetup(
-			[](GameObject* object)
-			{
+			[](GameObject* object) {
 				if (!object) return object;
 				object->m_addToNodeContainer = true;
 				object->setUserObject("dialog-delegate", Delegate::create());
@@ -1413,8 +1472,7 @@ class $modify(DialogLayer) {
 				return gd::string(str.c_str());
 			}
 		)->objectFromVector(
-			[](GameObject* object, gd::vector<gd::string>& p0, gd::vector<void*>&, void*, bool)
-			{
+			[](GameObject* object, gd::vector<gd::string>& p0, gd::vector<void*>&, void*, bool) {
 				if (!object) return object;
 
 				auto data = typeinfo_cast<CCNode*>(object->getUserObject("data"_spr));

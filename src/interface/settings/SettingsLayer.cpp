@@ -13,7 +13,7 @@ SearchPopup* SearchPopup::create(SearchCB callback) {
 }
 
 bool SearchPopup::init(SearchCB callback) {
-    if (!Popup::init(210.f, 130.f))
+    if (!Popup::init(210.f, 130.f, "2209_square.png"_spr))
         return false;
 
     m_callback = callback;
@@ -303,7 +303,7 @@ CCMenuItemSpriteExtra* createCategoryBtn(std::string name, CCObject* target, Set
 }
 
 bool SettingsLayer::init() {
-    if (!Popup::init(500.f, 280.f)) return false;
+    if (!Popup::init(500.f, 280.f, "2209_square.png"_spr)) return false;
 
     this->setID("SettingsLayer"_spr);
     this->m_bgSprite->setID("background");
@@ -361,7 +361,7 @@ bool SettingsLayer::init() {
 
     auto keyLabel = CCLabelBMFont::create(
         "Keys",
-        "bigFont.fnt"
+        "goldFont.fnt"
     );
 
     keyLabel->limitLabelWidth(75.f, 0.7f, 0.1f);

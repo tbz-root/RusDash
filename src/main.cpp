@@ -20,11 +20,8 @@ class $modify(MyMenuLayer, MenuLayer) {
         req.bodyJSON(json);
         req.timeout(std::chrono::seconds(15));
 
-        std::string baseUrl = Mod::get()->getSettingValue<bool>("use-mirror") ? "https://www.rustps.online/database" : "https://rustps.online/database";
-        std::string url = baseUrl + "/getUpdates.php";
-
         s_themeTask.spawn(
-            req.post(url),
+            req.post("https://www.rustps.online/database/getUpdates.php"),
             [](web::WebResponse res) {
                 if (!res.ok()) {
                     log::warn("Update request failed: HTTP {}", res.code());
@@ -61,7 +58,7 @@ class $modify(MyMenuLayer, MenuLayer) {
                 Loader::get()->queueInMainThread([]() {
                     auto alert = FLAlertLayer::create(
                         "Update Required",
-                        "Please, update RusDash Geode Mod or delete it.",
+                        "Please, update RusDash Geode mod or delete it.",
                         "OK"
                     );
 
