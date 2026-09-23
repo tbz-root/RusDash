@@ -1,30 +1,70 @@
+#include "server.hpp"
+#include <Geode/Geode.hpp>
+#include <Geode/modify/CCHttpClient.hpp>
+#include <Geode/modify/CCApplication.hpp>
+#include <vector>
+#include <string>
+
 using namespace geode::prelude;
 
-#include "server.hpp"
-#include <Geode/modify/CCHttpClient.hpp>
+std::string m_www_url = "www.rustps.online/database/";
+std::string m_url = "rustps.online/database/////";
 
-std::string m_url;
-class $modify(CCHttpClient) {
-    void send(CCHttpRequest* req) {
+class $modify(MyHttpClient, cocos2d::extension::CCHttpClient) {
+    void send(cocos2d::extension::CCHttpRequest* req) {
+        if (!req) {
+            cocos2d::extension::CCHttpClient::send(req);
+            return;
+        }
+
         std::string url = req->getUrl();
 
-        url = string::replace(url, "www.boomlings.com/database/", m_url);
-        url = string::replace(url,"boomlings.com/database/", m_url);
-
+        size_t pos1 = url.find("www.boomlings.com/database/");
+        if (pos1 != std::string::npos) {
+            url.replace(pos1, 27, m_www_url);
+        } else {
+            size_t pos2 = url.find("boomlings.com/database/");
+            if (pos2 != std::string::npos) {
+                url.replace(pos2, 24, m_url);
+            }
+        }
         req->setUrl(url.c_str());
 
-        return CCHttpClient::send(req);
+        std::vector<std::string> headers = req->getHeaders();
+        for (auto it = headers.begin(); it != headers.end();) {
+            if (it->find("User-Agent:") == 0 || it->find("user-agent:") == 0 || it->find("User-agent:") == 0) {
+                it = headers.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
+        headers.push_back("User-Agent: RusDash-Global-Agent/1.0");
+        req->setHeaders(headers);
+
+        cocos2d::extension::CCHttpClient::send(req);
     }
 };
 
-#include <Geode/modify/CCApplication.hpp>
-class $modify(CCApplication) {
+class $modify(MyApplication, cocos2d::CCApplication) {
     void openURL(const char* psz) {
+        if (!psz) {
+            cocos2d::CCApplication::openURL(psz);
+            return;
+        }
+
         std::string url = psz;
 
-        url = string::replace(url, "www.boomlings.com/database/", m_url);
-        url = string::replace(url, "boomlings.com/database/", m_url);
+        size_t pos1 = url.find("www.boomlings.com/database/");
+        if (pos1 != std::string::npos) {
+            url.replace(pos1, 27, m_www_url);
+        } else {
+            size_t pos2 = url.find("boomlings.com/database/");
+            if (pos2 != std::string::npos) {
+                url.replace(pos2, 24, m_url);
+            }
+        }
 
-        return CCApplication::openURL(url.c_str());
+        cocos2d::CCApplication::openURL(url.c_str());
     }
 };

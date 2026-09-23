@@ -21,7 +21,10 @@ bool TriggerTemplatePopup::init(EffectGameObject* trigger, CCArray* triggers) {
     auto bg = m_mainLayer->getChildByType<CCScale9Sprite>(0);
 
     bg->setContentSize({ m_popupWidth, m_popupHeight });
-    bg->setTexture("GJ_square01.png");
+    auto frame = cocos2d::CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("GJ_square01.png");
+    if (frame) {
+        bg->setSpriteFrame(frame);
+    }
 
     m_title = CCLabelBMFont::create(m_titleText.c_str(), "goldFont.fnt");
     m_title->setID("title");
