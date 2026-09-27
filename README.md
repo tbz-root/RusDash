@@ -1,6 +1,6 @@
 # <img src="logo.png" width="32" valign="middle"> RusDash
 
-All In One GDPS Mod!
+Geode based GDPS project!
 
 ## <img src="feature_icon.png" width="20" valign="middle"> Features
 - First Mod For Only One GDPS!
