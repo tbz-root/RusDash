@@ -36,43 +36,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python (Windows)
-        if: runner.os == 'Windows'
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Setup Python (Ubuntu host tools)
-        if: runner.os == 'Linux'
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      # Android: build embedded CPython for the matching ABI before Geode build
-      - name: Install Android NDK (Linux)
-        if: matrix.config.target == 'Android32' || matrix.config.target == 'Android64'
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r27c
-          link-to-sdk: true
-
-      - name: Build embedded CPython for Android
-        if: matrix.config.target == 'Android32' || matrix.config.target == 'Android64'
-        env:
-          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
-          PYTHON_VERSION: "3.12.9"
-          ANDROID_API: "24"
-        run: |
-          set -e
-          if [ "${{ matrix.config.target }}" = "Android32" ]; then
-            export ANDROID_ABI=armeabi-v7a
-          else
-            export ANDROID_ABI=arm64-v8a
-          fi
-          chmod +x scripts/build_python_android.sh
-          ./scripts/build_python_android.sh
-
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:
