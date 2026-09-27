@@ -1,3 +1,4 @@
+#include "selectMenu.hpp"
 #include <matjson.hpp>
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
@@ -204,7 +205,7 @@ void downloadLatestVersion(std::string const& downloadUrl) {
 #include <Geode/modify/MenuLayer.hpp>
 class $modify(MyMenuLayer, MenuLayer) {
     bool init() {
-        std::string modVersion = "v1.0.3"; 
+        std::string modVersion = "v1.0.4"; 
         matjson::Value json = matjson::makeObject({{"modVersion", modVersion}});
 
         auto req = web::WebRequest();
@@ -212,8 +213,10 @@ class $modify(MyMenuLayer, MenuLayer) {
         req.bodyJSON(json);
         req.timeout(std::chrono::seconds(15));
 
+        std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getUpdates.php" : "https://www.rustps.online/database/getUpdates.php";
+
         s_updateCheckTask.spawn(
-            req.post("https://rustps.online/database/getUpdates.php"),
+            req.post(url),
             [](web::WebResponse res) {
                 if (!res.ok()) return;
 
@@ -262,8 +265,15 @@ class $modify(MyMenuLayer, MenuLayer) {
     }
 
     void onOpenSettings(CCObject *) {
+        int myAccountID = GJAccountManager::sharedState()->m_accountID;
+        if (myAccountID > 0) {
+        if (auto popup = ThemePopup::create()) {
+            popup->show();
+        }
+    } else {
         openSettingsPopup(Mod::get());
     }
+}
 };
 
 $on_mod(Loaded) {

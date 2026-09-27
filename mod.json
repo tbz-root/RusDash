@@ -29,17 +29,11 @@
 		}
 	},
 	"settings": {
-		"profile-theme": {
-			"name": "Profile Theme",
-			"description": "Choose appearance of your profile main card.",
-			"type": "string",
-			"default": "default"
-		},
-		"script-triggers-enabled": {
-			"name": "Enable Script Triggers",
-			"description": "When disabled, Script Trigger and Conditional Script Trigger can still be viewed and edited, but their code will not execute in-game.",
+		"enable-mirror": {
+			"name": "Use Mirror",
+			"description": "When enabled, all requests is going to rustps.online, when disabled, they will be redirected through the www.rustps.online!",
 			"type": "bool",
-			"default": true
+			"default": false
 		}
 	},
 	"resources": {

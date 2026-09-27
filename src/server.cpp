@@ -21,11 +21,10 @@ class $modify(MyHttpClient, cocos2d::extension::CCHttpClient) {
 
         size_t pos1 = url.find("www.boomlings.com/database/");
         if (pos1 != std::string::npos) {
-            url.replace(pos1, 27, m_www_url);
-        } else {
-            size_t pos2 = url.find("boomlings.com/database/");
-            if (pos2 != std::string::npos) {
-                url.replace(pos2, 24, m_url);
+            if(Mod::get()->getSettingValue<bool>("enable-mirror")) {
+                url.replace(pos1, 27, m_url);
+            } else {
+                url.replace(pos1, 27, m_www_url);
             }
         }
         req->setUrl(url.c_str());
@@ -57,11 +56,10 @@ class $modify(MyApplication, cocos2d::CCApplication) {
 
         size_t pos1 = url.find("www.boomlings.com/database/");
         if (pos1 != std::string::npos) {
-            url.replace(pos1, 27, m_www_url);
-        } else {
-            size_t pos2 = url.find("boomlings.com/database/");
-            if (pos2 != std::string::npos) {
-                url.replace(pos2, 24, m_url);
+            if(Mod::get()->getSettingValue<bool>("enable-mirror")) {
+                url.replace(pos1, 27, m_url);
+            } else {
+                url.replace(pos1, 27, m_www_url);
             }
         }
 

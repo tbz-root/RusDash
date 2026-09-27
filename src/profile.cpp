@@ -35,8 +35,10 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
     req.bodyJSON(json);
     req.timeout(std::chrono::seconds(15));
 
+    auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/main.php" : "https://www.rustps.online/database/main.php";
+
     s_globalTasks[accountID].spawn(
-        req.post("https://www.rustps.online/database/main.php"),
+        req.post(url),
         [accountID, onComplete](web::WebResponse res)
         {
             s_pendingRequests.erase(accountID);
@@ -73,52 +75,6 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
 
             s_userBadgesCache[accountID] = userBadges;
             onComplete();
-        });
-}
-
-void verifyAndApplyTheme(int accountID, std::string themeID)
-{
-    if (themeID.empty() || themeID == "default")
-    {
-        return;
-    }
-
-    auto json = matjson::makeObject({{"accountID", accountID},
-                                     {"themeID", themeID}});
-
-    auto req = web::WebRequest();
-    req.header("Content-Type", "application/json");
-    req.bodyJSON(json);
-    req.timeout(std::chrono::seconds(15));
-
-    s_themeTask.spawn(
-        req.post("https://www.rustps.online/database/canUseTheme.php"),
-        [themeID](web::WebResponse res)
-        {
-            if (!res.ok())
-            {
-                FLAlertLayer::create("Error", "Failed to connect to the server to verify theme.", "OK")->show();
-                Mod::get()->setSettingValue<std::string>("profile-theme", "default");
-                return;
-            }
-
-            std::string responseStr = res.string().unwrapOr("");
-            while (!responseStr.empty() && (responseStr.back() == '\n' || responseStr.back() == '\r' || responseStr.back() == ' '))
-            {
-                responseStr.pop_back();
-            }
-
-            bool canUse = (responseStr == "true" || responseStr == "1");
-
-            if (!canUse)
-            {
-                FLAlertLayer::create("Access Denied", "You cannot use this profile theme because you do not have the required badge!", "OK")->show();
-                Mod::get()->setSettingValue<std::string>("profile-theme", "default");
-            }
-            else
-            {
-                FLAlertLayer::create("Success", "Profile theme applied successfully!", "OK")->show();
-            }
         });
 }
 
@@ -188,17 +144,17 @@ class $modify(MyProfilePage, ProfilePage) {
             applyThemeToProfile(s_userThemeCache[accountID]);
             return;
         }
-        std::string themeID = Mod::get()->getSettingValue<std::string>("profile-theme");
 
-        auto json = matjson::makeObject({{"accountID", accountID}, {"themeID", themeID}});
+        auto json = matjson::makeObject({{"accountID", accountID}});
 
         auto req = web::WebRequest();
         req.header("Content-Type", "application/json");
         req.bodyJSON(json);
         req.timeout(std::chrono::seconds(15));
 
+        auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getProfileTheme.php" : "https://www.rustps.online/database/getProfileTheme.php";
         m_fields->profileThemeTask.spawn(
-            req.post("https://www.rustps.online/database/getProfileTheme.php"),
+            req.post(url),
             [this, accountID](web::WebResponse res)
             {
                 std::string themeID = "default";
@@ -262,7 +218,7 @@ class $modify(MyProfilePage, ProfilePage) {
             {
                 if (auto button = dynamic_cast<CCMenuItemSpriteExtra *>(child))
                 {
-                    if (menuName == "main" && button->getID() == "copy-username-button" || button->getID() == "follow-button")
+                    if (menuName == "main" && button->getID() == "copy-username-button" || button->getID() == "follow-button" || button->getID() == "info-button")
                         continue;
 
                     std::string frameName = themeID + "_" + button->getID() + ".png";
@@ -421,11 +377,4 @@ $execute
         "tt01"_spr, "TickToker Badge", "The badge for the RusDash ticktoker. Must have > 1000 subscribers on tiktok and invite > 50 players by your videos!",
         [](const Badge &badge)
         { handleBadgeCheck(badge, "tt01", "tt01_badge.png"_spr); });
-
-    listenForSettingChanges<std::string>("profile-theme", [](std::string value)
-                                         {
-        auto gm = GJAccountManager::sharedState();
-        if (gm && gm->m_accountID != 0) {
-            verifyAndApplyTheme(gm->m_accountID, value);
-        } });
 }
