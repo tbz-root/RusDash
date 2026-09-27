@@ -29,9 +29,10 @@ class $modify(MyHttpClient, cocos2d::extension::CCHttpClient) {
         }
         req->setUrl(url.c_str());
 
-        std::vector<std::string> headers = req->getHeaders();
+        gd::vector<gd::string> headers = req->getHeaders();
         for (auto it = headers.begin(); it != headers.end();) {
-            if (it->find("User-Agent:") == 0 || it->find("user-agent:") == 0 || it->find("User-agent:") == 0) {
+            std::string headerStr = std::string(*it);
+            if (headerStr.find("User-Agent:") == 0 || headerStr.find("user-agent:") == 0 || headerStr.find("User-agent:") == 0) {
                 it = headers.erase(it);
             } else {
                 ++it;
