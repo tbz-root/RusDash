@@ -4,7 +4,7 @@
 
        this->setContentSize({ width, 54.0f });
 
-       auto background = CCScale9Sprite::create("square02b_001.png");
+       auto background = NineSlice::create("square02b_001.png");
        background->setContentSize({ width, 27.0f });
        background->setColor({ 0, 0, 0 });
        background->setOpacity(100);

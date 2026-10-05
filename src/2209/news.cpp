@@ -84,7 +84,7 @@ protected:
 
                 float itemHeight = textHeight + 40.f;
 
-                auto itemBg = CCScale9Sprite::create("square02b_001.png", {0, 0, 80, 80});
+                auto itemBg = NineSlice::create("square02b_001.png", {0, 0, 80, 80});
 
                 if (itemBg) {
                     itemBg->setContentSize({350.f, itemHeight});
@@ -117,7 +117,7 @@ protected:
 
                 auto clipper = CCClippingNode::create();
                 auto stencil = CCNode::create();
-                auto maskBg =CCScale9Sprite::create("square02b_001.png", {0, 0, 80, 80});
+                auto maskBg = NineSlice::create("square02b_001.png", {0, 0, 80, 80});
 
                 maskBg->setContentSize({340.f, textHeight});
                 maskBg->setPosition({180.f, textHeight / 2.f});

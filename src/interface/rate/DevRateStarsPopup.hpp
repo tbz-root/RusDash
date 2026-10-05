@@ -2,7 +2,7 @@
 
 using namespace geode::prelude;
 
-class DevRateStarsPopup : public geode::Popup {
+class DevRateStarsPopup : public Popup {
 protected:
     enum class FeatureState {
         None = 0,
@@ -12,8 +12,8 @@ protected:
         Mythic = 4
     };
     
-    static constexpr GLubyte DISABLED_OPACITY = 127; // 50%
-    static constexpr GLubyte ENABLED_OPACITY = 255; // 100%
+    static constexpr GLubyte DISABLED_OPACITY = 127;
+    static constexpr GLubyte ENABLED_OPACITY = 255;
 
     int m_levelId = 0;
     CCMenuItemSpriteExtra *m_featureButton = nullptr;

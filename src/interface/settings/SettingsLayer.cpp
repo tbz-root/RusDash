@@ -312,7 +312,7 @@ bool SettingsLayer::init() {
     this->m_closeBtn->setID("close-button");
     m_noElasticity = true;
 
-    auto bg = CCScale9Sprite::create("square02b_001.png");
+    auto bg = NineSlice::create("square02b_001.png");
 
     bg->setID("tab-background");
     bg->setContentSize({100.f, 245.f});

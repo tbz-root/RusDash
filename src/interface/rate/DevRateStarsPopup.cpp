@@ -22,9 +22,6 @@ bool DevRateStarsPopup::init(int levelId) {
 
     this->setID("dev-rate-stars-popup"_spr);
 
-    /*
-        FEATURE BUTTON LOGIC
-    */
     m_featureButton = CCMenuItemSpriteExtra::create(
         CCSprite::createWithSpriteFrameName("GJ_featuredCoin_001.png"),
         this,
@@ -34,9 +31,6 @@ bool DevRateStarsPopup::init(int levelId) {
     m_featureButton->setID("feature-button"_spr);
     m_buttonMenu->addChildAtPosition(m_featureButton, Anchor::TopRight, { -10.f, -10.f });
 
-    /*
-        COINS BUTTON LOGIC
-    */
     auto *coinsSprite = CCSprite::createWithSpriteFrameName("secretCoinUI2_001.png");
     coinsSprite->setScale(44.f / 53.75f);
 
@@ -49,9 +43,6 @@ bool DevRateStarsPopup::init(int levelId) {
     m_coinsButton->setID("coins-button"_spr);
     m_buttonMenu->addChildAtPosition(m_coinsButton, Anchor::BottomRight, { -10.f, 10.f });
 
-    /*
-        LOWER STARS BUTTON LOGIC
-    */
     auto *decreaseStarsButton = CCMenuItemSpriteExtra::create(
         CCSprite::createWithSpriteFrameName("GJ_arrow_02_001.png"),
         this,
@@ -61,16 +52,10 @@ bool DevRateStarsPopup::init(int levelId) {
     decreaseStarsButton->setID("decrease-stars-button"_spr);
     m_buttonMenu->addChildAtPosition(decreaseStarsButton, Anchor::Left, { 85.f, 0.f });
 
-    /*
-        STARS LABEL LOGIC
-    */
     m_starsLabel = CCLabelBMFont::create("0", "bigFont.fnt");
     m_starsLabel->setID("stars-label"_spr);
     m_buttonMenu->addChildAtPosition(m_starsLabel, Anchor::Left, { 130.f, 0.f });
 
-    /*
-        INCREASE STARS BUTTON LOGIC
-    */
     auto *increaseStarsButton = CCMenuItemSpriteExtra::create(
         CCSprite::createWithSpriteFrameName("GJ_arrow_02_001.png"),
         this,
@@ -80,17 +65,11 @@ bool DevRateStarsPopup::init(int levelId) {
     increaseStarsButton->setID("increase-stars-button"_spr);
     m_buttonMenu->addChildAtPosition(increaseStarsButton, Anchor::Left, { 175.f, 0.f });
 
-    /*
-        DIFFICULTY FACE LOGIC
-    */
     m_difficultyFace = CCSprite::createWithSpriteFrameName("difficulty_00_btn_001.png");
     m_difficultyFace->setScale(1.25f);
     m_difficultyFace->setID("difficulty-face"_spr);
     m_buttonMenu->addChildAtPosition(m_difficultyFace, Anchor::Right, { -85.f, 0.f });
 
-    /*
-        DAILY BUTTON LOGIC
-    */
     if (!Mod::get()->getSettingValue<bool>("disable-daily-button")) {
         auto *dailySprite = ButtonSprite::create(
             "Set\nDaily", 50, true, "goldFont.fnt", "GJ_button_01.png", 40.f, 1.0f
@@ -106,9 +85,6 @@ bool DevRateStarsPopup::init(int levelId) {
         m_buttonMenu->addChildAtPosition(dailyButton, Anchor::Left, { 30.f, 15.f });
     }
 
-    /*
-        WEEKLY BUTTON LOGIC
-    */
     if (!Mod::get()->getSettingValue<bool>("disable-weekly-button")) {
         auto *weeklySprite = ButtonSprite::create(
             "Set\nWeek", 50, true, "goldFont.fnt", "GJ_button_01.png", 40.f, 1.0f
@@ -124,9 +100,6 @@ bool DevRateStarsPopup::init(int levelId) {
         m_buttonMenu->addChildAtPosition(weeklyButton, Anchor::Left, { 30.f, -15.f });
     }
 
-    /*
-        SEND ONLY BUTTON LOGIC
-    */
     if (!Mod::get()->getSettingValue<bool>("disable-send-only-button")) {
         auto *sendOnlySprite = ButtonSprite::create(
             "Send\nOnly", 50, true, "goldFont.fnt", "GJ_button_01.png", 40.f, 1.0f
@@ -142,9 +115,6 @@ bool DevRateStarsPopup::init(int levelId) {
         m_buttonMenu->addChildAtPosition(sendOnlyButton, Anchor::Right, { -30.f, -30.f });
     }
 
-    /*
-        CANCEL BUTTON LOGIC
-    */
     auto *cancelButton = CCMenuItemSpriteExtra::create(
         ButtonSprite::create("Cancel", "goldFont.fnt", "GJ_button_01.png"),
         this,
@@ -153,9 +123,6 @@ bool DevRateStarsPopup::init(int levelId) {
     cancelButton->setID("cancel-button"_spr);
     m_buttonMenu->addChildAtPosition(cancelButton, Anchor::Bottom, { -60.f, 25.f });
     
-    /*
-        SUBMIT BUTTON LOGIC
-    */
     auto *submitButton = CCMenuItemSpriteExtra::create(
         ButtonSprite::create("Submit", "goldFont.fnt", "GJ_button_01.png"),
         this,
@@ -278,17 +245,17 @@ void DevRateStarsPopup::updateDifficultyVisuals(int stars) {
     auto *spriteCache = CCSpriteFrameCache::sharedSpriteFrameCache();
 
     static constexpr std::array difficultyFrames {
-        "difficulty_00_btn_001.png", // N/A
-        "difficulty_auto_btn_001.png", // Auto
-        "difficulty_01_btn_001.png", // Easy
-        "difficulty_02_btn_001.png", // Normal
-        "difficulty_03_btn_001.png", // Hard
-        "difficulty_03_btn_001.png", // Hard
-        "difficulty_04_btn_001.png", // Harder
-        "difficulty_04_btn_001.png", // Harder
-        "difficulty_05_btn_001.png", // Insane
-        "difficulty_05_btn_001.png", // Insane
-        "difficulty_06_btn_001.png" // Demon
+        "difficulty_00_btn_001.png",
+        "difficulty_auto_btn_001.png",
+        "difficulty_01_btn_001.png",
+        "difficulty_02_btn_001.png",
+        "difficulty_03_btn_001.png",
+        "difficulty_03_btn_001.png",
+        "difficulty_04_btn_001.png",
+        "difficulty_04_btn_001.png",
+        "difficulty_05_btn_001.png",
+        "difficulty_05_btn_001.png",
+        "difficulty_06_btn_001.png"
     };
 
     auto frame = (stars >= 0 && stars < difficultyFrames.size())

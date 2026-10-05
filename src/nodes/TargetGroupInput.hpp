@@ -10,7 +10,7 @@ protected:
     CCMenuItemSpriteExtra* m_leftBtn = nullptr;
     CCMenuItemSpriteExtra* m_rightBtn = nullptr;
     CCLabelBMFont* m_label = nullptr;
-    CCScale9Sprite* m_bg = nullptr;
+    NineSlice* m_bg = nullptr;
 
     bool init() override;
 

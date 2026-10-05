@@ -12,7 +12,7 @@ bool TargetGroupInput::init() {
 
     this->addChild(m_label);
 
-    m_bg = CCScale9Sprite::create("square02_small.png");
+    m_bg = NineSlice::create("square02_small.png");
 
     m_bg->setContentSize({ 48.f, 32.f });
     m_bg->setPosition({this->getContentSize().width / 2.f, 16.f});

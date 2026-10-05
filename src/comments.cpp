@@ -1,9 +1,7 @@
-#include <Geode/Geode.hpp>
-#include <Geode/modify/CommentCell.hpp>
-
 using namespace geode::prelude;
 
-class $modify(MyCommentCell, CommentCell) {
+#include <Geode/modify/CommentCell.hpp>
+class $modify(CommentCell) {
     void loadFromComment(GJComment* comment) {
         CommentCell::loadFromComment(comment);
 
@@ -23,7 +21,7 @@ class $modify(MyCommentCell, CommentCell) {
             if (originalBg) {
                 originalBg->setVisible(false);
 
-                auto customBg = CCScale9Sprite::createWithSpriteFrameName("test.png"_spr);
+                auto customBg = NineSlice::createWithSpriteFrameName("test.png"_spr);
                 if (customBg) {
                     customBg->setContentSize(originalBg->getContentSize());
                     customBg->setPosition(originalBg->getPosition());

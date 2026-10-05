@@ -3,10 +3,6 @@
 
 using namespace geode::prelude;
 
-// Force RusDash onto page 1 ABOVE Geode.
-// Uses pin weight (+4) only for sorting, button is hidden & disabled.
-// Visual order is forced to index 0 so we appear above Geode (+5).
-
 static void forceToTop(CCNode* item) {
     if (!item) return;
 
@@ -48,8 +44,6 @@ static void hideListToggles(CCNode* item) {
 }
 
 $on_mod(Loaded) {
-    // Pin is used ONLY so Geode's sorter puts us on page 1 (weight +4).
-    // The pin button itself is hidden — user cannot toggle it from the list.
     if (auto* self = Mod::get()) {
         self->setPinned(true);
     }
@@ -57,12 +51,10 @@ $on_mod(Loaded) {
     ModItemUIEvent().listen([](CCNode* item, std::string_view modID, std::optional<Mod*>) {
         if (!item) return ListenerResult::Propagate;
 
-        // Only our mod
         if (modID != Mod::get()->getID()) {
             return ListenerResult::Propagate;
         }
 
-        // Keep pin forced on (in case something unpinned us)
         if (auto* self = Mod::get()) {
             if (!self->isPinned()) {
                 self->setPinned(true);
@@ -71,7 +63,6 @@ $on_mod(Loaded) {
 
         hideListToggles(item);
 
-        // After the list finishes layout this frame → put us at index 0 (above Geode)
         queueInMainThread([item = Ref(item)] {
             forceToTop(item.data());
         });
