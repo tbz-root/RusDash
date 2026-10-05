@@ -1,0 +1,70 @@
+name: 💡 Предложение фичи (Идея)
+description: Предложить новую функцию или улучшение мода для RusDash.
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Отличная идея! Спасибо, что хотите сделать **RusDash** лучше.  
+        Чем подробнее вы опишете предложение, тем выше шанс, что оно будет реализовано.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: 🚀 Ваша идея / Улучшение
+      description: Кратко и понятно опишите, какую фичу вы хотите видеть в моде.
+      placeholder: Я хочу, чтобы добавили новый триггер ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: ❓ Какую проблему это решает?
+      description: |
+        Почему эта фича важна для игроков нашего приватного сервера?  
+        Как она сделает мод удобнее / интереснее / полезнее?
+      placeholder: Сейчас игрокам приходится... Это неудобно, потому что...
+    validations:
+      required: false
+
+  - type: textarea
+    id: appearance
+    attributes:
+      label: 🎨 Как это должно выглядеть?
+      description: |
+        Опишите интерфейс, новые кнопки, логику работы или поведение.  
+        Можно приложить наброски / скриншоты (после создания issue).
+      placeholder: |
+        - Новая кнопка в меню настроек
+        - При нажатии открывается...
+        - Данные сохраняются в...
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Альтернативы / существующие решения
+      description: Рассматривали ли вы другие способы решить эту задачу? Есть ли похожие функции в других модах?
+      placeholder: Можно было бы сделать через... но это хуже, потому что...
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 📌 Дополнительно
+      description: Любая другая информация, контекст, ссылки или примеры из других игр/модов.
+      placeholder: Ссылки, референсы, дополнительные мысли...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Перед отправкой
+      options:
+        - label: Я поискал такие же предложения и не нашёл их
+          required: true

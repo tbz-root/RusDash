@@ -472,4 +472,3 @@ char id=97 x=106 y=82 width=17 height=23 xoffset=1 yoffset=18 xadvance=20 page=0
 char id=98 x=125 y=82 width=19 height=33 xoffset=3 yoffset=8 xadvance=23 page=0 chnl=0
 char id=99 x=362 y=83 width=16 height=23 xoffset=2 yoffset=18 xadvance=18 page=0 chnl=0
 kernings count=0
-

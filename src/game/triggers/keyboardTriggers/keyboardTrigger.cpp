@@ -7,7 +7,7 @@
 
 using namespace GameObjectsFactory;
 
-class KeyboardTriggerPopup : public geode::Popup {
+class KeyboardTriggerPopup : public Popup {
 public:
     EffectGameObject* m_trigger = nullptr;
     Ref<CCLabelBMFont> m_keyLabel;

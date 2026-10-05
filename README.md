@@ -1,9 +1,10 @@
 # <img src="logo.png" width="32" valign="middle"> RusDash
+[🇺🇸 English](README.md) (Active) | [🇷🇺 Русская версия](README-RU.md)
 
 Geode based GDPS project!
 
 ## <img src="feature_icon.png" width="20" valign="middle"> Features
-- First Mod For Only One GDPS!
+- First Mod for Only One GDPS!
 - Switch To The RusDash Endpoints Automaticly!
 - Replacement Of The Main Levels!
 - Custom Badges!

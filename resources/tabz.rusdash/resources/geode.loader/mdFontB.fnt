@@ -355,4 +355,3 @@ char id=97 x=209 y=75 width=10 height=12 xoffset=0 yoffset=9 xadvance=11 page=0 
 char id=98 x=193 y=76 width=11 height=17 xoffset=1 yoffset=4 xadvance=12 page=0 chnl=0
 char id=99 x=143 y=76 width=10 height=12 xoffset=0 yoffset=9 xadvance=10 page=0 chnl=0
 kernings count=0
-

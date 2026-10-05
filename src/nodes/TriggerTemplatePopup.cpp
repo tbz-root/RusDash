@@ -1,5 +1,4 @@
 #include "TriggerTemplatePopup.hpp"
-
 TriggerTemplatePopup* TriggerTemplatePopup::create(EffectGameObject* trigger, CCArray* triggers) {
     auto ret = new TriggerTemplatePopup();
     if (ret && ret->init(trigger, triggers)) {
@@ -180,6 +179,7 @@ void TriggerTemplatePopup::onTouchToggle(CCObject*) {
             m_spawnToggle->toggle(false);
         }
     }
+    
     this->updateMultiVisibility();
 }
 
@@ -189,6 +189,7 @@ void TriggerTemplatePopup::onSpawnToggle(CCObject*) {
             m_touchToggle->toggle(false);
         }
     }
+
     this->updateMultiVisibility();
 }
 
@@ -201,11 +202,13 @@ void TriggerTemplatePopup::onOk(CCObject* sender) {
 
 void TriggerTemplatePopup::determineStartValues() {
     SetupTriggerPopup::determineStartValues();
+
     this->loadTriggerValues();
     this->updateMultiVisibility();
 }
 
 void TriggerTemplatePopup::onClose(CCObject* sender) {
     this->applyTriggerValues();
+
     SetupTriggerPopup::onClose(sender);
 }

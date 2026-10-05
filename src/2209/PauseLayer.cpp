@@ -3,19 +3,24 @@ using namespace geode::prelude;
 #include <Geode/modify/PauseLayer.hpp>
 class $modify(MyPauseLayer, PauseLayer) {
     struct Fields {
-        CCMenuItemSpriteExtra* m_hidePauseBtn = nullptr;
+        CCMenuItemToggler* m_hidePauseBtn = nullptr;
         bool m_hidden = false;
     };
 
     void customSetup() {
         PauseLayer::customSetup();
 
-        auto hidePauseSpr = CCSprite::createWithSpriteFrameName("hidePauseBtn_001.png"_spr);
+        auto offSpr = CCSprite::createWithSpriteFrameName("hidePauseBtn_001.png"_spr);
 
-        hidePauseSpr->setScale(0.55f);
+        offSpr->setScale(0.55f);
 
-        m_fields->m_hidePauseBtn = CCMenuItemSpriteExtra::create(
-            hidePauseSpr,
+        auto onSpr = CCSprite::createWithSpriteFrameName("hidePauseBtn_002.png"_spr);
+
+        onSpr->setScale(0.55f);
+
+        m_fields->m_hidePauseBtn = CCMenuItemToggler::create(
+            offSpr,
+            onSpr,
             this,
             menu_selector(MyPauseLayer::onHidePauseBtn)
         );
@@ -27,7 +32,7 @@ class $modify(MyPauseLayer, PauseLayer) {
 
         auto questsSpr = CCSprite::createWithSpriteFrameName("quickQuestsBtn_001.png"_spr);
 
-        questsSpr->setScale(0.55f);
+        questsSpr->setScale(0.65f);
 
         auto questsBtn = CCMenuItemSpriteExtra::create(
             questsSpr,
@@ -38,13 +43,31 @@ class $modify(MyPauseLayer, PauseLayer) {
         questsBtn->setID("quests-button");
 
         this->getChildByID("left-button-menu")->addChild(questsBtn);
+
+        auto level = PlayLayer::get()->m_level;
+        if (level && level->m_levelType != GJLevelType::Main) {
+            auto chatSpr = CCSprite::createWithSpriteFrameName("GJ_chatBtn_001.png");
+
+            chatSpr->setScale(0.65f);
+
+            auto chatBtn = CCMenuItemSpriteExtra::create(
+                chatSpr,
+                this,
+                menu_selector(MyPauseLayer::onCommentsBtn)
+            );
+
+            chatBtn->setID("comments-button");
+            
+            this->getChildByID("left-button-menu")->addChild(chatBtn);
+        }
+
         this->getChildByID("left-button-menu")->updateLayout();
     }
 
     void onHidePauseBtn(CCObject*) {
         auto rightButtonMenu = this->getChildByID("right-button-menu");
 
-        m_fields->m_hidden = !m_fields->m_hidden;
+        m_fields->m_hidden = !m_fields->m_hidePauseBtn->isToggled();
 
         auto children = this->getChildren();
 
@@ -66,9 +89,15 @@ class $modify(MyPauseLayer, PauseLayer) {
 
         rightButtonMenu->setVisible(true);
         m_fields->m_hidePauseBtn->setVisible(true);
+
+        this->setOpacity(m_fields->m_hidden ? 0 : 75);
     }
 
     void onQuestsBtn(CCObject*) {
         ChallengesPage::create()->show();
+    }
+
+    void onCommentsBtn(CCObject*) {
+        InfoLayer::create(PlayLayer::get()->m_level, nullptr, nullptr)->show();
     }
 };
