@@ -9,7 +9,7 @@
 	"name": "\u200BRusDash",
 	"version": "v1.0.5",
 	"developers": ["Tabz", "CMDs"],
-	"trailer": true,
+	"trailer": false,
 	"description": "Geode modding GDPS project",
 	"dependencies": {
 		"geode.node-ids": ">=v1.23.3",

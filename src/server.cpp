@@ -10,7 +10,7 @@ using namespace geode::prelude;
 std::string m_www_url = "www.rustps.online/database/";
 std::string m_url = "rustps.online/database/////";
 
-class $modify(MyHttpClient, CCHttpClient) {
+class $modify(CCHttpClient) {
     void send(CCHttpRequest* req) {
         if (!req) {
             CCHttpClient::send(req);
@@ -47,7 +47,7 @@ class $modify(MyHttpClient, CCHttpClient) {
     }
 };
 
-class $modify(MyApplication, CCApplication) {
+class $modify(CCApplication) {
     void openURL(const char* psz) {
         if (!psz) {
             CCApplication::openURL(psz);

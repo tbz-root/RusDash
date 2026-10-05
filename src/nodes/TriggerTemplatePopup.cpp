@@ -17,18 +17,20 @@ bool TriggerTemplatePopup::init(EffectGameObject* trigger, CCArray* triggers) {
         return false;
     }
 
-    auto bg = m_mainLayer->getChildByType<CCScale9Sprite>(0);
+    m_mainLayer->getChildByType<CCScale9Sprite>(0)->removeFromParentAndCleanup(true);
 
-    bg->setContentSize({ m_popupWidth, m_popupHeight });
-    auto frame = cocos2d::CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("GJ_square01.png");
-    if (frame) {
-        bg->setSpriteFrame(frame);
-    }
+    auto bg = NineSlice::create("GJ_square01.png");
+
+    bg->setContentSize({440.f, 310.f});
+    bg->setPosition({m_popupWidth / 2.f, m_popupHeight / 2.f});
+    bg->setID("background");
+
+    m_mainLayer->addChild(bg, -2);
 
     m_title = CCLabelBMFont::create(m_titleText.c_str(), "goldFont.fnt");
     m_title->setID("title");
     m_title->setScale(0.7f);
-    m_title->setPosition({ m_popupWidth / 2.f, m_popupHeight - 25.f });
+    m_title->setPosition({m_popupWidth / 2.f, m_popupHeight - 25.f});
     m_mainLayer->addChild(m_title);
 
     auto okSpr = ButtonSprite::create("OK", "goldFont.fnt", "GJ_button_01.png", 0.8f);

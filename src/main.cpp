@@ -50,7 +50,7 @@ static CCLabelBMFont* s_titleLabel = nullptr;
 class ExitTrigger : public CCObject {
 public:
     void onExit(CCObject*) {
-        geode::utils::game::restart(true);
+        utils::game::restart(true);
     }
 };
 static ExitTrigger s_exitTrigger;
@@ -63,7 +63,7 @@ void showRestartPopup() {
     s_progressPopup = ProgressPopupLayer::create();
     s_progressPopup->setID("rusdash-restart-layer"_spr);
 
-    auto bg = CCScale9Sprite::create("GJ_square01.png");
+    auto bg = NineSlice::create("GJ_square01.png");
     bg->setContentSize({ 280.0f, 140.0f });
     bg->setPosition(winSize / 2);
     s_progressPopup->addChild(bg);
@@ -104,7 +104,7 @@ void createProgressPopup() {
     s_progressPopup = ProgressPopupLayer::create();
     s_progressPopup->setID("rusdash-progress-layer"_spr);
 
-    auto bg = CCScale9Sprite::create("GJ_square01.png");
+    auto bg = NineSlice::create("GJ_square01.png");
     bg->setContentSize({ 280.0f, 140.0f });
     bg->setPosition(winSize / 2);
     s_progressPopup->addChild(bg);
@@ -123,7 +123,7 @@ void createProgressPopup() {
 }
 
 void downloadLatestVersion(std::string const& downloadUrl) {
-    auto modsDir = geode::dirs::getModsDir();
+    auto modsDir = dirs::getModsDir();
     auto newModPath = modsDir / (Mod::get()->getID() + ".geode.new");
 
     Loader::get()->queueInMainThread([]() {
@@ -170,7 +170,7 @@ void downloadLatestVersion(std::string const& downloadUrl) {
                 file.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
                 file.close();
                 log::info("New version staged as .geode.new!");
-                auto unzippedDir = geode::dirs::getGeodeDir() / "unzipped" / Mod::get()->getID();
+                auto unzippedDir = dirs::getGeodeDir() / "unzipped" / Mod::get()->getID();
                 auto cachedManifest = unzippedDir / "mod.json";
                 if (std::filesystem::exists(cachedManifest)) {
                     try {
@@ -241,7 +241,7 @@ class $modify(MyMenuLayer, MenuLayer) {
         if (!MenuLayer::init()) return false;
         
         auto winSize = CCDirector::sharedDirector()->getWinSize();
-        auto holyShit = CCMenuItemSpriteExtra::create(
+        auto themesButton = CCMenuItemSpriteExtra::create(
             CircleButtonSprite::createWithSpriteFrameName("tabsek.png"_spr, 0.85f, CircleBaseColor::Blue, CircleBaseSize::MediumAlt),
             this,
             menu_selector(MyMenuLayer::onOpenSettings)
@@ -249,8 +249,8 @@ class $modify(MyMenuLayer, MenuLayer) {
 
         auto menu = this->getChildByID("bottom-menu");
         if (menu) {
-            menu->addChild(holyShit);
-            holyShit->setID("rusdash-holy-shit-btn"_spr);
+            menu->addChild(themesButton);
+            themesButton->setID("themes-button"_spr);
             menu->updateLayout();
         }
 
@@ -279,9 +279,7 @@ class $modify(MyMenuLayer, MenuLayer) {
     void onOpenSettings(CCObject *) {
         int myAccountID = GJAccountManager::sharedState()->m_accountID;
         if (myAccountID > 0) {
-        if (auto popup = ThemePopup::create()) {
-            popup->show();
-        }
+            ThemePopup::create()->show();
     } else {
         openSettingsPopup(Mod::get());
     }
@@ -289,7 +287,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 };
 
 $on_mod(Loaded) {
-    auto modsDir = geode::dirs::getModsDir();
+    auto modsDir = dirs::getModsDir();
     auto currentModPath = modsDir / (Mod::get()->getID() + ".geode");
     auto stagedModPath = modsDir / (Mod::get()->getID() + ".geode.new");
 
@@ -300,7 +298,7 @@ $on_mod(Loaded) {
             }
             std::filesystem::rename(stagedModPath, currentModPath);
             log::info("RusDash successfully auto-replaced on startup!");
-            geode::utils::game::restart(true);
+            utils::game::restart(true);
         } catch (std::exception const& e) {
             log::error("Failed to apply update on startup: {}", e.what());
         }
@@ -330,6 +328,17 @@ class $modify(PlayLayer) {
                 }
             }
         #endif
+
+        return true;
+    }
+};
+
+#include <Geode/modify/LoadingLayer.hpp>
+class $modify(LoadingLayer) {
+    bool init(bool refresh) {
+        if (!LoadingLayer::init(refresh)) return false;
+
+        this->getChildByID("gd-logo")->setScale(1.25f);
 
         return true;
     }

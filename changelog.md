@@ -1,6 +1,8 @@
 # v1.0.5
-- Add custom sprite to news button
-- Add custom save manager (ty to gdps switcher's source for ts)
+- Added custom icons
+- Added custom sprite to news button
+- Added custom save manager (ty to gdps switcher's source for ts)
+- Fixed Dialog Trigger popup background (Fixed TriggerTemplatePopup)
 
 ## v1.0.4
 - Lazy to this...

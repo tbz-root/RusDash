@@ -1,17 +1,21 @@
 #pragma once
 #include <Geode/Geode.hpp>
+#include <Geode/ui/Popup.hpp>
+#include <Geode/ui/LoadingSpinner.hpp>
+#include <Geode/utils/async.hpp>
+#include <Geode/utils/web.hpp>
 
-class ThemePopup : public FLAlertLayer {
+class ThemePopup : public geode::Popup {
 protected:
     cocos2d::CCMenu* m_buttonsMenu = nullptr;
-    LoadingCircle* m_circle = nullptr;
+    geode::LoadingSpinner* m_spinner = nullptr;
+    geode::async::TaskHolder<geode::utils::web::WebResponse> m_fetchTask;
+    geode::async::TaskHolder<geode::utils::web::WebResponse> m_selectTask;
 
     bool init() override;
-    void registerWithTouchDispatcher() override;
     void fetchAvailableThemes();
     void onSelectTheme(cocos2d::CCObject* sender);
-    void onClose(cocos2d::CCObject* sender);
-    void keyBackClicked() override;
+    void onClose(cocos2d::CCObject* sender) override;
 
 public:
     static ThemePopup* create();

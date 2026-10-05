@@ -1,5 +1,4 @@
 #include "hpp/gManager.hpp"
-
 void RusDashGManager::setup() {
     if (m_fields->originalFileName.empty()) {
         m_fields->originalFileName = m_fileName;
