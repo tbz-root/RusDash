@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "hpp/server.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCHttpClient.hpp>
 #include <Geode/modify/CCApplication.hpp>

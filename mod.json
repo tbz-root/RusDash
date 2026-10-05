@@ -10,7 +10,7 @@
 	"version": "v1.0.5",
 	"developers": ["Tabz", "CMDs"],
 	"trailer": true,
-	"description": "All In One GDPS Mod",
+	"description": "Geode modding GDPS project",
 	"dependencies": {
 		"geode.node-ids": ">=v1.23.3",
 		"dasshu.badgified": ">=1.0.3",
@@ -29,8 +29,8 @@
 	},
 	"settings": {
 		"enable-mirror": {
-			"name": "Use Mirror",
-			"description": "When enabled, all requests is going to rustps.online, when disabled, they will be redirected through the www.rustps.online!",
+			"name": "Built-in VPN",
+			"description": "When enabled, all requests is proxing by rustps.online, when disabled, they will be proxied by www.rustps.online!",
 			"type": "bool",
 			"default": false
 		}

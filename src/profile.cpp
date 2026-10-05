@@ -4,7 +4,7 @@ using namespace geode::prelude;
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
 #include <Geode/modify/ProfilePage.hpp>
-#include "server.hpp"
+#include "hpp/server.hpp"
 #include <future>
 #include <dasshu.badgified/include/Badgified.hpp>
 

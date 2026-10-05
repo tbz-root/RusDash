@@ -1,15 +1,14 @@
 # RusDash
-Всё в одном моде!
+Geode modding GDPS project
 
 ## Функции
-- Автоматическое переключение на сервера RusDash!
-- Замена официальных уровней!
-- Кастомные бейджики!
+- Auto URL replacing! (from boomlings to RusDash servers)
+- Main levels replace!
+- Custom badges and profile themes!
 
 ## Кредиты
-* [lil2kki](https://github.com/lil2kki) - Объяснил некоторое
-* [km7dev](https://github.com/Kingminer7) - Server API
+* [lil2kki](https://github.com/lil2kki) - Explain something
 * [DasshuDev](https://github.com/DasshuDev/Badgified) - Badgified API
-* [CMDxsus](https://t.me/CMDxsus) - Помог с разработкой мода (сделал почти всё хы)
+* [CMDxsus](https://t.me/CMDxsus) - The best contributor <3
 
-Приятной игры <3
+Enjoy the game! <3

@@ -1,12 +1,12 @@
-using namespace geode::prelude;
-
-#include "selectMenu.hpp"
+#include "hpp/selectMenu.hpp"
 #include <matjson.hpp>
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
 #include <Geode/Geode.hpp>
 #include <chrono>
 #include <fstream>
+
+using namespace geode::prelude;
 
 static TaskHolder<web::WebResponse> s_updateCheckTask;
 static TaskHolder<web::WebResponse> s_downloadTask;
@@ -50,7 +50,7 @@ static CCLabelBMFont* s_titleLabel = nullptr;
 class ExitTrigger : public CCObject {
 public:
     void onExit(CCObject*) {
-        utils::game::restart(true);
+        geode::utils::game::restart(true);
     }
 };
 static ExitTrigger s_exitTrigger;
@@ -123,8 +123,8 @@ void createProgressPopup() {
 }
 
 void downloadLatestVersion(std::string const& downloadUrl) {
-    auto modsDir = dirs::getModsDir();
-    auto modPath = modsDir / (Mod::get()->getID() + ".geode");
+    auto modsDir = geode::dirs::getModsDir();
+    auto newModPath = modsDir / (Mod::get()->getID() + ".geode.new");
 
     Loader::get()->queueInMainThread([]() {
         createProgressPopup();
@@ -148,7 +148,7 @@ void downloadLatestVersion(std::string const& downloadUrl) {
 
     s_downloadTask.spawn(
         req.get(downloadUrl),
-        [modPath](web::WebResponse res) {
+        [newModPath](web::WebResponse res) {
             if (!res.ok() || res.code() != 200) {
                 log::error("Dropbox download failed. HTTP {}", res.code());
                 Loader::get()->queueInMainThread([]() {
@@ -164,19 +164,19 @@ void downloadLatestVersion(std::string const& downloadUrl) {
             }
 
             auto bytes = res.data();
-
-            try {
-                if (std::filesystem::exists(modPath)) {
-                    std::filesystem::remove(modPath);
-                }
-            } catch (...) {}
-
-            std::ofstream file(modPath, std::ios::binary);
+            std::ofstream file(newModPath, std::ios::binary);
 
             if (file.is_open()) {
                 file.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
                 file.close();
-                log::info("New version written directly to .geode!");
+                log::info("New version staged as .geode.new!");
+                auto unzippedDir = geode::dirs::getGeodeDir() / "unzipped" / Mod::get()->getID();
+                auto cachedManifest = unzippedDir / "mod.json";
+                if (std::filesystem::exists(cachedManifest)) {
+                    try {
+                        std::filesystem::remove(cachedManifest);
+                    } catch(...) {}
+                }
 
                 Loader::get()->queueInMainThread([]() {
                     s_progressLabel = nullptr;
@@ -191,12 +191,10 @@ void downloadLatestVersion(std::string const& downloadUrl) {
                 Loader::get()->queueInMainThread([]() {
                     s_progressLabel = nullptr;
                     s_titleLabel = nullptr;
-
                     if (s_progressPopup) {
                         s_progressPopup->removeFromParentAndCleanup(true);
                         s_progressPopup = nullptr;
                     }
-
                     Notification::create("Installation failed!", NotificationIcon::Error, 3.0f)->show();
                 });
             }
@@ -208,7 +206,6 @@ void downloadLatestVersion(std::string const& downloadUrl) {
 class $modify(MyMenuLayer, MenuLayer) {
     bool init() {
         std::string modVersion = Mod::get()->getVersion().toVString();
-#ifdef BRELEASE
         matjson::Value json = matjson::makeObject({{"modVersion", modVersion}});
 
         auto req = web::WebRequest();
@@ -216,7 +213,7 @@ class $modify(MyMenuLayer, MenuLayer) {
         req.bodyJSON(json);
         req.timeout(std::chrono::seconds(15));
 
-        std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getUpdates.php"  : "https://www.rustps.online/database/getUpdates.php";
+        std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getUpdates.php" : "https://www.rustps.online/database/getUpdates.php";
 
         s_updateCheckTask.spawn(
             req.post(url),
@@ -240,22 +237,22 @@ class $modify(MyMenuLayer, MenuLayer) {
                 });
             }
         );
-#endif
-        if (!MenuLayer::init())
-            return false;
 
+        if (!MenuLayer::init()) return false;
+        
         auto winSize = CCDirector::sharedDirector()->getWinSize();
-        auto menu = this->getChildByID("bottom-menu");
         auto holyShit = CCMenuItemSpriteExtra::create(
             CircleButtonSprite::createWithSpriteFrameName("tabsek.png"_spr, 0.85f, CircleBaseColor::Blue, CircleBaseSize::MediumAlt),
             this,
             menu_selector(MyMenuLayer::onOpenSettings)
         );
 
-        holyShit->setID("rusdash-holy-shit-btn"_spr);
-
-        menu->addChild(holyShit);
-        menu->updateLayout();
+        auto menu = this->getChildByID("bottom-menu");
+        if (menu) {
+            menu->addChild(holyShit);
+            holyShit->setID("rusdash-holy-shit-btn"_spr);
+            menu->updateLayout();
+        }
 
         auto versionLabel = CCLabelBMFont::create(
             modVersion.c_str(),
@@ -272,17 +269,43 @@ class $modify(MyMenuLayer, MenuLayer) {
         return true;
     }
 
+    static auto onModify(auto) {
+        CCTexturePack rd;
+        rd.m_id = std::string(Mod::get()->getID());
+        rd.m_paths.push_back(string::pathToString(Mod::get()->getResourcesDir() / "resources"));
+        CCFileUtils::get()->addTexturePack(rd);
+    }
+
     void onOpenSettings(CCObject *) {
         int myAccountID = GJAccountManager::sharedState()->m_accountID;
         if (myAccountID > 0) {
-            if (auto popup = ThemePopup::create()) {
-                popup->show();
+        if (auto popup = ThemePopup::create()) {
+            popup->show();
+        }
+    } else {
+        openSettingsPopup(Mod::get());
+    }
+}
+};
+
+$on_mod(Loaded) {
+    auto modsDir = geode::dirs::getModsDir();
+    auto currentModPath = modsDir / (Mod::get()->getID() + ".geode");
+    auto stagedModPath = modsDir / (Mod::get()->getID() + ".geode.new");
+
+    if (std::filesystem::exists(stagedModPath)) {
+        try {
+            if (std::filesystem::exists(currentModPath)) {
+                std::filesystem::remove(currentModPath);
             }
-        } else {
-            openSettingsPopup(Mod::get());
+            std::filesystem::rename(stagedModPath, currentModPath);
+            log::info("RusDash successfully auto-replaced on startup!");
+            geode::utils::game::restart(true);
+        } catch (std::exception const& e) {
+            log::error("Failed to apply update on startup: {}", e.what());
         }
     }
-};
+}
 
 #include <Geode/modify/GameManager.hpp>
 class $modify(GameManager) {
@@ -301,25 +324,12 @@ class $modify(PlayLayer) {
             return false;
 
         #ifdef GEODE_IS_DESKTOP
-
-        if (auto ui = this->getChildByID("UILayer")) {
-            if (auto pauseMenu = ui->getChildByID("pause-button-menu")) {
-                pauseMenu->setVisible(false);
+            if (auto ui = this->getChildByID("UILayer")) {
+                if (auto pauseMenu = ui->getChildByID("pause-button-menu")) {
+                    pauseMenu->setVisible(false);
+                }
             }
-        }
-        
         #endif
-
-        return true;
-    }
-};
-
-#include <Geode/modify/LoadingLayer.hpp>
-class $modify(LoadingLayer) {
-    bool init(bool refresh) {
-        if (!LoadingLayer::init(refresh)) return false;
-
-        this->getChildByID("gd-logo")->setScale(1.25f);
 
         return true;
     }
