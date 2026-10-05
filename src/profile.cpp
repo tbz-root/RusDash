@@ -261,8 +261,7 @@ class $modify(MyProfilePage, ProfilePage) {
     }
 };
 
-$execute
-{
+$execute {
     registerBadge(
         "example_badge"_spr, "Example Badge", "Description here",
         [](const Badge &badge)

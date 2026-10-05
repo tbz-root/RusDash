@@ -10,10 +10,11 @@ using namespace geode::prelude;
 std::string m_www_url = "www.rustps.online/database/";
 std::string m_url = "rustps.online/database/////";
 
-class $modify(MyHttpClient, cocos2d::extension::CCHttpClient) {
-    void send(cocos2d::extension::CCHttpRequest* req) {
+class $modify(MyHttpClient, CCHttpClient) {
+    void send(CCHttpRequest* req) {
         if (!req) {
-            cocos2d::extension::CCHttpClient::send(req);
+            CCHttpClient::send(req);
+
             return;
         }
 
@@ -42,14 +43,14 @@ class $modify(MyHttpClient, cocos2d::extension::CCHttpClient) {
         headers.push_back("User-Agent: RusDash-Global-Agent/1.0");
         req->setHeaders(headers);
 
-        cocos2d::extension::CCHttpClient::send(req);
+        CCHttpClient::send(req);
     }
 };
 
-class $modify(MyApplication, cocos2d::CCApplication) {
+class $modify(MyApplication, CCApplication) {
     void openURL(const char* psz) {
         if (!psz) {
-            cocos2d::CCApplication::openURL(psz);
+            CCApplication::openURL(psz);
             return;
         }
 
@@ -64,6 +65,6 @@ class $modify(MyApplication, cocos2d::CCApplication) {
             }
         }
 
-        cocos2d::CCApplication::openURL(url.c_str());
+        CCApplication::openURL(url.c_str());
     }
 };

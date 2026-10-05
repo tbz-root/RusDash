@@ -1,0 +1,123 @@
+name: 🐛 Репорт о баге (Ошибка)
+description: Сообщить об ошибке в моде RusDash, чтобы мы её починили.
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо, что помогаете улучшать **RusDash Mod**!  
+        Пожалуйста, заполните форму максимально подробно — это сильно ускорит исправление бага.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Описание бага
+      description: Чётко и кратко опишите, что идёт не так. Укажите текст ошибки, если он есть.
+      placeholder: Например: При нажатии на кнопку «Настройки» мод вылетает с ошибкой...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 🔄 Шаги для воспроизведения
+      description: Как нам повторить этот баг самостоятельно?
+      placeholder: |
+        1. Запустить RusDash с модом
+        2. Зайти в меню...
+        3. Нажать на кнопку «...»
+        4. Увидеть баг «...»
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 📊 Ожидаемое поведение
+      description: Что должно было произойти, если бы это работало правильно?
+      placeholder: После нажатия кнопки должно открываться окно настроек без вылета.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 💥 Фактическое поведение
+      description: Что происходит на самом деле?
+      placeholder: Игра вылетает / Что то ломается / Другое...
+    validations:
+      required: true
+
+  - type: input
+    id: gd-version
+    attributes:
+      label: Версия Geometry Dash
+      description: Например, 2.2081
+      placeholder: 2.2081
+    validations:
+      required: true
+
+  - type: input
+    id: geode-version
+    attributes:
+      label: Версия Geode
+      description: Можно посмотреть в настройках Geode
+      placeholder: v4.10.1
+    validations:
+      required: true
+
+  - type: input
+    id: mod-version
+    attributes:
+      label: Версия RusDash Mod
+      description: Можно увидеть в списке модов Geode
+      placeholder: v1.0.5
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 🖥️ Платформа
+      description: На какой платформе проявляется баг?
+      multiple: false
+      options:
+        - Windows
+        - Android
+        - Linux (Wine - Proton или другое)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 📂 Краш или Логи Geode
+      description: |
+        Краш-лог можно найти в `geode/crashlogs` выберите самый новый - по времени когда был краш файл.
+        Лог можно найти в `geode/logs` выберите самый новый - по времени когда был баг или краш файл.
+        Это очень помогает при диагностике.
+      placeholder: Вставьте сюда текст лога или опишите, что видите в консоли если она включена или в логах.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 📎 Дополнительные материалы
+      description: Скриншоты, видео, ссылки на записи экрана — всё, что поможет понять проблему. Можно просто перетащить файлы в это поле после создания issue.
+      placeholder: Ссылки или описание прикреплённых файлов...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Перед отправкой
+      options:
+        - label: Я поискал похожие issue и не нашёл их
+          required: true
+        - label: Я указал все версии и платформу
+          required: true

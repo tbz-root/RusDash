@@ -1,17 +1,15 @@
 # RusDash
+Всё в одном моде!
 
-All In One GDPS Mod!
+## Функции
+- Автоматическое переключение на сервера RusDash!
+- Замена официальных уровней!
+- Кастомные бейджики!
 
-## Features
-- First Mod For Only One GDPS!
-- Switch To The RusDash Endpoints Automaticly!
-- Replacement Of The Main Levels!
-- Custom Badges!
-
-## Credits
-* [lil2kki](https://github.com/lil2kki) - Explained Something
+## Кредиты
+* [lil2kki](https://github.com/lil2kki) - Объяснил некоторое
 * [km7dev](https://github.com/Kingminer7) - Server API
 * [DasshuDev](https://github.com/DasshuDev/Badgified) - Badgified API
-* [CMDxsus](https://t.me/CMDxsus) - Help To Develop Mod (maked almost all lol)
+* [CMDxsus](https://t.me/CMDxsus) - Помог с разработкой мода (сделал почти всё хы)
 
-Have The Best Game! <3
+Приятной игры <3

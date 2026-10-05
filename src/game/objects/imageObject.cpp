@@ -1,3 +1,4 @@
+#ifdef BDEBUG
 #include <Geode/Geode.hpp>
 #include <Geode/utils/file.hpp>
 #include <Geode/utils/cocos.hpp>
@@ -10,9 +11,14 @@
 #include "../../../include/impl.hpp"
 #include <fstream>
 #include <vector>
+#include <cstring>
 
 using namespace geode::prelude;
 using namespace GameObjectsFactory;
+
+static constexpr int IMAGE_DATA_KEY = 9999;
+// Limit PNG size to avoid huge level strings (base64 expands ~33%)
+static constexpr size_t MAX_PNG_BYTES = 48 * 1024; // ~48 KB raw
 
 static const char* B64_TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -99,14 +105,32 @@ static void setRawIcon(GameObject* obj, std::string const& b64) {
     setObjectData(obj, data);
 }
 
+// Same approach as the working TextGameObjectImageExt:
+// decode → CCImage → addUIImage → CCSpriteFrame → register in SpriteFrameCache
 static CCSpriteFrame* tryGetSpriteFrame(GameObject* obj) {
     std::string b64 = getRawIcon(obj);
     if (b64.empty()) return nullptr;
 
     auto bytes = base64Decode(b64);
     if (bytes.size() < 8) return nullptr;
-    if (bytes[0] != 0x89 || bytes[1] != 0x50 || bytes[2] != 0x4E || bytes[3] != 0x47)
+
+    static const uint8_t pngSig[8] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+    if (std::memcmp(bytes.data(), pngSig, 8) != 0)
         return nullptr;
+
+    // Stable key so the texture/frame can be reused
+    std::string key = fmt::format("image-obj-b64-{}", bytes.size());
+    if (bytes.size() >= 16) {
+        uint32_t h = 0;
+        for (size_t i = 8; i < 16 && i < bytes.size(); ++i) h = h * 31 + bytes[i];
+        for (size_t i = bytes.size() - 8; i < bytes.size(); ++i) h = h * 31 + bytes[i];
+        key += fmt::format("-{:08x}", h);
+    }
+
+    // Already in frame cache?
+    if (auto existing = CCSpriteFrameCache::get()->spriteFrameByName(key.c_str())) {
+        return existing;
+    }
 
     auto img = new CCImage();
     bool ok = img->initWithImageData(
@@ -118,48 +142,73 @@ static CCSpriteFrame* tryGetSpriteFrame(GameObject* obj) {
         return nullptr;
     }
 
-    auto tex = new CCTexture2D();
-    if (!tex->initWithImage(img)) {
-        tex->release();
-        img->release();
-        return nullptr;
-    }
+    auto tex = CCTextureCache::sharedTextureCache()->addUIImage(img, key.c_str());
     img->release();
-    tex->autorelease();
+    if (!tex) return nullptr;
+
+    tex->setAntiAliasTexParameters();
 
     auto size = tex->getContentSize();
-    return CCSpriteFrame::createWithTexture(
+    if (size.width <= 0.f || size.height <= 0.f) return nullptr;
+
+    auto frame = CCSpriteFrame::createWithTexture(
         tex,
         CCRect{ 0.f, 0.f, size.width, size.height }
     );
+    if (!frame) return nullptr;
+
+    // Register in the global frame cache (same as the working TextGameObject code)
+    frame->retain();
+    CCSpriteFrameCache::get()->addSpriteFrame(frame, key.c_str());
+
+    return frame;
 }
 
 static void trySetupCustomSprite(GameObject* obj) {
     if (!obj) return;
 
+    obj->removeChildByTag("image"_h);
+
     if (auto frame = tryGetSpriteFrame(obj)) {
+        // Take out of the shared batch so the GD atlas is NOT forced onto our sprite.
+        // This is the main reason you saw the sprite sheet instead of the PNG.
+        obj->setBatchNode(nullptr);
+
         for (auto c : obj->getChildrenExt()) {
             c->setVisible(false);
         }
-        obj->removeChildByTag("image"_h);
+
+        // Prevent the object itself from drawing the original atlas frame
+        obj->setTexture(nullptr);
 
         obj->setContentSize({ 30.f, 30.f });
 
         auto image = CCSprite::createWithSpriteFrame(frame);
+        if (!image) {
+            for (auto c : obj->getChildrenExt()) c->setVisible(true);
+            return;
+        }
+
+        // Exact same limit as the working TextGameObject version
         limitNodeSize(image, obj->getContentSize(), 1337.f, 0.f);
         image->setPosition(obj->getContentSize() / 2);
+        image->setAnchorPoint({ 0.5f, 0.5f });
+
+        // Match the working code (they do apply color)
         image->setColor(obj->getColor());
         image->setOpacity(obj->getOpacity());
+        image->setBlendFunc({ GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA });
+        image->setBatchNode(nullptr);
+
         obj->addChild(image, 1, "image"_h);
     }
     else {
         for (auto c : obj->getChildrenExt()) {
             c->setVisible(true);
         }
-        obj->removeChildByTag("image"_h);
     }
 
-    obj->m_width = obj->getContentWidth();
+    obj->m_width  = obj->getContentWidth();
     obj->m_height = obj->getContentHeight();
     obj->updateOrientedBox();
 }
@@ -171,16 +220,16 @@ static std::optional<std::string> readFileAsBase64(std::filesystem::path const& 
     file.seekg(0, std::ios::end);
     auto len = file.tellg();
     if (len <= 0) return std::nullopt;
+    if (static_cast<size_t>(len) > MAX_PNG_BYTES) return std::nullopt;
     file.seekg(0, std::ios::beg);
 
     std::vector<uint8_t> bytes(static_cast<size_t>(len));
     file.read(reinterpret_cast<char*>(bytes.data()), len);
     if (!file) return std::nullopt;
 
-    if (bytes.size() < 8 ||
-        bytes[0] != 0x89 || bytes[1] != 0x50 || bytes[2] != 0x4E || bytes[3] != 0x47) {
+    static const uint8_t pngSig[8] = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+    if (bytes.size() < 8 || std::memcmp(bytes.data(), pngSig, 8) != 0)
         return std::nullopt;
-    }
 
     return base64Encode(bytes);
 }
@@ -191,7 +240,7 @@ protected:
     CCLabelBMFont* m_statusLabel = nullptr;
 
     bool init(GameObject* obj) {
-        if (!Popup::init(300.f, 170.f, "GJ_square02.png"))
+        if (!Popup::init(300.f, 180.f, "GJ_square02.png"))
             return false;
 
         m_target = obj;
@@ -201,12 +250,21 @@ protected:
 
         bool hasImage = !getRawIcon(obj).empty();
         m_statusLabel = CCLabelBMFont::create(
-            hasImage ? "Custom image loaded" : "Not image selected :(",
+            hasImage ? "Custom image loaded" : "No image selected",
             "chatFont.fnt"
         );
         m_statusLabel->setScale(0.45f);
-        m_statusLabel->setPosition({ winSize.width / 2.f, winSize.height / 2.f + 28.f });
+        m_statusLabel->setPosition({ winSize.width / 2.f, winSize.height / 2.f + 35.f });
         m_mainLayer->addChild(m_statusLabel);
+
+        auto hint = CCLabelBMFont::create(
+            fmt::format("Max size: {} KB PNG", MAX_PNG_BYTES / 1024).c_str(),
+            "chatFont.fnt"
+        );
+        hint->setScale(0.35f);
+        hint->setColor({ 180, 180, 180 });
+        hint->setPosition({ winSize.width / 2.f, winSize.height / 2.f + 12.f });
+        m_mainLayer->addChild(hint);
 
         auto chooseBtn = CCMenuItemSpriteExtra::create(
             ButtonSprite::create("Choose PNG", "goldFont.fnt", "GJ_button_01.png", 0.8f),
@@ -221,7 +279,7 @@ protected:
         );
 
         auto menu = CCMenu::create();
-        menu->setPosition({ winSize.width / 2.f, winSize.height / 2.f - 20.f });
+        menu->setPosition({ winSize.width / 2.f, winSize.height / 2.f - 25.f });
         chooseBtn->setPosition({ 0.f, 20.f });
         resetBtn->setPosition({ 0.f, -25.f });
         menu->addChild(chooseBtn);
@@ -240,25 +298,27 @@ protected:
             }
         };
 
+        Ref<ImageSelectPopup> self = this;
+
         async::spawn(
             file::pick(file::PickMode::OpenFile, options),
-            [this](Result<std::optional<std::filesystem::path>> result) {
+            [self](Result<std::optional<std::filesystem::path>> result) {
                 if (!result.isOk()) return;
                 auto opt = result.unwrap();
                 if (!opt) return;
 
                 auto b64 = readFileAsBase64(*opt);
                 if (!b64) {
-                    if (m_statusLabel)
-                        m_statusLabel->setString("Error: not a valid PNG");
+                    if (self->m_statusLabel)
+                        self->m_statusLabel->setString("Error: invalid / too large PNG");
                     return;
                 }
 
-                setRawIcon(m_target, *b64);
-                trySetupCustomSprite(m_target);
+                setRawIcon(self->m_target, *b64);
+                trySetupCustomSprite(self->m_target);
 
-                if (m_statusLabel)
-                    m_statusLabel->setString("Custom PNG loaded");
+                if (self->m_statusLabel)
+                    self->m_statusLabel->setString("Custom PNG loaded");
             }
         );
     }
@@ -267,7 +327,7 @@ protected:
         setRawIcon(m_target, "");
         trySetupCustomSprite(m_target);
         if (m_statusLabel)
-            m_statusLabel->setString("Not image selected :(");
+            m_statusLabel->setString("No image selected");
     }
 
 public:
@@ -287,16 +347,36 @@ void registerImageObject() {
         UNIQ_ID("image-object"),
         "unImagedBlock.png"_spr,
         [](GameObject* obj) {
+            // Same flag the working objects use
+            obj->m_addToNodeContainer = true;
             trySetupCustomSprite(obj);
-        }, 914
+        },
+        211
+    );
+
+    config->saveString(
+        [](std::string str, GameObject* obj, GJBaseGameLayer*) -> gd::string {
+            std::string b64 = getRawIcon(obj);
+            if (!b64.empty()) {
+                str += "," + std::to_string(IMAGE_DATA_KEY) + "," + b64;
+            }
+            return str;
+        }
     );
 
     config->objectFromVector(
-        [](GameObject* obj, gd::vector<gd::string>&, gd::vector<void*>&, GJBaseGameLayer*, bool) {
+        [](GameObject* obj, gd::vector<gd::string>& values, gd::vector<void*>&, GJBaseGameLayer*, bool) {
+            for (size_t i = 0; i + 1 < values.size(); i += 2) {
+                if (values[i] == std::to_string(IMAGE_DATA_KEY)) {
+                    setRawIcon(obj, values[i + 1]);
+                    break;
+                }
+            }
+
             queueInMainThread([obj]() {
                 trySetupCustomSprite(obj);
             });
-            
+
             return obj;
         }
     );
@@ -306,7 +386,6 @@ void registerImageObject() {
             if (auto popup = ImageSelectPopup::create(obj)) {
                 popup->show();
             }
-
             return true;
         }
     );
@@ -323,3 +402,4 @@ void registerImageObject() {
 $execute {
     registerImageObject();
 }
+#endif

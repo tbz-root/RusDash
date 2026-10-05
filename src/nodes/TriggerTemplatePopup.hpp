@@ -5,6 +5,7 @@
 #include <Geode/binding/EffectGameObject.hpp>
 #include <Geode/binding/ButtonSprite.hpp>
 #include <Geode/binding/CCMenuItemToggler.hpp>
+#include "TargetGroupInput.hpp"
 
 using namespace geode::prelude;
 

@@ -1,5 +1,8 @@
-# v1.0.4
-- Заполнить надо.
+# v1.0.5
+- Add custom sprite to news button
+
+## v1.0.4
+- Lazy to this...
 
 ## v1.0.3
 - Fix crash in main menu (Thanks Benchi for information)

@@ -114,5 +114,5 @@ resources/tbz.rusdash
 resources/tbz.rusdash/levels
 >>>>>>> 5bdd4a550f5b16b15359042a181fbd657d271313
 
-# Python and Android it's shit
-resources/python/stdlib
+# Trailer files
+src/trailer
