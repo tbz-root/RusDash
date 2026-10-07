@@ -28,14 +28,13 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
 
     s_pendingRequests.insert(accountID);
 
-    auto json = matjson::makeObject({{"accountID", accountID}});
+    std::string reqBody = "accountID=" + std::to_string(accountID);
 
     auto req = web::WebRequest();
-    req.header("Content-Type", "application/json");
-    req.bodyJSON(json);
+    req.bodyString(reqBody);
     req.timeout(std::chrono::seconds(15));
 
-    auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/main.php" : "https://www.rustps.online/database/main.php";
+    auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJUserBadges22.php" : "https://www.rustps.online/database/getGJUserBadges22.php";
 
     s_globalTasks[accountID].spawn(
         req.post(url),
@@ -125,16 +124,13 @@ class $modify(MyProfilePage, ProfilePage) {
             s_userBadgesCache.erase(m_score->m_accountID);
             s_pendingRequests.erase(m_score->m_accountID);
             s_userThemeCache.erase(m_score->m_accountID);
-        }
 
-        ProfilePage::onUpdate(sender);
-
-        if (m_score)
-        {
             int accId = m_score->m_accountID;
             fetchBadgesForUser(accId, [this]() {});
             fetchAndApplyProfileTheme(accId);
         }
+
+        ProfilePage::onUpdate(sender);
     }
 
     void fetchAndApplyProfileTheme(int accountID)
@@ -145,14 +141,13 @@ class $modify(MyProfilePage, ProfilePage) {
             return;
         }
 
-        auto json = matjson::makeObject({{"accountID", accountID}});
+        std::string body = "accountID=" + std::to_string(accountID);
 
         auto req = web::WebRequest();
-        req.header("Content-Type", "application/json");
-        req.bodyJSON(json);
+        req.bodyString(body);
         req.timeout(std::chrono::seconds(15));
 
-        auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getProfileTheme.php" : "https://www.rustps.online/database/getProfileTheme.php";
+        auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJProfileTheme22.php" : "https://www.rustps.online/database/getGJProfileTheme22.php";
         m_fields->profileThemeTask.spawn(
             req.post(url),
             [this, accountID](web::WebResponse res)
@@ -182,7 +177,7 @@ class $modify(MyProfilePage, ProfilePage) {
         if (!profileOriginalCard)
             return;
 
-        if (themeID.empty() || themeID == "default")
+        if (themeID.empty() || themeID == "default" || themeID == "-1")
             return;
 
         if (profileOriginalCard->getChildren()) {

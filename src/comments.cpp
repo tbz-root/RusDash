@@ -21,7 +21,7 @@ class $modify(CommentCell) {
             if (originalBg) {
                 originalBg->setVisible(false);
 
-                auto customBg = NineSlice::createWithSpriteFrameName("test.png"_spr);
+                auto customBg = NineSlice::createWithSpriteFrameName("chineeze.png"_spr);
                 if (customBg) {
                     customBg->setContentSize(originalBg->getContentSize());
                     customBg->setPosition(originalBg->getPosition());

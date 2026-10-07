@@ -48,6 +48,9 @@
 			],
 			"RD_profileSheet01": [
 				"resources/profile/*.png"
+			],
+			"RD_commentSheet01": [
+				"resources/comments/*.png"
 			]
 		},
 		"sprites": [

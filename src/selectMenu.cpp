@@ -26,14 +26,13 @@ bool ThemePopup::init() {
 
 void ThemePopup::fetchAvailableThemes() {
     int accountID = GJAccountManager::get()->m_accountID;
-    std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getUserThemes.php" : "https://www.rustps.online/database/getUserThemes.php";
+    std::string gjp = GJAccountManager::get()->m_GJP2;
+    std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJUserThemes22.php" : "https://www.rustps.online/database/getGJUserThemes22.php";
 
-    matjson::Value bodyData = matjson::makeObject({
-        { "accountID", accountID }
-    });
+    std::string body = "accountID=" + std::to_string(accountID) + "&gjp2=" + gjp;
 
     web::WebRequest req;
-    req.bodyJSON(bodyData);
+    req.bodyString(body);
 
     m_fetchTask.spawn(
         req.post(url),
@@ -107,31 +106,22 @@ void ThemePopup::onSelectTheme(CCObject* sender) {
 
     std::string themeID = btn->getID();
     int accountID = GJAccountManager::get()->m_accountID;
+    std::string gjp = GJAccountManager::get()->m_GJP2;
 
-    std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/canUseTheme.php" : "https://www.rustps.online/database/canUseTheme.php";
+    std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/updateGJUserTheme22.php" : "https://www.rustps.online/database/updateGJUserTheme22.php";
 
-    matjson::Value bodyData = matjson::makeObject({
-        { "accountID", accountID },
-        { "themeID", themeID }
-    });
+    std::string body = "accountID=" + std::to_string(accountID) + "&themeID=" + themeID + "&gjp2=" + gjp;
 
     web::WebRequest req;
-    req.bodyJSON(bodyData);
+    req.bodyString(body);
 
     m_selectTask.spawn(
         req.post(url),
         [this](web::WebResponse response) {
             if (response.code() == 200) {
-                auto json = response.json().unwrapOr(matjson::Value());
-                bool success = false;
+                std::string responseStr = response.string().unwrapOr("-1");
 
-                if (json.isBool()) {
-                    success = json.asBool().unwrapOr(false);
-                } else if (json.contains("success")) {
-                    success = json["success"].asBool().unwrapOr(false);
-                }
-
-                if (success) {
+                if (responseStr == "1") {
                     FLAlertLayer::create("Success", "Theme successfully applied!", "OK")->show();
                     this->onClose(nullptr);
                 } else {

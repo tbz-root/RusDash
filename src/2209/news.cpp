@@ -35,18 +35,20 @@ protected:
     }
 
     void fetchNewsFromServer() {
-        std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getnews.php" : "https://www.rustps.online/database/getnews.php";
+        std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJNews22.php" : "https://www.rustps.online/database/getGJNews22.php";
 
         auto am = GJAccountManager::sharedState();
         int accountID = am->m_accountID;
         std::string username = am->m_username.c_str();
+        std::string gjp = am->m_GJP2;
+        // TODO: include "secret" parameter maybe
 
-        matjson::Value bodyData = matjson::makeObject({{"accountID", accountID}, {"username", username}});
+        std::string bodyData = "accountID=" + std::to_string(accountID) + "&gjp2=" + gjp + "&userName=" + username;
 
         this->retain();
 
         web::WebRequest req;
-        req.bodyJSON(bodyData);
+        req.bodyString(bodyData);
 
         async::spawn(req.post(url), [this](web::WebResponse response) {
             if (m_circle) {

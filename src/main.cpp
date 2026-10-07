@@ -206,14 +206,13 @@ void downloadLatestVersion(std::string const& downloadUrl) {
 class $modify(MyMenuLayer, MenuLayer) {
     bool init() {
         std::string modVersion = Mod::get()->getVersion().toVString();
-        matjson::Value json = matjson::makeObject({{"modVersion", modVersion}});
+        std::string body = "modVersion=" + modVersion;
 
         auto req = web::WebRequest();
-        req.header("Content-Type", "application/json");
-        req.bodyJSON(json);
+        req.bodyString(body);
         req.timeout(std::chrono::seconds(15));
 
-        std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getUpdates.php" : "https://www.rustps.online/database/getUpdates.php";
+        std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJVersion22.php" : "https://www.rustps.online/database/getGJVersion22.php";
 
         s_updateCheckTask.spawn(
             req.post(url),
@@ -228,7 +227,7 @@ class $modify(MyMenuLayer, MenuLayer) {
                 while (!responseStr.empty() && std::isspace(static_cast<unsigned char>(responseStr.back()))) responseStr.pop_back();
                 while (!responseStr.empty() && std::isspace(static_cast<unsigned char>(responseStr.front()))) responseStr.erase(responseStr.begin());
 
-                if (responseStr == "true" || responseStr.empty()) return;
+                if (responseStr == "1" || responseStr.empty()) return;
 
                 std::string downloadUrl = responseStr;
 
