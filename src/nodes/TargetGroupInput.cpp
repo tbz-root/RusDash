@@ -1,98 +1,98 @@
 #include "TargetGroupInput.hpp"
-bool TargetGroupInput::init() {
+bool TargetGroupInput::init(std::string const& labelText, bool isFloat, float step, float minVal, float maxVal) {
     if (!CCNode::init()) return false;
 
-    this->setContentSize({ 120.f, 50.f });
+    m_isFloat = isFloat;
+    m_step = step;
+    m_min = minVal;
+    m_max = maxVal;
 
-    m_label = CCLabelBMFont::create("Target Group:", "goldFont.fnt");
+    this->setContentSize({130.f, 52.f});
+
+    m_label = CCLabelBMFont::create(labelText.c_str(), "goldFont.fnt");
 
     m_label->setScale(0.4f);
     m_label->setAnchorPoint({ 0.5f, 0.f });
-    m_label->setPosition({this->getContentSize().width / 2.f, 36.f});
+    m_label->setPosition({ this->getContentSize().width / 2.f, 36.f });
 
     this->addChild(m_label);
 
     m_bg = NineSlice::create("square02_small.png");
-
-    m_bg->setContentSize({ 48.f, 32.f });
+    
+    m_bg->setContentSize({56.f, 30.f});
     m_bg->setPosition({this->getContentSize().width / 2.f, 16.f});
+    m_bg->setOpacity(100.f);
 
     this->addChild(m_bg);
-    
-    m_input = CCTextInputNode::create(40.f, 28.f, "0", "bigFont.fnt");
 
-    m_input->setAllowedChars("1234567890");
-    m_input->setMaxLabelScale(0.6f);
-    m_input->setMaxLabelWidth(40.f);
-    m_input->setLabelPlaceholderScale(0.5f);
+    m_input = CCTextInputNode::create(50.f, 26.f, m_isFloat ? "1.0" : "0", "bigFont.fnt");
+    m_input->setAllowedChars(m_isFloat ? "0123456789.-" : "0123456789");
+    m_input->setMaxLabelScale(0.55f);
+    m_input->setMaxLabelWidth(48.f);
+    m_input->setLabelPlaceholderScale(0.45f);
     m_input->setLabelPlaceholderColor(ccc3(120, 120, 120));
-    m_input->setPosition({this->getContentSize().width / 2.f, 16.f});
-    m_input->setString("0");
+    m_input->setPosition({ this->getContentSize().width / 2.f, 16.f });
+    m_input->setString(m_isFloat ? "1.00" : "0");
 
     this->addChild(m_input);
 
     auto menu = CCMenu::create();
-
-    menu->setPosition({ 0.f, 0.f });
-
+    menu->setPosition({0.f, 0.f});
     this->addChild(menu);
 
-    auto leftSpr = CCSprite::createWithSpriteFrameName("edit_leftBtn_001.png");
+    m_leftBtn = CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("edit_leftBtn_001.png"), this, menu_selector(TargetGroupInput::onLeft));
 
-    leftSpr->setFlipX(true);
-    leftSpr->setScale(0.7f);
-
-    m_leftBtn = CCMenuItemSpriteExtra::create(
-        leftSpr,
-        this,
-        menu_selector(TargetGroupInput::onLeft)
-    );
-
-    m_leftBtn->setPosition({ this->getContentSize().width / 2.f - 40.f, 16.f });
+    m_leftBtn->setPosition({this->getContentSize().width / 2.f - 50.f, 16.f});
 
     menu->addChild(m_leftBtn);
 
     auto rightSpr = CCSprite::createWithSpriteFrameName("edit_leftBtn_001.png");
+    rightSpr->setFlipX(true);
+    m_rightBtn = CCMenuItemSpriteExtra::create(rightSpr, this, menu_selector(TargetGroupInput::onRight));
 
-    rightSpr->setScale(0.7f);
-
-    m_rightBtn = CCMenuItemSpriteExtra::create(
-        rightSpr,
-        this,
-        menu_selector(TargetGroupInput::onRight)
-    );
-
-    m_rightBtn->setPosition({ this->getContentSize().width / 2.f + 40.f, 16.f });
+    m_rightBtn->setPosition({this->getContentSize().width / 2.f + 50.f, 16.f});
 
     menu->addChild(m_rightBtn);
 
     return true;
 }
 
-TargetGroupInput* TargetGroupInput::create() {
+TargetGroupInput* TargetGroupInput::create(std::string const& labelText) {
     auto ret = new TargetGroupInput();
-    if (ret && ret->init()) {
+    if (ret && ret->init(labelText, false, 1.f, 0.f, 9999.f)) {
         ret->autorelease();
         return ret;
     }
 
     CC_SAFE_DELETE(ret);
+    return nullptr;
+}
 
+TargetGroupInput* TargetGroupInput::createFloat(std::string const& labelText, float step, float minVal, float maxVal, int decimals) {
+    auto ret = new TargetGroupInput();
+    if (ret && ret->init(labelText, true, step, minVal, maxVal)) {
+        ret->m_decimals = decimals;
+        ret->autorelease();
+        return ret;
+    }
+    
+    CC_SAFE_DELETE(ret);
     return nullptr;
 }
 
 void TargetGroupInput::onLeft(CCObject*) {
-    updateValue(-1);
+    updateValue(-m_step);
 }
 
 void TargetGroupInput::onRight(CCObject*) {
-    updateValue(+1);
+    updateValue(+m_step);
 }
 
-void TargetGroupInput::updateValue(int delta) {
-    int value = getValue() + delta;
-    if (value < 0) value = 0;
-    setValue(value);
+void TargetGroupInput::updateValue(float delta) {
+    float value = getFloatValue() + delta;
+    value = std::clamp(value, m_min, m_max);
+    setFloatValue(value);
+    if (m_callback) m_callback(value);
 }
 
 void TargetGroupInput::setString(std::string const& str) {
@@ -101,15 +101,28 @@ void TargetGroupInput::setString(std::string const& str) {
 
 std::string TargetGroupInput::getString() const {
     if (m_input) return m_input->getString();
-    return "0";
+    return m_isFloat ? "1.0" : "0";
 }
 
 int TargetGroupInput::getValue() const {
-    auto str = getString();
-    if (str.empty()) return 0;
-    return numFromString<int>(str).unwrapOr(0);
+    return static_cast<int>(getFloatValue());
 }
 
 void TargetGroupInput::setValue(int value) {
-    setString(std::to_string(value));
+    setFloatValue(static_cast<float>(value));
+}
+
+float TargetGroupInput::getFloatValue() const {
+    auto str = getString();
+    if (str.empty()) return m_isFloat ? 1.f : 0.f;
+    return numFromString<float>(str).unwrapOr(m_isFloat ? 1.f : 0.f);
+}
+
+void TargetGroupInput::setFloatValue(float value) {
+    value = std::clamp(value, m_min, m_max);
+    if (m_isFloat) {
+        setString(fmt::format("{:.{}f}", value, m_decimals));
+    } else {
+        setString(std::to_string(static_cast<int>(value)));
+    }
 }

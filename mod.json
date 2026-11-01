@@ -1,29 +1,22 @@
 {
-	"geode": "5.10.1",
+	"geode": "5.11.2",
 	"early-load": true,
 	"gd": {
-		"win": "2.2081",
-		"android": "2.2081"
+		"win": "2.2091",
+		"android": "2.2091"
 	},
 	"id": "tabz.rusdash",
 	"name": "\u200BRusDash",
-	"version": "v1.0.51",
+	"version": "v1.1.0",
 	"developers": ["Tabz", "CMDs"],
 	"trailer": false,
 	"description": "Geode modding GDPS project",
 	"dependencies": {
-		"geode.node-ids": ">=v1.23.3",
-		"dasshu.badgified": ">=1.0.3",
-		"bitz.customprofiles": ">=1.1.5",
-		"alk.ime-input": ">=1.0.4"
+		"geode.node-ids": ">=v1.23.3"
 	},
 	"incompatibilities": {
-		"alphalaneous.tinker": {
+		"km7dev.gdps-swticher": {
 			"breaking": true,
-			"version": "*"
-		},
-		"techstudent10.settings_plus": {
-			"breaking": false,
 			"version": "*"
 		}
 	},
@@ -31,6 +24,32 @@
 		"enable-mirror": {
 			"name": "Built-in VPN",
 			"description": "When enabled, all requests is proxing by rustps.online, when disabled, they will be proxied by www.rustps.online!",
+			"type": "bool",
+			"default": false
+		},
+		"language": {
+			"name": "Language",
+			"description": "Russian yayyy",
+			"type":"string",
+			"one-of": ["English", "Русский"],
+			"default": "Русский"
+		},
+		"restartbuttons": {
+			"name": "Restart Buttons",
+			"type": "title"
+		},
+		"restart-keybind": {
+			"name": "Restart Keybind",
+			"type": "keybind",
+			"default": "F1"
+		},
+		"reload-keybind": {
+			"name": "Reload Textures Keybind",
+			"type": "keybind",
+			"default": "F2"
+		},
+		"keybind_anywhere": {
+			"name": "Keybind works anywhere",
 			"type": "bool",
 			"default": false
 		}
@@ -43,9 +62,6 @@
 			"RD_iconsSheet01": [
 				"resources/icons/*.png"
 			],
-			"RD_backport2209Sheet": [
-				"resources/2209/*.png"
-			],
 			"RD_profileSheet01": [
 				"resources/profile/*.png"
 			],
@@ -54,11 +70,9 @@
 			]
 		},
 		"sprites": [
-			"resources/sprites/*.png",
-			"resources/sprites/2209/*.png"
+			"resources/sprites/*.png"
 		],
 		"files": [
-			"resources/docs/script-trigger.md",
 			"resources/levels.txt",
 			"resources/badges/*.png"
 		]
@@ -69,6 +83,7 @@
 			"resources/tabz.rusdash/resources/*.png",
 			"resources/tabz.rusdash/resources/*.plist",
 			"resources/tabz.rusdash/resources/*.fnt",
+			"resources/tabz.rusdash/lang/*.json",
 			"include/*.hpp"
 		]
 	},

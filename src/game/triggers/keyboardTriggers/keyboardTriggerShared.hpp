@@ -11,13 +11,31 @@ using namespace geode::prelude;
 #define KEYBOARD_TRIGGER_ID UNIQ_ID("keyboard-trigger")
 #define STOP_KEYBOARD_TRIGGER_ID UNIQ_ID("stop-keyboard-trigger")
 
-class KeyboardTriggerData : public CCObject {
-public:
+struct KeyboardBinding {
     int keyCode = 0;
     int targetGroup = 0;
     bool activateOnHold = true;
     bool wasPressed = false;
+
+    std::string toString() const {
+        return fmt::format("{},{},{}", keyCode, targetGroup, activateOnHold ? 1 : 0);
+    }
+
+    static KeyboardBinding fromString(std::string const& s) {
+        KeyboardBinding b;
+        auto parts = string::split(s, ",");
+        if (parts.size() >= 1) b.keyCode      = numFromString<int>(parts[0]).unwrapOr(0);
+        if (parts.size() >= 2) b.targetGroup  = numFromString<int>(parts[1]).unwrapOr(0);
+        if (parts.size() >= 3) b.activateOnHold = parts[2] != "0";
+        return b;
+    }
+};
+
+class KeyboardTriggerData : public CCObject {
+public:
+    std::vector<KeyboardBinding> pages;
     bool enabled = false;
+    int currentPage = 0;
 
     static KeyboardTriggerData* create() {
         auto ret = new KeyboardTriggerData();
@@ -25,18 +43,47 @@ public:
         return ret;
     }
 
+    void ensurePages() {
+        if (pages.empty()) {
+            pages.push_back(KeyboardBinding{});
+        }
+    }
+
     std::string toString() const {
-        return fmt::format("{},{},{}", keyCode, targetGroup, activateOnHold ? 1 : 0);
+        std::string out;
+        for (size_t i = 0; i < pages.size(); ++i) {
+            if (i) out += "|";
+            out += pages[i].toString();
+        }
+        return out;
     }
 
     void fromString(std::string const& s) {
-        auto parts = string::split(s, ",");
-        if (parts.size() >= 1) keyCode     = numFromString<int>(parts[0]).unwrapOr(0);
-        if (parts.size() >= 2) targetGroup = numFromString<int>(parts[1]).unwrapOr(0);
-        if (parts.size() >= 3) activateOnHold = parts[2] != "0";
+        pages.clear();
+        if (s.empty()) {
+            ensurePages();
+            enabled = false;
+            currentPage = 0;
+            return;
+        }
+        
+        if (s.find('|') == std::string::npos && s.find(',') != std::string::npos) {
+            pages.push_back(KeyboardBinding::fromString(s));
+        } else {
+            auto parts = string::split(s, "|");
+            for (auto const& p : parts) {
+                if (!p.empty()) pages.push_back(KeyboardBinding::fromString(p));
+            }
+        }
+        ensurePages();
         enabled = false;
-        wasPressed = false;
+        currentPage = 0;
+        for (auto& b : pages) b.wasPressed = false;
     }
+
+    int& keyCode() { ensurePages(); return pages[0].keyCode; }
+    int& targetGroup() { ensurePages(); return pages[0].targetGroup; }
+    bool& activateOnHold() { ensurePages(); return pages[0].activateOnHold; }
 };
 
 class StopKeyboardTriggerData : public CCObject {
@@ -58,108 +105,6 @@ public:
 inline std::unordered_set<int> g_kbPressedKeys;
 inline std::vector<EffectGameObject*> g_kbActiveTriggers;
 inline class KeyboardTriggerPopup* g_kbListeningPopup = nullptr;
-
-inline KeyboardTriggerData* kbGetData(GameObject* obj) {
-    if (!obj) return nullptr;
-    return typeinfo_cast<KeyboardTriggerData*>(obj->getUserObject("kb-data"_spr));
-}
-
-inline void kbSetData(GameObject* obj, KeyboardTriggerData* data) {
-    if (obj) obj->setUserObject("kb-data"_spr, data);
-}
-
-inline KeyboardTriggerData* kbEnsureData(GameObject* obj) {
-    auto d = kbGetData(obj);
-    if (!d) {
-        d = KeyboardTriggerData::create();
-        kbSetData(obj, d);
-    }
-    return d;
-}
-
-inline StopKeyboardTriggerData* stopKbGetData(GameObject* obj) {
-    if (!obj) return nullptr;
-    return typeinfo_cast<StopKeyboardTriggerData*>(obj->getUserObject("stop-kb-data"_spr));
-}
-
-inline void stopKbSetData(GameObject* obj, StopKeyboardTriggerData* data) {
-    if (obj) obj->setUserObject("stop-kb-data"_spr, data);
-}
-
-inline StopKeyboardTriggerData* stopKbEnsureData(GameObject* obj) {
-    auto d = stopKbGetData(obj);
-    if (!d) {
-        d = StopKeyboardTriggerData::create();
-        stopKbSetData(obj, d);
-    }
-    return d;
-}
-
-inline void kbUnregister(EffectGameObject* effect) {
-    if (!effect) return;
-    auto it = std::find(g_kbActiveTriggers.begin(), g_kbActiveTriggers.end(), effect);
-    if (it != g_kbActiveTriggers.end()) g_kbActiveTriggers.erase(it);
-    if (auto d = kbGetData(effect)) {
-        d->enabled = false;
-        d->wasPressed = false;
-    }
-}
-
-inline void kbRegisterActive(EffectGameObject* effect) {
-    if (!effect) return;
-    auto d = kbEnsureData(effect);
-    d->enabled = true;
-    d->wasPressed = false;
-    if (std::find(g_kbActiveTriggers.begin(), g_kbActiveTriggers.end(), effect)
-        == g_kbActiveTriggers.end()) {
-        g_kbActiveTriggers.push_back(effect);
-    }
-    log::info("Keyboard Trigger ENABLED: key={} group={} mode={}",
-        d->keyCode, d->targetGroup, d->activateOnHold ? "Hold" : "Press");
-}
-
-inline bool kbObjectInGroup(GameObject* obj, int groupId) {
-    if (!obj || groupId <= 0) return false;
-    if (obj->m_groups) {
-        for (auto const& g : *obj->m_groups) {
-            if ((int)g == groupId) return true;
-        }
-    }
-    return false;
-}
-
-inline void kbStopByGroup(GJBaseGameLayer* layer, int targetGroup) {
-    if (targetGroup <= 0) {
-        for (auto* t : g_kbActiveTriggers) {
-            if (auto d = kbGetData(t)) {
-                d->enabled = false;
-                d->wasPressed = false;
-            }
-        }
-        g_kbActiveTriggers.clear();
-        log::info("Stopped ALL keyboard triggers");
-        return;
-    }
-
-    for (auto it = g_kbActiveTriggers.begin(); it != g_kbActiveTriggers.end(); ) {
-        auto* t = *it;
-        if (!t) {
-            it = g_kbActiveTriggers.erase(it);
-            continue;
-        }
-        bool match = kbObjectInGroup(t, targetGroup);
-        if (match) {
-            if (auto d = kbGetData(t)) {
-                d->enabled = false;
-                d->wasPressed = false;
-            }
-            log::info("Stopped keyboard trigger in group {}", targetGroup);
-            it = g_kbActiveTriggers.erase(it);
-        } else {
-            ++it;
-        }
-    }
-}
 
 inline bool kbIsBlockedKey(int code) {
     switch (code) {
@@ -230,5 +175,117 @@ inline std::string kbKeyName(int code) {
             if (code >= 97 && code <= 122) return std::string(1, char('A' + (code - 97)));
             if (code >= 112 && code <= 121) return "F" + std::to_string(code - 111);
             return "Key " + std::to_string(code);
+    }
+}
+
+inline KeyboardTriggerData* kbGetData(GameObject* obj) {
+    if (!obj) return nullptr;
+    return typeinfo_cast<KeyboardTriggerData*>(obj->getUserObject("kb-data"_spr));
+}
+
+inline void kbSetData(GameObject* obj, KeyboardTriggerData* data) {
+    if (obj) obj->setUserObject("kb-data"_spr, data);
+}
+
+inline KeyboardTriggerData* kbEnsureData(GameObject* obj) {
+    auto d = kbGetData(obj);
+    if (!d) {
+        d = KeyboardTriggerData::create();
+        d->ensurePages();
+        kbSetData(obj, d);
+    }
+    return d;
+}
+
+inline StopKeyboardTriggerData* stopKbGetData(GameObject* obj) {
+    if (!obj) return nullptr;
+    return typeinfo_cast<StopKeyboardTriggerData*>(obj->getUserObject("stop-kb-data"_spr));
+}
+
+inline void stopKbSetData(GameObject* obj, StopKeyboardTriggerData* data) {
+    if (obj) obj->setUserObject("stop-kb-data"_spr, data);
+}
+
+inline StopKeyboardTriggerData* stopKbEnsureData(GameObject* obj) {
+    auto d = stopKbGetData(obj);
+    if (!d) {
+        d = StopKeyboardTriggerData::create();
+        stopKbSetData(obj, d);
+    }
+    return d;
+}
+
+inline void kbUnregister(EffectGameObject* effect) {
+    if (!effect) return;
+    auto it = std::find(g_kbActiveTriggers.begin(), g_kbActiveTriggers.end(), effect);
+    if (it != g_kbActiveTriggers.end()) g_kbActiveTriggers.erase(it);
+    if (auto d = kbGetData(effect)) {
+        d->enabled = false;
+        d->currentPage = 0;
+        for (auto& b : d->pages) b.wasPressed = false;
+    }
+}
+
+inline void kbRegisterActive(EffectGameObject* effect) {
+    if (!effect) return;
+    auto d = kbEnsureData(effect);
+    d->enabled = true;
+    d->currentPage = 0;
+    for (auto& b : d->pages) b.wasPressed = false;
+    if (std::find(g_kbActiveTriggers.begin(), g_kbActiveTriggers.end(), effect)
+        == g_kbActiveTriggers.end()) {
+        g_kbActiveTriggers.push_back(effect);
+    }
+    log::info("Keyboard Trigger ENABLED: {} page(s), starting at page 0", d->pages.size());
+    for (size_t i = 0; i < d->pages.size(); ++i) {
+        auto& b = d->pages[i];
+        log::info("  page {}: key={} ({}) group={} mode={}",
+            i, kbKeyName(b.keyCode), b.keyCode, b.targetGroup,
+            b.activateOnHold ? "Hold" : "Press");
+    }
+}
+
+inline bool kbObjectInGroup(GameObject* obj, int groupId) {
+    if (!obj || groupId <= 0) return false;
+    if (obj->m_groups) {
+        for (auto const& g : *obj->m_groups) {
+            if ((int)g == groupId) return true;
+        }
+    }
+    return false;
+}
+
+inline void kbStopByGroup(GJBaseGameLayer* layer, int targetGroup) {
+    if (targetGroup <= 0) {
+        for (auto* t : g_kbActiveTriggers) {
+            if (auto d = kbGetData(t)) {
+                d->enabled = false;
+                d->currentPage = 0;
+                for (auto& b : d->pages) b.wasPressed = false;
+            }
+        }
+        g_kbActiveTriggers.clear();
+        log::info("Stopped ALL keyboard triggers");
+        return;
+    }
+
+    for (auto it = g_kbActiveTriggers.begin(); it != g_kbActiveTriggers.end(); ) {
+        auto* t = *it;
+        if (!t) {
+            it = g_kbActiveTriggers.erase(it);
+            continue;
+        }
+        bool match = kbObjectInGroup(t, targetGroup);
+        if (match) {
+            if (auto d = kbGetData(t)) {
+                d->enabled = false;
+                d->currentPage = 0;
+                for (auto& b : d->pages) b.wasPressed = false;
+            }
+            log::info("Stopped keyboard trigger in group {}", targetGroup);
+            it = g_kbActiveTriggers.erase(it);
+        } else {
+            ++it;
+        }
     }
 }

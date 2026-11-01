@@ -1,0 +1,121 @@
+{
+    "search.quick-placeholder": {
+        "text": "Enter a level, user or id",
+        "parent": "search-bar",
+        "layer": "LevelSearchLayer"
+    },
+
+    "search.quick-search-label": {
+        "text": "Quick Search",
+        "node": "quick-search-title",
+        "layer": "LevelSearchLayer"
+    },
+
+
+    "search.quick-search-downloads": {
+        "text": "Downloads",
+        "layer": "LevelSearchLayer"
+    },
+    "search.quick-search-likes": {
+        "text": "Likes",
+        "layer": "LevelSearchLayer"
+    },
+    "search.quick-search-hyped": {
+        "text": "Hyped",
+        "layer": "LevelSearchLayer"
+    },
+    "search.quick-search-trending": {
+        "text": "Trending",
+        "layer": "LevelSearchLayer"
+    },
+    "search.quick-search-recent": {
+        "text": "Recent",
+        "layer": "LevelSearchLayer"
+    },
+    "search.quick-search-magic": {
+        "text": "Magic",
+        "layer": "LevelSearchLayer"
+    },
+    "search.quick-search-awarded": {
+        "text": "Awarded",
+        "layer": "LevelSearchLayer"
+    },
+
+
+    "search.filters-label": {
+        "text": "Filters",
+        "node": "filters-title",
+        "layer": "LevelSearchLayer"
+    },
+
+
+    "browse.title.online": {
+        "text": "Online Levels",
+        "node": "title",
+        "layer": "GJListLayer"
+    },
+    "browse.title.mylevels": {
+        "text": "My Levels",
+        "node": "title",
+        "layer": "GJListLayer"
+    },
+    "browse.title.myonlinelevels": {
+        "text": "My Online Levels",
+        "node": "title",
+        "layer": "GJListLayer"
+    },
+    "browse.title.mappacks": {
+        "text": "Map Packs",
+        "node": "title",
+        "layer": "GJListLayer"
+    },
+
+
+    "comments.load-comments": {
+        "text": "Load Comments",
+        "layer": "InfoLayer"
+    },
+
+
+    "levelpage.normal-mode-label": {
+        "text": "Normal Mode",
+        "node": "normal-mode-label",
+        "layer": "LevelPage"
+    },
+    "levelpage.practice-mode-label": {
+        "text": "Practice Mode",
+        "node": "practice-mode-label",
+        "layer": "LevelPage"
+    },
+
+
+    "levelpreview.verifed": {
+        "text": "Verifed",
+        "parent": "level-verified",
+        "layer": "EditLevelLayer"
+    },
+    "levelpreview.unverifed": {
+        "text": "Unverifed",
+        "parent": "level-verified",
+        "layer": "EditLevelLayer"
+    },
+
+    "levelcell.verifed": {
+        "text": "Verifed",
+        "node": "info-label",
+        "layer": "LevelCell"
+    },
+    "levelcell.unverifed": {
+        "text": "Unverifed",
+        "node": "info-label",
+        "layer": "LevelCell"
+    },
+
+
+    "itempopup.buyitem": {
+        "text": "Buy Item",
+        "node": "title",
+        "parent": "main-layer",
+        "layer": "PurchaseItemPopup"
+    }
+}

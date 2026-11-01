@@ -6,6 +6,8 @@ using namespace geode::prelude;
 #include "../../../include/impl.hpp"
 #include <Geode/modify/EffectGameObject.hpp>
 #include <Geode/binding/SetupCollisionStateTriggerPopup.hpp>
+#include <Geode/binding/LevelEditorLayer.hpp>
+#include <Geode/binding/EditorUI.hpp>
 class $modify(EffectGameObject) {
 	class ButtonMenuItem : public CCMenuItemSpriteExtra {
 	public:
@@ -19,6 +21,7 @@ class $modify(EffectGameObject) {
 			m_colorEnabled = false;
 			m_activateSound = "no sound";
 			m_selectSound = "no sound";
+			this->setContentSize({30.f, 30.f});
 			
 			return true;
 		}
@@ -161,6 +164,24 @@ class $modify(EffectGameObject) {
 		unselected->getInputNode()->addChild(unselectedLabel);
 	}
 
+	static CCNode* findBestMenuParent(GJBaseGameLayer* game) {
+		if (auto* lel = typeinfo_cast<LevelEditorLayer*>(game)) {
+			if (lel->m_editorUI) {
+				return lel->m_editorUI;
+			}
+			return lel;
+		}
+
+		if (game->m_uiLayer) {
+			return game->m_uiLayer;
+		}
+		if (game->m_uiTriggerUI) {
+			return game->m_uiTriggerUI;
+		}
+
+		return game;
+	}
+
 	static void setup() {
 		conf = GameObjectsFactory::createRingConfig(
 			UNIQ_ID("button"),
@@ -195,7 +216,7 @@ class $modify(EffectGameObject) {
 				return str;
 			}
 		)->objectFromVector(
-			[](GameObject* object, gd::vector<gd::string>& p0, gd::vector<void*>&, GJBaseGameLayer*, bool) {
+			[](GameObject* object, std::vector<std::string>& p0, std::vector<void*>&, GJBaseGameLayer*, bool) {
 				if (p0.size() > 228 && !p0[228].empty()) {
 					auto decoded = ZipUtils::base64URLDecode(p0[228].c_str());
 					getStore(object)->load(decoded);
@@ -227,25 +248,28 @@ class $modify(EffectGameObject) {
 				object->setTag(uid);
 
 				Ref menu = typeinfo_cast<CCMenu*>(game->getUserObject("objects-menu"_spr));
-				if (!menu) {
-					menu = CCMenu::create();
-					menu->setID("objects-menu");
-					menu->setPosition(CCPointZero);
-					menu->setContentSize(CCSizeZero);
-					menu->setAnchorPoint(CCPointZero);
+				auto* desiredParent = findBestMenuParent(game);
+
+				if (!menu || menu->getParent() != desiredParent) {
+					if (menu) {
+						menu->removeFromParentAndCleanup(false);
+					} else {
+						menu = CCMenu::create();
+						menu->setID("objects-menu");
+						menu->setPosition(CCPointZero);
+						menu->setContentSize(CCSizeZero);
+						menu->setAnchorPoint(CCPointZero);
+					}
 					menu->setTouchEnabled(true);
 					menu->setEnabled(true);
+					menu->setTouchPriority(-999);
 
-					if (game->m_uiLayer) {
-						game->m_uiLayer->addChild(menu, 9999);
-						log::info("Created objects-menu in m_uiLayer");
-					} else if (game->m_uiTriggerUI) {
-						game->m_uiTriggerUI->addChild(menu, 9999);
-						log::info("Created objects-menu in m_uiTriggerUI");
-					} else {
+					if (!desiredParent) {
 						log::error("No place to put objects-menu");
 						return;
 					}
+					desiredParent->addChild(menu, 99999);
+					log::info("Created/reparented objects-menu under {}", desiredParent->getID().empty() ? typeid(*desiredParent).name() : desiredParent->getID().c_str());
 					game->setUserObject("objects-menu"_spr, menu);
 				}
 
@@ -265,7 +289,7 @@ class $modify(EffectGameObject) {
 					int group = getStore(object)->getInt("activate");
 					log::info("ACTIVATE group={}", group);
 					if (game && group > 0) {
-						game->spawnGroup(group, false, 0.f, gd::vector<int>(), 0, 0);
+						game->spawnGroup(group, false, 0.f, std::vector<int>(), 0, 0);
 					}
 				});
 
@@ -273,7 +297,7 @@ class $modify(EffectGameObject) {
 					int group = getStore(object)->getInt("selected");
 					log::info("SELECTED group={}", group);
 					if (game && group > 0) {
-						game->spawnGroup(group, false, 0.f, gd::vector<int>(), 0, 0);
+						game->spawnGroup(group, false, 0.f, std::vector<int>(), 0, 0);
 					}
 				});
 
@@ -281,41 +305,49 @@ class $modify(EffectGameObject) {
 					int group = getStore(object)->getInt("unselected");
 					log::info("UNSELECTED group={}", group);
 					if (game && group > 0) {
-						game->spawnGroup(group, false, 0.f, gd::vector<int>(), 0, 0);
+						game->spawnGroup(group, false, 0.f, std::vector<int>(), 0, 0);
 					}
 				});
 
 				item->setUserObject("button-object"_spr, object);
 				item->setTag(uid);
+				item->setEnabled(true);
+				item->setVisible(true);
 				menu->addChild(item);
 				menu->setTouchEnabled(true);
 				menu->setEnabled(true);
 
 				if (!menu->getActionByTag(uid)) {
-					auto* action = CCRepeatForever::create(CCSequence::create(CallFuncExt::create([object, item, menu, game] {
-								if (!game || !object || !item || !menu) return;
+					auto* action = CCRepeatForever::create(CCSequence::create(
+						CallFuncExt::create([object, item, menu, game] {
+							if (!game || !object || !item || !menu) return;
 
-								if (item->getParent() != menu) {
-									item->removeFromParentAndCleanup(false);
-									menu->addChild(item);
-									menu->setTouchEnabled(true);
-									menu->setEnabled(true);
-								}
+							if (item->getParent() != menu) {
+								item->removeFromParentAndCleanup(false);
+								menu->addChild(item);
+								menu->setTouchEnabled(true);
+								menu->setEnabled(true);
+							}
 
-								menu->setVisible(game->m_uiLayer ? game->m_uiLayer->isVisible() : true);
+							bool visible = true;
+							if (game->m_uiLayer) {
+								visible = game->m_uiLayer->isVisible();
+							}
+							menu->setVisible(visible);
+							item->setVisible(visible && object->isVisible());
 
-								item->setContentSize({ object->m_width, object->m_height });
-								item->setAnchorPoint(object->m_editorEnabled ? CCPointZero : ccp(0.5f, 0.5f));
+							float w = object->m_width  > 0.f ? object->m_width  : 30.f;
+							float h = object->m_height > 0.f ? object->m_height : 30.f;
+							item->setContentSize({w, h});
+							item->setAnchorPoint(object->m_editorEnabled ? CCPointZero : ccp(0.5f, 0.5f));
 
-								auto world = object->nodeToWorldTransform();
-								auto inv = CCAffineTransformInvert(menu->nodeToWorldTransform());
-								
-								item->setAdditionalTransform(CCAffineTransformConcat(world, inv));
-								item->updateTransform();
-							}), nullptr
-						)
-					);
-					
+							auto world = object->nodeToWorldTransform();
+							auto inv   = CCAffineTransformInvert(menu->nodeToWorldTransform());
+							item->setAdditionalTransform(CCAffineTransformConcat(world, inv));
+							item->updateTransform();
+						}),
+						nullptr
+					));
 					action->setTag(uid);
 					menu->runAction(action);
 				}

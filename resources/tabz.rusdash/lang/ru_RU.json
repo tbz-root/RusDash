@@ -1,0 +1,93 @@
+{
+    "search.quick-placeholder": {
+        "text": "Введите уровень, пользователя или айди",
+        "scale": -0.175
+    },
+    
+    "search.quick-search-label": {
+        "text": "Быстрый Поиск"
+    },
+
+
+    "search.quick-search-downloads": {
+        "text": "Скачивания",
+        "scale": -0.05
+    },
+    "search.quick-search-likes": {
+        "text": "Лайки"
+    },
+    "search.quick-search-hyped": {
+        "text": "Хайповые",
+        "scale": -0.1,
+        "x": -5
+    },
+    "search.quick-search-trending": {
+        "text": "Тренды"
+    },
+    "search.quick-search-recent": {
+        "text": "Недавние",
+        "scale": -0.05,
+        "x": -3.5
+    },
+    "search.quick-search-magic": {
+        "text": "Магические",
+        "scale": -0.1
+    },
+    "search.quick-search-awarded": {
+        "text": "Награждённые",
+        "scale": -0.25
+    },
+
+
+    "search.filters-label": {
+        "text": "Фильтры"
+    },
+
+
+    "browse.title.online": {
+        "text": "Онлайн Уровни"
+    },
+    "browse.title.mylevels": {
+        "text": "Мои Уровни"
+    },
+    "browse.title.myonlinelevels": {
+        "text": "Мои Онлайн Уровни"
+    },
+    "browse.title.mappacks": {
+        "text": "Мап Паки"
+    },
+
+
+
+    "comments.load-comments": {
+        "text": "Загрузить Комменты",
+        "scale": -0.15
+    },
+
+
+    "levelpage.normal-mode-label": {
+        "text": "Обычный Режим"
+    },
+    "levelpage.practice-mode-label": {
+        "text": "Режим Тренировки"
+    },
+
+    "levelpreview.verifed": {
+        "text": "Проверенный"
+    },
+    "levelpreview.unverifed": {
+        "text": "Непроверенный"
+    },
+
+    "levelcell.verifed": {
+        "text": "Проверенный"
+    },
+    "levelcell.unverifed": {
+        "text": "Непроверенный"
+    },
+
+
+    "itempopup.buyitem": {
+        "text": "Купить Товар"
+    }
+}

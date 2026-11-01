@@ -1,37 +1,40 @@
 using namespace geode::prelude;
 
-#define saves getMod()->getSaveContainer
-
-namespace fs {
-	using namespace std::filesystem;
-	using namespace geode::cocos;
-	typedef CCFileUtils cocos;
-};
-
+#include <asp/fs.hpp>
 void resourceSetup() {
     auto resourcesDir = getMod()->getResourcesDir() / "resources";
 
     CCTexturePack rd;
     rd.m_id = Mod::get()->getID();
-	
-    rd.m_paths.push_back(string::pathToString(resourcesDir));
-    rd.m_paths.push_back(string::pathToString(dirs::getGameDir()));
 
-    fs::cocos::get()->addTexturePack(rd);
+    rd.m_paths.push_back(resourcesDir.string());
+    rd.m_paths.push_back(dirs::getGameDir().string());
 
-    for (const auto& entry : fs::recursive_directory_iterator(resourcesDir)) {
-        if (!entry.is_regular_file())
-            continue;
+    CCFileUtils::get()->addTexturePack(rd);
 
-        auto ext = entry.path().extension().string();
-        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    auto iterRes = asp::fs::iterDir(resourcesDir);
+    if (iterRes.isErr()) {
+        log::warn("resourceSetup: failed to iterate {}: {}", resourcesDir.string(), iterRes.unwrapErr());
+        return;
+    }
 
-        if (string::containsAny(ext, std::vector<std::string>{".png", ".plist", ".fnt"})) {
-            auto relativePath = fs::relative(entry.path(), resourcesDir);
-            auto path = string::pathToString(relativePath);
+    for (auto entryRes : iterRes.unwrap()) {
+        if (entryRes.isErr()) continue;
+        auto& entry = entryRes.unwrap();
+        if (!entry.isFile()) continue;
+
+        auto extOpt = entry.path.extension();
+        if (!extOpt) continue;
+
+        std::string extLower(extOpt->begin(), extOpt->end());
+        std::transform(extLower.begin(), extLower.end(), extLower.begin(), ::tolower);
+
+        if (extLower == "png" || extLower == "plist" || extLower == "fnt") {
+            auto nameOpt = entry.path.filename();
+            if (!nameOpt) continue;
+            std::string path = nameOpt->string();
 
             auto sprite = CCSprite::create(path.c_str());
-
             if (sprite) {
                 CCSpriteFrameCache::get()->addSpriteFrame(
                     sprite->displayFrame(),

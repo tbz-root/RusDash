@@ -1,6 +1,6 @@
 using namespace geode::prelude;
 
-#include <matjson.hpp>
+/* #include <matjson.hpp>
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
 #include <Geode/modify/ProfilePage.hpp>
@@ -173,7 +173,7 @@ class $modify(MyProfilePage, ProfilePage) {
 
     void applyThemeToProfile(std::string themeID)
     {
-        auto profileOriginalCard = MyProfilePage::getChildByIndex(0);
+        auto profileOriginalCard = this->getChildByIndex(0);
         if (!profileOriginalCard)
             return;
 
@@ -371,4 +371,4 @@ $execute {
         "tt01"_spr, "TickToker Badge", "The badge for the RusDash ticktoker. Must have > 1000 subscribers on tiktok and invite > 50 players by your videos!",
         [](const Badge &badge)
         { handleBadgeCheck(badge, "tt01", "tt01_badge.png"_spr); });
-}
+} */

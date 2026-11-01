@@ -79,7 +79,7 @@ static void registerStopKeyboardTrigger() {
         STOP_KEYBOARD_TRIGGER_ID,
         "stopKeyboardTrigger.png",
 
-        [](EffectGameObject* trigger, GJBaseGameLayer* game, int, gd::vector<int> const*) {
+        [](EffectGameObject* trigger, GJBaseGameLayer* game, int, std::vector<int> const*) {
             if (!trigger || !game) return;
             auto data = stopKbEnsureData(trigger);
             log::info("Stop Keyboard Trigger fired (target group={})", data->targetGroup);
@@ -108,7 +108,7 @@ static void registerStopKeyboardTrigger() {
         stopKbEnsureData(obj);
     });
 
-    config->objectFromVector([](GameObject* obj, gd::vector<gd::string>& p0, gd::vector<void*>&, GJBaseGameLayer*, bool) -> GameObject* {
+    config->objectFromVector([](GameObject* obj, std::vector<std::string>& p0, std::vector<void*>&, GJBaseGameLayer*, bool) -> GameObject* {
         auto data = stopKbEnsureData(obj);
         if (p0.size() > 228 && !p0[228].empty()) {
             data->fromString(ZipUtils::base64URLDecode(p0[228].c_str()));
@@ -117,12 +117,12 @@ static void registerStopKeyboardTrigger() {
         return obj;
     });
 
-    config->saveString([](std::string str, GameObject* obj, GJBaseGameLayer*) -> gd::string {
+    config->saveString([](std::string str, GameObject* obj, GJBaseGameLayer*) -> std::string {
         if (auto data = stopKbGetData(obj)) {
             str += ",228,";
             str += ZipUtils::base64URLEncode(data->toString().c_str()).c_str();
         }
-        return gd::string(str.c_str());
+        return std::string(str.c_str());
     });
 
     config->registerMe();

@@ -106,7 +106,7 @@ inline static auto exchangeCustomObjectIDs(
 
 #include <Geode/modify/GJBaseGameLayer.hpp>
 class $modify(GJBaseGameLayerFactoryExt, GJBaseGameLayer) {
-    void spawnObject(GameObject * object, double delay, gd::vector<int> const& remapKeys) {
+    void spawnObject(GameObject * object, double delay, std::vector<int> const& remapKeys) {
         if (ALREADY_HAVE_GOF_IMPL) return GJBaseGameLayer::spawnObject(object, delay, remapKeys);
 
         auto changedObjects = exchangeCustomObjectIDs(object);
@@ -151,7 +151,7 @@ class $modify(EffectGameObjectFactoryExt, EffectGameObject) {
         // Call custom activation if available
         if (THIS_CONF) if (auto fn = config->m_triggerActivated) fn(this, p0);
     }
-    void triggerObject(GJBaseGameLayer * p0, int p1, gd::vector<int> const* p2) {
+    void triggerObject(GJBaseGameLayer * p0, int p1, std::vector<int> const* p2) {
         if (ALREADY_HAVE_GOF_IMPL) return EffectGameObject::triggerObject(p0, p1, p2);
 
         EffectGameObject::triggerObject(p0, p1, p2);
@@ -189,7 +189,7 @@ class $modify(GameObjectFactoryExt, GameObject) {
 
             object->customSetup();
 
-            gd::string frame = ObjectToolbox::sharedState()->intKeyToFrame(
+            std::string frame = ObjectToolbox::sharedState()->intKeyToFrame(
                 config->m_refObjectID
             );
             object->addColorSprite(frame);
@@ -206,7 +206,7 @@ class $modify(GameObjectFactoryExt, GameObject) {
         return GameObject::createWithKey(p0);
     }
 
-    static GameObject* objectFromVector(gd::vector<gd::string>& p0, gd::vector<void*>& p1, GJBaseGameLayer* p2, bool p3) {
+    static GameObject* objectFromVector(std::vector<std::string>& p0, std::vector<void*>& p1, GJBaseGameLayer* p2, bool p3) {
         if (ALREADY_HAVE_GOF_IMPL) return GameObject::objectFromVector(p0, p1, p2, p3);
 
         auto object = GameObject::objectFromVector(p0, p1, p2, p3);
@@ -229,7 +229,7 @@ class $modify(GameObjectFactoryExt, GameObject) {
         return object;
     }
 
-    gd::string getSaveString(GJBaseGameLayer* p0) {
+    std::string getSaveString(GJBaseGameLayer* p0) {
         if (ALREADY_HAVE_GOF_IMPL) return GameObject::getSaveString(p0);
 
         auto str = std::string(GameObject::getSaveString(p0));
