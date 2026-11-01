@@ -1,13 +1,13 @@
-#include "hpp/selectMenu.hpp"
+using namespace geode::prelude;
+
+#include "../hpp/selectMenu.hpp"
 #include <matjson.hpp>
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
 #include <Geode/Geode.hpp>
 #include <chrono>
 #include <fstream>
-
-using namespace geode::prelude;
-
+#include <asp/fs.hpp>
 static TaskHolder<web::WebResponse> s_updateCheckTask;
 static TaskHolder<web::WebResponse> s_downloadTask;
 
@@ -50,7 +50,7 @@ static CCLabelBMFont* s_titleLabel = nullptr;
 class ExitTrigger : public CCObject {
 public:
     void onExit(CCObject*) {
-        utils::game::restart(true);
+        game::restart(true, false);
     }
 };
 static ExitTrigger s_exitTrigger;
@@ -164,7 +164,7 @@ void downloadLatestVersion(std::string const& downloadUrl) {
             }
 
             auto bytes = res.data();
-            std::ofstream file(newModPath, std::ios::binary);
+            std::ofstream file(newModPath.string(), std::ios::binary);
 
             if (file.is_open()) {
                 file.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
@@ -172,10 +172,8 @@ void downloadLatestVersion(std::string const& downloadUrl) {
                 log::info("New version staged as .geode.new!");
                 auto unzippedDir = dirs::getGeodeDir() / "unzipped" / Mod::get()->getID();
                 auto cachedManifest = unzippedDir / "mod.json";
-                if (std::filesystem::exists(cachedManifest)) {
-                    try {
-                        std::filesystem::remove(cachedManifest);
-                    } catch(...) {}
+                if (cachedManifest.exists()) {
+                    (void)asp::fs::remove(cachedManifest);
                 }
 
                 Loader::get()->queueInMainThread([]() {
@@ -206,6 +204,7 @@ void downloadLatestVersion(std::string const& downloadUrl) {
 class $modify(MyMenuLayer, MenuLayer) {
     bool init() {
         std::string modVersion = Mod::get()->getVersion().toVString();
+        #ifdef BRELEASE
         std::string body = "modVersion=" + modVersion;
 
         auto req = web::WebRequest();
@@ -236,6 +235,7 @@ class $modify(MyMenuLayer, MenuLayer) {
                 });
             }
         );
+        #endif
 
         if (!MenuLayer::init()) return false;
         
@@ -246,12 +246,10 @@ class $modify(MyMenuLayer, MenuLayer) {
             menu_selector(MyMenuLayer::onOpenSettings)
         );
 
-        auto menu = this->getChildByID("bottom-menu");
-        if (menu) {
-            menu->addChild(themesButton);
-            themesButton->setID("themes-button"_spr);
-            menu->updateLayout();
-        }
+        themesButton->setID("themes-button"_spr);
+
+        this->getChildByID("bottom-menu")->addChild(themesButton);
+        this->getChildByID("bottom-menu")->updateLayout();
 
         auto versionLabel = CCLabelBMFont::create(
             modVersion.c_str(),
@@ -271,7 +269,7 @@ class $modify(MyMenuLayer, MenuLayer) {
     static auto onModify(auto) {
         CCTexturePack rd;
         rd.m_id = std::string(Mod::get()->getID());
-        rd.m_paths.push_back(string::pathToString(Mod::get()->getResourcesDir() / "resources"));
+        rd.m_paths.push_back((Mod::get()->getResourcesDir() / "resources").string());
         CCFileUtils::get()->addTexturePack(rd);
     }
 
@@ -290,16 +288,17 @@ $on_mod(Loaded) {
     auto currentModPath = modsDir / (Mod::get()->getID() + ".geode");
     auto stagedModPath = modsDir / (Mod::get()->getID() + ".geode.new");
 
-    if (std::filesystem::exists(stagedModPath)) {
-        try {
-            if (std::filesystem::exists(currentModPath)) {
-                std::filesystem::remove(currentModPath);
-            }
-            std::filesystem::rename(stagedModPath, currentModPath);
+    if (stagedModPath.exists()) {
+        if (currentModPath.exists()) {
+            auto rm = asp::fs::remove(currentModPath);
+            if (rm.isErr()) log::error("Failed to remove old mod: {}", rm.unwrapErr());
+        }
+        auto ren = asp::fs::rename(stagedModPath, currentModPath);
+        if (ren.isOk()) {
             log::info("RusDash successfully auto-replaced on startup!");
-            utils::game::restart(true);
-        } catch (std::exception const& e) {
-            log::error("Failed to apply update on startup: {}", e.what());
+            game::restart(true, false);
+        } else {
+            log::error("Failed to apply update on startup: {}", ren.unwrapErr());
         }
     }
 }
@@ -316,8 +315,8 @@ class $modify(GameManager) {
 
 #include <Geode/modify/PlayLayer.hpp>
 class $modify(PlayLayer) {
-    bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
-        if (!PlayLayer::init(level, useReplay, dontCreateObjects))
+    bool init(GJGameLevel* level, bool dontCreateObjects) {
+        if (!PlayLayer::init(level, dontCreateObjects))
             return false;
 
         #ifdef GEODE_IS_DESKTOP

@@ -1,6 +1,7 @@
 using namespace geode::prelude;
 
 #include <fstream>
+#include <Geode/utils/crypto.hpp>
 #include <unordered_map>
 struct LevelData {
     std::string levelName;
@@ -18,7 +19,7 @@ static std::unordered_map<int, LevelData> loadLevels() {
 
     auto path = Mod::get()->getResourcesDir() / "levels.txt";
 
-    std::ifstream hashFile(path, std::ios::binary);
+    std::ifstream hashFile(path.string(), std::ios::binary);
     if (hashFile.is_open()) {
         Sha256Hasher configHasher;
         std::array<char, 8192> buffer;
@@ -34,7 +35,7 @@ static std::unordered_map<int, LevelData> loadLevels() {
         }
     }
 
-    std::ifstream file(path);
+    std::ifstream file(path.string());
     if (!file.is_open()) {
         log::error("Failed to open {}", path);
         return levels;
@@ -172,13 +173,13 @@ static const std::unordered_map<int, std::string> g_levelHashes = {
     {9, "9CCB5757FFF485BD870FC9F37E95EB025C0E10CCE0B41F366A933EE8348D2014"},
     {10, "AA7A3E36E39A97CFD5D8613C612362144F4875EC6927805DB453816750EFC260"},
     {11, "6209C8F2071C0582A934247C0F554C09E2A999FDA503634F7F2D16EDDD75C6C8"},
+    {3001, "CB33607DBBA041BE4D840AA90B5041E7CCAD457D78FEDB0EDEF516CF6653A8FD"},
     {5001, "B25A37281E632BF3A369F05298D8E2BC49C3D5B445A53F16C01795E59FA3D4B6"},
     {5002, "C9DB9E016DE3E95BFA37B7272ED9EFBBDEE6F00E1657ED3992EF810AEA8501A2"},
     {5003, "2025625A20170E025CD0FC34C63CC054BD92DA5CB0A6C09B711EA706BD69B77F"},
     {5004, "4F7BE8D5E3AAA41ED010872D847E37A04ACB423587C5D054A4B5A6EB97B67C6F"},
 };
 
-#include <Geode/utils/hash.hpp>
 static bool verifyCustomLevel(int levelID) {
     auto it = g_levelHashes.find(levelID);
 
@@ -192,7 +193,7 @@ static bool verifyCustomLevel(int levelID) {
         "levels" /
         fmt::format("{}.txt", levelID);
 
-    std::ifstream stream(file, std::ios::binary);
+    std::ifstream stream(file.string(), std::ios::binary);
 
     if (!stream.is_open()) {
         log::error("Failed to open level: {}", file);
@@ -247,7 +248,7 @@ static bool verifyCustomLevel(int levelID) {
 
 #include <Geode/modify/LevelTools.hpp>
 class $modify(LevelTools) {
-    static bool verifyLevelIntegrity(gd::string verifyString, int levelID) {
+    static bool verifyLevelIntegrity(std::string verifyString, int levelID) {
         return verifyCustomLevel(levelID);
     }
 
@@ -337,10 +338,10 @@ class $modify(LevelSelectLayer) {
 
 #include <Geode/modify/LocalLevelManager.hpp>
 class $modify(LocalLevelManager) {
-    gd::string getMainLevelString(int id) {
-        std::filesystem::path file = Mod::get()->getResourcesDir() / "levels" / fmt::format("{}.txt", id);
+    std::string getMainLevelString(int id) {
+        asp::fs::Path file = Mod::get()->getResourcesDir() / "levels" / fmt::format("{}.txt", id);
 
-        std::ifstream stream(file, std::ios::binary);
+        std::ifstream stream(file.string(), std::ios::binary);
 
         if (!stream.is_open()) {
             return LocalLevelManager::getMainLevelString(id);
@@ -352,6 +353,6 @@ class $modify(LocalLevelManager) {
 
         content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
 
-        return gd::string(content.c_str());
+        return std::string(content.c_str());
     }
 };

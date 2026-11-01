@@ -10,7 +10,6 @@ using namespace geode::prelude;
 #include <Geode/ui/TextInput.hpp>
 #include <Geode/binding/ButtonSprite.hpp>
 #include <Geode/utils/file.hpp>
-
 static std::string encodeBase64(std::vector<uint8_t> const& data) {
 	static constexpr char kTbl[] =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -61,10 +60,10 @@ static std::string dialogIconName(int frame) {
 class $modify(MyTextArea, TextArea) {
 	static inline auto ForceWidth = 0.f;
 	static TextArea* create(
-		gd::string str, char const* font, float scale,
-		float width, cocos2d::CCPoint anchor, float lineHeight, bool disableColor
+		std::string str, char const* font, float scale,
+		float width, cocos2d::CCPoint anchor, float lineHeight, bool disableColor, int maxEmoji = 0
 	) {
-		return TextArea::create(str, font, scale, ForceWidth ? ForceWidth : width, anchor, lineHeight, disableColor);
+		return TextArea::create(str, font, scale, ForceWidth ? ForceWidth : width, anchor, lineHeight, disableColor, maxEmoji);
 	};
 };
 
@@ -663,7 +662,7 @@ protected:
 				opts.filters = { { "PNG images", { "*.png" } } };
 				async::spawn(
 					file::pick(file::PickMode::OpenFile, opts),
-					[this](Result<std::optional<std::filesystem::path>> result) {
+					[this](Result<std::optional<asp::fs::Path>> result) {
 						if (result.isErr()) {
 							log::warn("file pick failed: {}", result.unwrapErr());
 							return;
@@ -981,7 +980,7 @@ protected:
 		m_buttonMenu->addChild(pagesBtn);
 
 		auto run = CCMenuItemExt::createSpriteExtra(
-			ButtonSprite::create("Run"),
+			ButtonSprite::create("RUN"),
 			[this](CCMenuItem*) {
 				m_trigger->triggerObject(GameManager::get()->m_gameLayer, 0, nullptr);
 			}
@@ -1060,7 +1059,7 @@ class $modify(DialogLayer) {
 
 		GameObjectsFactory::registerGameObject(GameObjectsFactory::createTriggerConfig(
 			UNIQ_ID("dialog-trigger"), "dialogTrigger.png",
-			[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+			[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, std::vector<int> const* p2)
 			{
 				if (!trigger) return;
 				if (!game) return;
@@ -1462,17 +1461,17 @@ class $modify(DialogLayer) {
 		)->saveString(
 			[](std::string str, GameObject* object, GJBaseGameLayer* level)
 			{
-				if (!object) return gd::string(str.c_str());
-				if (!level) return gd::string(str.c_str());
+				if (!object) return std::string(str.c_str());
+				if (!level) return std::string(str.c_str());
 				if (auto data = typeinfo_cast<CCNode*>(object->getUserObject("data"_spr))) {
 					str += ",228,";
 					str += ZipUtils::base64URLEncode(data->getID().c_str()).c_str();
 				}
 
-				return gd::string(str.c_str());
+				return std::string(str.c_str());
 			}
 		)->objectFromVector(
-			[](GameObject* object, gd::vector<gd::string>& p0, gd::vector<void*>&, void*, bool) {
+			[](GameObject* object, std::vector<std::string>& p0, std::vector<void*>&, void*, bool) {
 				if (!object) return object;
 
 				auto data = typeinfo_cast<CCNode*>(object->getUserObject("data"_spr));
@@ -1539,7 +1538,7 @@ class $modify(DialogLayer) {
 
 		if (auto a = "!activate:"; string::startsWith(text, a)) {
 			auto id = utils::numFromString<int>(string::replace(text, a, "")).unwrapOrDefault();
-			if (del->m_game) del->m_game->spawnGroup(id, false, 0, gd::vector<int>(), -1, -1);
+			if (del->m_game) del->m_game->spawnGroup(id, false, 0, std::vector<int>(), -1, -1);
 
 			return true;
 		}
@@ -1616,7 +1615,7 @@ class $modify(DialogLayer) {
 					group1, group2](CCNode* a, bool btn2) {
 						del->dialogClosed(nullptr);
 						if (game) game->spawnGroup(
-							btn2 ? group2 : group1, false, 0, gd::vector<int>(), -1, -1
+							btn2 ? group2 : group1, false, 0, std::vector<int>(), -1, -1
 						);
 						if (_) {
 							a->getParent()->addChild(_);

@@ -12,7 +12,6 @@ static void forceToTop(CCNode* item) {
     auto* children = parent->getChildren();
     if (!children || children->count() == 0) return;
 
-    // Already first
     if (children->objectAtIndex(0) == item) {
         if (parent->getLayout()) parent->updateLayout();
         return;

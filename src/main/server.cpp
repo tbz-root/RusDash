@@ -1,4 +1,4 @@
-#include "hpp/server.hpp"
+#include "../hpp/server.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCHttpClient.hpp>
 #include <Geode/modify/CCApplication.hpp>
@@ -30,7 +30,7 @@ class $modify(CCHttpClient) {
         }
         req->setUrl(url.c_str());
 
-        gd::vector<gd::string> headers = req->getHeaders();
+        std::vector<std::string> headers = req->getHeaders();
         for (auto it = headers.begin(); it != headers.end();) {
             std::string headerStr = std::string(*it);
             if (headerStr.find("User-Agent:") == 0 || headerStr.find("user-agent:") == 0 || headerStr.find("User-agent:") == 0) {

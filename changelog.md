@@ -1,6 +1,15 @@
-# v1.0.5
+# v1.1.0
+- Fixed The Challenge
+- Updated to 2.2091 gd :3
+- Added Player Scale Trigger
+- Added pages to Keyboard Trigger
+- Attempt to fix TriggerTemplatePopup
+- Added languages (You can change in Settings or Mod Settings)
+
+## v1.0.5
 - Added custom icons
 - Added custom sprite to news button
+- Added version label over title in Main Menu
 - Added custom save manager (ty to gdps switcher's source for ts)
 - Fixed Dialog Trigger popup background (Fixed TriggerTemplatePopup)
 
