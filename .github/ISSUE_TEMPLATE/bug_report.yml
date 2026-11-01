@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Спасибо, что помогаете **RusDash Mod**!
+        Спасибо, что помогаете улучшать **RusDash Mod**!
         Пожалуйста, заполните форму максимально подробно — это сильно ускорит исправление бага.
 
   - type: textarea
@@ -55,8 +55,8 @@ body:
     id: gd-version
     attributes:
       label: "Версия Geometry Dash"
-      description: "Например, 2.2081"
-      placeholder: "2.2081"
+      description: "Например, 2.2091"
+      placeholder: "2.2091"
     validations:
       required: true
 
@@ -65,7 +65,7 @@ body:
     attributes:
       label: "Версия Geode"
       description: "Можно посмотреть в настройках Geode"
-      placeholder: "v4.10.1"
+      placeholder: "v5.11.2"
     validations:
       required: true
 
@@ -73,8 +73,8 @@ body:
     id: mod-version
     attributes:
       label: "Версия RusDash Mod"
-      description: "Можно увидеть в списке модов Geode"
-      placeholder: "v1.0.5"
+      description: "Можно увидеть в о моде"
+      placeholder: "v1.1.0"
     validations:
       required: true
 
@@ -87,19 +87,19 @@ body:
       options:
         - Windows
         - Android
-        - Linux (Wine / Proton или другое)
+        - Linux (Wine - Proton или другое)
     validations:
       required: true
 
   - type: textarea
     id: logs
     attributes:
-      label: "📂 Краш-лог или логи Geode"
+      label: "📂 Краш или логи Geode"
       description: |
         Краш-лог можно найти в `geode/crashlogs`. Выберите самый новый файл по времени краша.
         Логи можно найти в `geode/logs`. Выберите файл по времени возникновения бага или краша.
         Это очень помогает при диагностике.
-      placeholder: "Вставьте сюда текст лога или опишите, что видите в консоли, если она включена."
+      placeholder: "Вставьте сюда текст лога или опишите, что видите в консоли, если она включена или в логах."
       render: shell
     validations:
       required: false
@@ -108,7 +108,7 @@ body:
     id: additional
     attributes:
       label: "📎 Дополнительные материалы"
-      description: "Скриншоты, видео, ссылки на записи экрана — всё, что поможет понять проблему. Можно просто перетащить файлы в issue после создания."
+      description: "Скриншоты, видео, ссылки на записи экрана — всё, что поможет понять проблему."
       placeholder: "Ссылки или описание прикреплённых файлов..."
     validations:
       required: false
