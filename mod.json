@@ -1,5 +1,5 @@
 {
-	"geode": "5.11.2",
+	"geode": "6.0.0-alpha.1",
 	"early-load": true,
 	"gd": {
 		"win": "2.2091",
@@ -79,19 +79,22 @@
 	},
 	"api": {
 		"include": [
+			"include/*.hpp",
+			"resources/Active.mp3",
+			"resources/UltimateDestruction.mp3",
+			"resources/tabz.rusdash/lang/*.json",
 			"resources/tabz.rusdash/levels/*.txt",
 			"resources/tabz.rusdash/resources/*.png",
-			"resources/tabz.rusdash/resources/*.plist",
 			"resources/tabz.rusdash/resources/*.fnt",
-			"resources/tabz.rusdash/lang/*.json",
-			"include/*.hpp"
+			"resources/tabz.rusdash/resources/*.plist"
 		]
 	},
 	"tags": [
 		"offline",
 		"online",
 		"gameplay",
-		"utility"
+		"utility",
+		"gdps"
 	],
 	"links": {
 		"homepage": "https://www.rustps.online",

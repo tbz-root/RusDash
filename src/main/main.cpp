@@ -341,3 +341,27 @@ class $modify(LoadingLayer) {
         return true;
     }
 };
+#ifdef BDEBUG
+#include <Geode/modify/LevelEditorLayer.hpp>
+#include <Geode/utils/Keyboard.hpp>
+class $modify(LevelEditorLayer) {
+    bool init(GJGameLevel* level, bool noUI) {
+        if (!LevelEditorLayer::init(level, noUI))
+            return false;
+
+        this->addEventListener(
+            "",
+            KeyboardInputEvent(KEY_K),
+            [this](KeyboardInputData& data) {
+                if (data.action == KeyboardInputData::Action::Press) {
+                    clipboard::write(getLevelString());
+                }
+
+                return ListenerResult::Propagate;
+            }
+        );
+
+        return true;
+    }
+};
+#endif
