@@ -1,4 +1,7 @@
-# v1.1.0
+v1.1.1
+- ya hyesos
+
+## v1.1.0
 - Fixed The Challenge
 - Updated to 2.2091 gd :3
 - Added Player Scale Trigger
