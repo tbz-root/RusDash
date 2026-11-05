@@ -403,3 +403,83 @@ class $modify(LocalLevelManager) {
         return std::string(content.c_str());
     }
 };
+
+#include <Geode/modify/AchievementManager.hpp>
+class $modify(AchievementManager) {
+    void addManualAchievements() {
+        AchievementManager::addManualAchievements();
+
+        this->addAchievement(
+            "geometry.ach.ultimate.struction",
+            "Ultimate Struction",
+            "Complete 'Ultimate Destruction' in Practice mode",
+            "Complete 'Ultimate Destruction' in Practice mode",
+            "color_88_001.png",
+            0
+        );
+
+        this->addAchievement(
+            "geometry.ach.ultimate.destruction",
+            "Ultimate Destruction",
+            "Complete 'Ultimate Destruction' in Normal mode",
+            "Complete 'Ultimate Destruction' in Normal mode",
+            "player_486_001.png",
+            0
+        );
+
+        this->addAchievement(
+            "geometry.ach.active.inactive",
+            "Inactive",
+            "Complete 'Active' in Practice mode",
+            "Complete 'Active' in Practice mode",
+            "color_55_001.png",
+            0
+        );
+
+        this->addAchievement(
+            "geometry.ach.active",
+            "Active",
+            "Complete 'Active' in Normal mode",
+            "Complete 'Active' in Normal mode",
+            "player_487_001.png",
+            0
+        );
+    }
+};
+
+#include <Geode/binding/GameManager.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+class $modify(PlayLayer) {
+    void levelComplete() {
+        PlayLayer::levelComplete();
+
+        if (!m_level) return;
+
+        if (m_level->m_levelID == 17500) {
+            if (m_isPracticeMode) {
+                if (!AchievementManager::sharedState()->isAchievementEarned("geometry.ach.ultimate.struction")) {
+                    AchievementManager::sharedState()->reportAchievementWithID("geometry.ach.ultimate.struction", 100, false);
+                    GameManager::sharedState()->unlockColor(88, UnlockType::Col1);
+                }
+            } else {
+                if (!AchievementManager::sharedState()->isAchievementEarned("geometry.ach.ultimate.destruction")) {
+                    AchievementManager::sharedState()->reportAchievementWithID("geometry.ach.ultimate.destruction", 100, false);
+                    GameManager::sharedState()->unlockIcon(486, IconType::Cube);
+                }
+            }
+        }
+        else if (m_level->m_levelID == 17501) {
+            if (m_isPracticeMode) {
+                if (!AchievementManager::sharedState()->isAchievementEarned("geometry.ach.active.inactive")) {
+                    AchievementManager::sharedState()->reportAchievementWithID("geometry.ach.active.inactive", 100, false);
+                    GameManager::sharedState()->unlockColor(55, UnlockType::Col1);
+                }
+            } else {
+                if (!AchievementManager::sharedState()->isAchievementEarned("geometry.ach.active")) {
+                    AchievementManager::sharedState()->reportAchievementWithID("geometry.ach.active", 100, false);
+                    GameManager::sharedState()->unlockIcon(487, IconType::Cube);
+                }
+            }
+        }
+    }
+};
