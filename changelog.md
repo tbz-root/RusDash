@@ -4,6 +4,7 @@
 - Added Player Scale Trigger
 - Added pages to Keyboard Trigger
 - Attempt to fix TriggerTemplatePopup
+- Back official levels but added 2 custom levels
 - Added languages (You can change in Settings or Mod Settings)
 
 ## v1.0.5

@@ -1,80 +1,171 @@
 [1]
-m_levelName = "Easy Level"
+m_levelName = "Stereo Madness"
 m_difficulty = GJDifficulty::Easy
-m_stars = 2
-m_requiredCoins = 0
-m_audioTrack = 4
-
-[2]
-m_levelName = "Cycling"
-m_difficulty = GJDifficulty::Easy
-m_stars = 2
-m_requiredCoins = 0
-m_audioTrack = 8
-
-[3]
-m_levelName = "Stereo Pink"
-m_difficulty = GJDifficulty::Normal
-m_stars = 3
-m_requiredCoins = 0
-m_audioTrack = 0
-
-[4]
-m_levelName = "Stereo Upgradness"
-m_difficulty = GJDifficulty::Hard
-m_stars = 4
-m_requiredCoins = 0
-m_audioTrack = 0
-
-[5]
-m_levelName = "PolarShift"
-m_difficulty = GJDifficulty::Hard
-m_stars = 4
-m_requiredCoins = 0
-m_audioTrack = 2
-
-[6]
-m_levelName = "Back On Tabz"
-m_difficulty = GJDifficulty::Hard
-m_stars = 4
-m_requiredCoins = 0
-m_audioTrack = 4
-
-[7]
-m_levelName = "ToyTou"
-m_difficulty = GJDifficulty::Hard
-m_stars = 5
-m_requiredCoins = 0
-m_audioTrack = 18
-
-[8]
-m_levelName = "Jumping Adventure"
-m_difficulty = GJDifficulty::Harder
-m_stars = 7
-m_requiredCoins = 0
-m_audioTrack = 12
-
-[9]
-m_levelName = "Metrical Trical"
-m_difficulty = GJDifficulty::Insane
-m_stars = 8
-m_requiredCoins = 0
-m_audioTrack = 18
-
-[10]
-m_levelName = "SPEED BLAST"
-m_difficulty = GJDifficulty::Insane
-m_stars = 9
-m_requiredCoins = 0
-m_audioTrack = 14
-
-[11]
-m_levelName = "Unnamed 1"
-m_difficulty = GJDifficulty::Auto
 m_stars = 1
 m_requiredCoins = 0
 m_audioTrack = 0
 
+[2]
+m_levelName = "Back On Track"
+m_difficulty = GJDifficulty::Easy
+m_stars = 2
+m_requiredCoins = 0
+m_audioTrack = 1
+
+[3]
+m_levelName = "Polargeist"
+m_difficulty = GJDifficulty::Normal
+m_stars = 3
+m_requiredCoins = 0
+m_audioTrack = 2
+
+[4]
+m_levelName = "Dry Out"
+m_difficulty = GJDifficulty::Normal
+m_stars = 4
+m_requiredCoins = 0
+m_audioTrack = 3
+
+[5]
+m_levelName = "Base After Base"
+m_difficulty = GJDifficulty::Hard
+m_stars = 5
+m_requiredCoins = 0
+m_audioTrack = 4
+
+[6]
+m_levelName = "Cant Let Go"
+m_difficulty = GJDifficulty::Hard
+m_stars = 6
+m_requiredCoins = 0
+m_audioTrack = 5
+
+[7]
+m_levelName = "Jumper"
+m_difficulty = GJDifficulty::Hard
+m_stars = 7
+m_requiredCoins = 0
+m_audioTrack = 6
+
+[8]
+m_levelName = "Time Machine"
+m_difficulty = GJDifficulty::Harder
+m_stars = 8
+m_requiredCoins = 0
+m_audioTrack = 7
+
+[9]
+m_levelName = "Cycles"
+m_difficulty = GJDifficulty::Harder
+m_stars = 9
+m_requiredCoins = 0
+m_audioTrack = 8
+
+[10]
+m_levelName = "xStep"
+m_difficulty = GJDifficulty::Insane
+m_stars = 10
+m_requiredCoins = 0
+m_audioTrack = 9
+
+[11]
+m_levelName = "Clutterfunk"
+m_difficulty = GJDifficulty::Insane
+m_stars = 11
+m_requiredCoins = 0
+m_audioTrack = 10
+
+[12]
+m_levelName = "Theory of Everything"
+m_difficulty = GJDifficulty::Insane
+m_stars = 12
+m_requiredCoins = 0
+m_audioTrack = 11
+
+[13]
+m_levelName = "Electroman Adventures"
+m_difficulty = GJDifficulty::Insane
+m_stars = 10
+m_requiredCoins = 0
+m_audioTrack = 12
+
+[14]
+m_levelName = "Clubstep"
+m_difficulty = GJDifficulty::Demon
+m_stars = 14
+m_requiredCoins = 0
+m_audioTrack = 13
+
+[15]
+m_levelName = "Electrodynamix"
+m_difficulty = GJDifficulty::Insane
+m_stars = 12
+m_requiredCoins = 0
+m_audioTrack = 14
+
+[16]
+m_levelName = "Hexagon Force"
+m_difficulty = GJDifficulty::Insane
+m_stars = 12
+m_requiredCoins = 0
+m_audioTrack = 15
+
+[17]
+m_levelName = "Blast Processing"
+m_difficulty = GJDifficulty::Insane
+m_stars = 10
+m_requiredCoins = 0
+m_audioTrack = 16
+
+[18]
+m_levelName = "Theory of Everything 2"
+m_difficulty = GJDifficulty::Demon
+m_stars = 14
+m_requiredCoins = 0
+m_audioTrack = 17
+
+[19]
+m_levelName = "Geometrical Dominator"
+m_difficulty = GJDifficulty::Harder
+m_stars = 10
+m_requiredCoins = 0
+m_audioTrack = 18
+
+[20]
+m_levelName = "Deadlocked"
+m_difficulty = GJDifficulty::Demon
+m_stars = 15
+m_requiredCoins = 0
+m_audioTrack = 19
+
+[21]
+m_levelName = "Fingerdash"
+m_difficulty = GJDifficulty::Insane
+m_stars = 12
+m_requiredCoins = 0
+m_audioTrack = 20
+
+[22]
+m_levelName = "Dash"
+m_difficulty = GJDifficulty::Insane
+m_stars = 12
+m_requiredCoins = 0
+m_audioTrack = 21
+
+[17500]
+m_levelName = "Ultimate Destruction"
+m_difficulty = GJDifficulty::Hard
+m_stars = 4
+m_requiredCoins = 0
+m_audioTrack = 17500
+
+[17501]
+m_levelName = "Active"
+m_difficulty = GJDifficulty::Hard
+m_stars = 5
+m_requiredCoins = 0
+m_audioTrack = 17501
+
 
 [Config]
-levels = 11
+levels = 24

@@ -28,7 +28,7 @@ static std::unordered_map<int, LevelData> loadLevels() {
         }
         std::string currentHash = configHasher.finish().toString();
 
-        std::string expectedHash = "4a8fe851243ae14150c6acb4d65cbbbbe7fa6f27ea84dca7ec3cf6a8bf28c51f";
+        std::string expectedHash = "63d7af438fd105950a2a09bebe2b77e8a7e8e2451a638e3657de7b9f93303223";
 
         if (currentHash != expectedHash) {
             return levels;
@@ -162,17 +162,30 @@ static std::unordered_map<int, LevelData> loadLevels() {
 }
 
 static const std::unordered_map<int, std::string> g_levelHashes = {
-    {1, "3F0201CCE9F6C15A22FCA80680B4B7570867613C5EF58DA1B8F9C668F87B9D17"},
-    {2, "C2ED951E34B59BA31EE7542F0CBF2D1E89DFE90114BBB406690D7F4A631473BC"},
-    {3, "FBB3503AF26BD9C32194E88DEC78F86027681B5F457A9D9592BE6608E60C9582"},
-    {4, "BE5B7200A207A5B6D3247619CF35DD032769BE6E52E2A4CC1BAE89603B5EB20A"},
-    {5, "41B06E184E5FB52B735EC18A1F2A654FAB7D30EC41EE10506ED8FB7F00C835B9"},
-    {6, "DDB45D67B24DD0FF2B3D3F993787A13CA94108DB625DFC1A6C7E248AC9BA4E65"},
-    {7, "B4F2D25067FA09534E993BF876621971C94C1B5AC62874EB6BD8A47F1374BB65"},
-    {8, "4C5DEEF431531F782B4E8A45F98457D2D9F0AD244F81065A28AFCD9DDB503353"},
-    {9, "9CCB5757FFF485BD870FC9F37E95EB025C0E10CCE0B41F366A933EE8348D2014"},
-    {10, "AA7A3E36E39A97CFD5D8613C612362144F4875EC6927805DB453816750EFC260"},
-    {11, "6209C8F2071C0582A934247C0F554C09E2A999FDA503634F7F2D16EDDD75C6C8"},
+    {1, "BAAC8024B41F90E5D08E519F4B51B423E2038853AECB3CE59C6E428D1B49AF12"},
+    {2, "F63F13D67EAEE6A48D5091BC9EB3452012DA0FFCD5935C0091A8B09EACE76C36"},
+    {3, "9A62980B5BDAB51BE598A167194E1590AA98D579C95726815A880B8456E72514"},
+    {4, "3E7B86657AFEA48402A95E92DB874D57E3FD5D117FC4E351A4EFCFBB66D79578"},
+    {5, "587A6F5B7343280DDB0F6A9D499B227E9515019A78FDD309D3FC1B4714CA81E0"},
+    {6, "454024D034A256DA8053A680D31B3EB276C4C0ADE7D41D7DCC859CA68BA5F353"},
+    {7, "2D563E48BEA58C119677170869E0C3E1993869119860286D4AFFE5F361881E3E"},
+    {8, "40692F43B3CA70F762486E25FEECC4ACD9A77798B9FF69F958D40BF1B81E6860"},
+    {9, "18F9AEACFA4FF2CD93BC476AC66B5EEFF8A9E837BD2F3D7F50F8DCCE66DE5BD0"},
+    {10, "B3ECD3453FD29FBED349C9FC24569CE8D121BE5FD04496EFFB0AD67167738F75"},
+    {11, "29823EB793DBA21D04438A3B86DAE8E48A87175567300EB4AFF5781FF3EC6DBA"},
+    {12, "967AABD790174A69E08D2D20B36238D7D8E7A28E843B4FA7196DFE393DCC2BFA"},
+    {13, "911C5F96E2932594E9731B08E35D8BE281FB8A64E222B25741D3CACCF49A28F4"},
+    {14, "07E7533705F2301DCBFED988FAC597F3891CC1C2CB1CB9E6AF3A8AC534D5F4E2"},
+    {15, "BA0EF34B0A16D48C624B96A4C4E15858EE9B42EE700E8C541813DBD6E6E9463B"},
+    {16, "C36BB3A029BE1CCE8524DF3800E6846D9F275C5A92953F48483587A6DF10B9F6"},
+    {17, "F4AFAEB1CBDBE70F0D1D1A66E705A5F15784BB51835BC3EF59A476F06A953565"},
+    {18, "28CE1F70966D5CCA3044F5C711D3A30404F0E97D040ED9D22353492198B645B3"},
+    {19, "3B1554AA43245F82505E3EC06024BFE8A58859B01266A5FB7F432C78E6D89C56"},
+    {20, "3084F80E992A7420B2292E0E7B8E1BB294D60993D98D3EF7D39088ED87F43679"},
+    {21, "6277E571240D628EF87624104F2B3664C0DFA98CBF8865DD4EBC1ABEE65B9707"},
+    {22, "B2942B6D99E3BE6011E8D3855FA7BCEC8C045E816EA4CA28DA95510752AA265A"},
+    {17500, "500130f48b757305e1b167a08d8323818246c9a27631c126286b212cfe75a242"},
+    {17501, "efb4b01535effc45a34c85be060df02f645bf3fec4799da06bda15dd82bd73e9"},
     {3001, "CB33607DBBA041BE4D840AA90B5041E7CCAD457D78FEDB0EDEF516CF6653A8FD"},
     {5001, "B25A37281E632BF3A369F05298D8E2BC49C3D5B445A53F16C01795E59FA3D4B6"},
     {5002, "C9DB9E016DE3E95BFA37B7272ED9EFBBDEE6F00E1657ED3992EF810AEA8501A2"},
@@ -275,8 +288,37 @@ class $modify(LevelTools) {
 
         return level;
     }
+
+static std::string getAudioFileName(int id) {
+        if (id == 17500) {
+            return (Mod::get()->getResourcesDir() / "../" / "UltimateDestruction.mp3").string();
+        }
+
+        if (id == 17501) {
+            return (Mod::get()->getResourcesDir() / "../" / "Active.mp3").string();
+        }
+
+        return LevelTools::getAudioFileName(id);
+    }
+
+    static std::string getAudioTitle(int id) {
+        if (id == 17500) return "Ultimate Destruction";
+        if (id == 17501) return "Active";
+        return LevelTools::getAudioTitle(id);
+    }
+
+    static SongInfoObject* getSongObject(int id) {
+        if (id == 17500 || id == 17501) {
+            auto song = SongInfoObject::create(id, getAudioTitle(id), id == 17500 ? "TMM43" : "Unknown", 0, 0.f, "", 0, "", false, 0, 0);
+            return song;
+        }
+
+        return LevelTools::getSongObject(id);
+    }
 };
 
+#include <vector>
+#include <algorithm>
 #include <Geode/modify/LevelSelectLayer.hpp>
 class $modify(LevelSelectLayer) {
     bool init(int page) {
@@ -293,8 +335,19 @@ class $modify(LevelSelectLayer) {
 
         m_scrollLayer->m_dots->removeAllObjects();
 
-        for (int i = 1; i <= g_levelsCount; i++) {
-            auto level = GameLevelManager::get()->getMainLevel(i, true);
+        static auto levels = loadLevels();
+
+        std::vector<int> levelIDs;
+        levelIDs.reserve(levels.size());
+
+        for (auto const& [id, data] : levels) {
+            levelIDs.push_back(id);
+        }
+
+        std::sort(levelIDs.begin(), levelIDs.end());
+
+        for (int id : levelIDs) {
+            auto level = GameLevelManager::get()->getMainLevel(id, true);
 
             if (level) {
                 m_scrollLayer->m_dynamicObjects->addObject(level);
@@ -324,12 +377,6 @@ class $modify(LevelSelectLayer) {
 
         m_scrollLayer->updateDots(0.f);
         m_scrollLayer->updatePages();
-
-        this->updatePageWithObject(
-            m_scrollLayer->m_pages->objectAtIndex(page % 3),
-            m_scrollLayer->m_dynamicObjects->objectAtIndex(page)
-        );
-
         m_scrollLayer->repositionPagesLooped();
 
         return true;
@@ -354,5 +401,85 @@ class $modify(LocalLevelManager) {
         content.erase(std::remove(content.begin(), content.end(), '\r'), content.end());
 
         return std::string(content.c_str());
+    }
+};
+
+#include <Geode/modify/AchievementManager.hpp>
+class $modify(AchievementManager) {
+    void addManualAchievements() {
+        AchievementManager::addManualAchievements();
+
+        this->addAchievement(
+            "geometry.ach.ultimate.struction",
+            "Ultimate Struction",
+            "Complete 'Ultimate Destruction' in Practice mode",
+            "Complete 'Ultimate Destruction' in Practice mode",
+            "color_88_001.png",
+            0
+        );
+
+        this->addAchievement(
+            "geometry.ach.ultimate.destruction",
+            "Ultimate Destruction",
+            "Complete 'Ultimate Destruction' in Normal mode",
+            "Complete 'Ultimate Destruction' in Normal mode",
+            "player_486_001.png",
+            0
+        );
+
+        this->addAchievement(
+            "geometry.ach.active.inactive",
+            "Inactive",
+            "Complete 'Active' in Practice mode",
+            "Complete 'Active' in Practice mode",
+            "color_55_001.png",
+            0
+        );
+
+        this->addAchievement(
+            "geometry.ach.active",
+            "Active",
+            "Complete 'Active' in Normal mode",
+            "Complete 'Active' in Normal mode",
+            "player_487_001.png",
+            0
+        );
+    }
+};
+
+#include <Geode/binding/GameManager.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+class $modify(PlayLayer) {
+    void levelComplete() {
+        PlayLayer::levelComplete();
+
+        if (!m_level) return;
+
+        if (m_level->m_levelID == 17500) {
+            if (m_isPracticeMode) {
+                if (!AchievementManager::sharedState()->isAchievementEarned("geometry.ach.ultimate.struction")) {
+                    AchievementManager::sharedState()->reportAchievementWithID("geometry.ach.ultimate.struction", 100, false);
+                    GameManager::sharedState()->unlockColor(88, UnlockType::Col1);
+                }
+            } else {
+                if (!AchievementManager::sharedState()->isAchievementEarned("geometry.ach.ultimate.destruction")) {
+                    AchievementManager::sharedState()->reportAchievementWithID("geometry.ach.ultimate.destruction", 100, false);
+                    GameManager::sharedState()->unlockIcon(486, IconType::Cube);
+                }
+            }
+        }
+        else if (m_level->m_levelID == 17501) {
+            if (m_isPracticeMode) {
+                if (!AchievementManager::sharedState()->isAchievementEarned("geometry.ach.active.inactive")) {
+                    AchievementManager::sharedState()->reportAchievementWithID("geometry.ach.active.inactive", 100, false);
+                    GameManager::sharedState()->unlockColor(55, UnlockType::Col1);
+                }
+            } else {
+                if (!AchievementManager::sharedState()->isAchievementEarned("geometry.ach.active")) {
+                    AchievementManager::sharedState()->reportAchievementWithID("geometry.ach.active", 100, false);
+                    GameManager::sharedState()->unlockIcon(487, IconType::Cube);
+                }
+            }
+        }
     }
 };
