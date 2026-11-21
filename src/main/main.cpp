@@ -210,7 +210,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 
         auto req = web::WebRequest();
         req.bodyString(body);
-        req.timeout(std::chrono::seconds(15));
+        req.timeout(asp::Duration(15, 0));
 
         std::string url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJVersion22.php" : "https://www.rustps.online/database/getGJVersion22.php";
 
