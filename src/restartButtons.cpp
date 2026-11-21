@@ -36,8 +36,7 @@ void onReload(CCObject* sender) {
 #include <Geode/modify/MenuLayer.hpp>
 class $modify(RestartMenuLayer, MenuLayer) {
 	static CCScene* scene(bool isVideoOptionsOpen) {
-		if (!isReload) return MenuLayer::scene(isVideoOptionsOpen);
-		else {
+		if (!isReload) return MenuLayer::scene(isVideoOptionsOpen); else {
 			isReload = false;
 			return MenuLayer::scene(false);
 		}
@@ -59,13 +58,11 @@ class $modify(RestartMenuLayer, MenuLayer) {
 		auto menu = this->getChildByID("close-menu");
 		menu->setAnchorPoint(CCPoint(0, 1));
 		menu->setPosition(winSize.width/300.f, winSize.height - winSize.width/300.f);
-		auto layout = ColumnLayout::create()
+		menu->setLayout(ColumnLayout::create()
 					->setAxisReverse(true)
 					->setAxisAlignment(AxisAlignment::End)
 					->setGap(4.f)
-					->setCrossAxisOverflow(false);
-
-		menu->setLayout(layout);
+					->setCrossAxisOverflow(false));
 		menu->setContentSize({menu->getContentSize().height, menu->getContentSize().width});
 
         if (!menu->getChildByID("close-button")) {

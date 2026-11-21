@@ -1,5 +1,7 @@
-v1.1.1
-- ya hyesos
+# v1.1.1
+- December Main Menu snow :3
+- Bug fix and small changes
+- Port to Geode v6.0.0-beta.1
 
 ## v1.1.0
 - Fixed The Challenge

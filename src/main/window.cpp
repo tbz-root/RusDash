@@ -1,6 +1,6 @@
 #ifdef GEODE_IS_WINDOWS
-#include <Windows.h>
 #include <dwmapi.h>
+#include <Windows.h>
 #include <Geode/modify/CCEGLView.hpp>
 class $modify(cocos2d::CCEGLView) {
     void setupWindow(cocos2d::CCRect rect) {

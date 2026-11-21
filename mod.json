@@ -1,5 +1,5 @@
 {
-	"geode": "6.0.0-alpha.1",
+	"geode": "6.0.0-beta.1",
 	"early-load": true,
 	"gd": {
 		"win": "2.2091",
@@ -12,7 +12,7 @@
 	"trailer": false,
 	"description": "Geode modding GDPS project",
 	"dependencies": {
-		"geode.node-ids": ">=v1.23.3"
+		"geode.node-ids": ">=v1.24.0-beta.1"
 	},
 	"incompatibilities": {
 		"km7dev.gdps-swticher": {
@@ -34,7 +34,13 @@
 			"one-of": ["English", "Русский"],
 			"default": "Русский"
 		},
-		"restartbuttons": {
+		"winter-snow": {
+			"name": "Winter snow",
+			"description": "Snow if your month 12, 01, 02",
+			"type": "bool",
+			"default": true
+		},
+		"restart-buttons": {
 			"name": "Restart Buttons",
 			"type": "title"
 		},

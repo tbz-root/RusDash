@@ -236,10 +236,10 @@ inline void kbRegisterActive(EffectGameObject* effect) {
         == g_kbActiveTriggers.end()) {
         g_kbActiveTriggers.push_back(effect);
     }
-    log::info("Keyboard Trigger ENABLED: {} page(s), starting at page 0", d->pages.size());
+    log::debug("Keyboard Trigger ENABLED: {} page(s), starting at page 0", d->pages.size());
     for (size_t i = 0; i < d->pages.size(); ++i) {
         auto& b = d->pages[i];
-        log::info("  page {}: key={} ({}) group={} mode={}",
+        log::debug("  page {}: key={} ({}) group={} mode={}",
             i, kbKeyName(b.keyCode), b.keyCode, b.targetGroup,
             b.activateOnHold ? "Hold" : "Press");
     }
@@ -264,8 +264,10 @@ inline void kbStopByGroup(GJBaseGameLayer* layer, int targetGroup) {
                 for (auto& b : d->pages) b.wasPressed = false;
             }
         }
+
         g_kbActiveTriggers.clear();
-        log::info("Stopped ALL keyboard triggers");
+        log::debug("Stopped ALL keyboard triggers");
+
         return;
     }
 
@@ -275,14 +277,15 @@ inline void kbStopByGroup(GJBaseGameLayer* layer, int targetGroup) {
             it = g_kbActiveTriggers.erase(it);
             continue;
         }
-        bool match = kbObjectInGroup(t, targetGroup);
-        if (match) {
+        
+        if (kbObjectInGroup(t, targetGroup)) {
             if (auto d = kbGetData(t)) {
                 d->enabled = false;
                 d->currentPage = 0;
                 for (auto& b : d->pages) b.wasPressed = false;
             }
-            log::info("Stopped keyboard trigger in group {}", targetGroup);
+
+            log::debug("Stopped keyboard trigger in group {}", targetGroup);
             it = g_kbActiveTriggers.erase(it);
         } else {
             ++it;

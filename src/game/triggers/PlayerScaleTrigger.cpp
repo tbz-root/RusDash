@@ -3,8 +3,8 @@ using namespace geode::prelude;
 #include <Geode/Geode.hpp>
 #include "../../../include/main.hpp"
 #include "../../../include/impl.hpp"
-#include "../../nodes/TriggerTemplatePopup.hpp"
 #include "../../nodes/TargetGroupInput.hpp"
+#include "../../nodes/TriggerTemplatePopup.hpp"
 constexpr int PROP_DATA = 228;
 
 static std::string psEncode(float sx, float sy, bool p1, bool p2, bool rel) {
@@ -26,6 +26,7 @@ static void psDecode(std::string const& raw, float& sx, float& sy, bool& p1, boo
         parts.push_back(raw.substr(start, pos - start));
         start = pos + 1;
     }
+    
     if (parts.size() > 0) sx  = numFromString<float>(parts[0]).unwrapOr(1.f);
     if (parts.size() > 1) sy  = numFromString<float>(parts[1]).unwrapOr(1.f);
     if (parts.size() > 2) p1  = numFromString<int>(parts[2]).unwrapOr(1) != 0;

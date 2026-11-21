@@ -5,24 +5,18 @@ void RusDashGManager::setup() {
         m_fields->originalFileName = m_fileName;
     }
 
-    auto saveDir = geode::dirs::getSaveDir() / "gdpses" / "rusdash";
+    auto saveDir = dirs::getSaveDir() / "gdpses" / "rusdash";
 
     if (!saveDir.exists()) {
         auto result = asp::fs::createDirAll(saveDir);
         if (result.isErr()) {
-            log::error(
-                "Failed to create RusDash save directory: {}",
-                result.unwrapErr()
-            );
+            log::error("Failed to create RusDash save directory: {}", result.unwrapErr());
             
             return GManager::setup();
         }
     }
 
-    m_fileName = fmt::format(
-        "gdpses/rusdash/{}",
-        m_fields->originalFileName
-    );
+    m_fileName = fmt::format("gdpses/rusdash/{}", m_fields->originalFileName);
 
     GManager::setup();
 }

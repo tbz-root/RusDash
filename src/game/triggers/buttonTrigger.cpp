@@ -31,15 +31,15 @@ class $modify(EffectGameObject) {
 		std::function<void()> m_onUnselected = []() {};
 
 		virtual void activate() override {
-			log::info("activate() called");
+			log::debug("activate() called");
 			if (m_onActivate) m_onActivate();
 		}
 		virtual void selected() override {
-			log::info("selected() called");
+			log::debug("selected() called");
 			if (m_onSelected) m_onSelected();
 		}
 		virtual void unselected() override {
-			log::info("unselected() called");
+			log::debug("unselected() called");
 			if (m_onUnselected) m_onUnselected();
 		}
 
@@ -120,48 +120,33 @@ class $modify(EffectGameObject) {
 
 		auto* activate = TextInput::create(52.f, "ID");
 
-		activate->setFilter("0123456789");
-		activate->getInputNode()->m_allowedChars = "0123456789";
+		activate->setCommonFilter(CommonFilter::Uint);
+		activate->setLabel("Activate");
 		activate->setString(utils::numToString(data->getInt("activate")));
 		activate->setPositionY(95.f);
 		activate->setCallback([obj](std::string const& str) { getStore(obj)->setInt("activate", utils::numFromString<int>(str).unwrapOr(0)); });
 
 		menu->addChild(activate);
 
-		auto* activateLabel = CCLabelBMFont::create("Activate:\n \n \n \n ", "goldFont.fnt");
-
-		activateLabel->setScale(0.5f);
-		activate->getInputNode()->addChild(activateLabel);
-
 		auto* selected = TextInput::create(54.f, "ID");
 
-		selected->setFilter("0123456789");
-		selected->getInputNode()->m_allowedChars = "0123456789";
+		selected->setCommonFilter(CommonFilter::Uint);
+		selected->setLabel("Selected");
 		selected->setString(utils::numToString(data->getInt("selected")));
 		selected->setPosition({ -95.f, 77.f });
 		selected->setCallback([obj](std::string const& str) { getStore(obj)->setInt("selected", utils::numFromString<int>(str).unwrapOr(0)); });
 
 		menu->addChild(selected);
 
-		auto* selectedLabel = CCLabelBMFont::create("Selected:\n \n \n \n ", "goldFont.fnt");
-
-		selectedLabel->setScale(0.5f);
-		selected->getInputNode()->addChild(selectedLabel);
-
 		auto* unselected = TextInput::create(48.f, "ID");
 
-		unselected->setFilter("0123456789");
-		unselected->getInputNode()->m_allowedChars = "0123456789";
+		unselected->setCommonFilter(CommonFilter::Uint);
+		unselected->setLabel("Unselected");
 		unselected->setString(utils::numToString(data->getInt("unselected")));
 		unselected->setPosition({ 95.f, 77.f });
 		unselected->setCallback([obj](std::string const& str) { getStore(obj)->setInt("unselected", utils::numFromString<int>(str).unwrapOr(0)); });
 
 		menu->addChild(unselected);
-
-		auto* unselectedLabel = CCLabelBMFont::create("Unselected:\n \n \n \n ", "goldFont.fnt");
-
-		unselectedLabel->setScale(0.5f);
-		unselected->getInputNode()->addChild(unselectedLabel);
 	}
 
 	static CCNode* findBestMenuParent(GJBaseGameLayer* game) {
@@ -233,7 +218,7 @@ class $modify(EffectGameObject) {
 			}
 		)->resetObject(
 			[](GameObject* pObj) {
-				log::info("=== Button resetObject called ===");
+				log::debug("=== Button resetObject called ===");
 
 				auto* gameLayer = GameManager::get()->m_gameLayer;
 				if (!gameLayer) {
@@ -260,6 +245,7 @@ class $modify(EffectGameObject) {
 						menu->setContentSize(CCSizeZero);
 						menu->setAnchorPoint(CCPointZero);
 					}
+					
 					menu->setTouchEnabled(true);
 					menu->setEnabled(true);
 					menu->setTouchPriority(-999);
@@ -268,8 +254,9 @@ class $modify(EffectGameObject) {
 						log::error("No place to put objects-menu");
 						return;
 					}
+
 					desiredParent->addChild(menu, 99999);
-					log::info("Created/reparented objects-menu under {}", desiredParent->getID().empty() ? typeid(*desiredParent).name() : desiredParent->getID().c_str());
+					log::debug("Created/reparented objects-menu under {}", desiredParent->getID().empty() ? typeid(*desiredParent).name() : desiredParent->getID().c_str());
 					game->setUserObject("objects-menu"_spr, menu);
 				}
 
@@ -283,11 +270,11 @@ class $modify(EffectGameObject) {
 					return;
 				}
 
-				log::info("Created Button item tag={}", uid);
+				log::debug("Created Button item tag={}", uid);
 
 				item->onActivate([game, object] {
 					int group = getStore(object)->getInt("activate");
-					log::info("ACTIVATE group={}", group);
+					log::debug("ACTIVATE group={}", group);
 					if (game && group > 0) {
 						game->spawnGroup(group, false, 0.f, std::vector<int>(), 0, 0);
 					}
@@ -295,7 +282,7 @@ class $modify(EffectGameObject) {
 
 				item->onSelected([game, object] {
 					int group = getStore(object)->getInt("selected");
-					log::info("SELECTED group={}", group);
+					log::debug("SELECTED group={}", group);
 					if (game && group > 0) {
 						game->spawnGroup(group, false, 0.f, std::vector<int>(), 0, 0);
 					}
@@ -303,7 +290,7 @@ class $modify(EffectGameObject) {
 
 				item->onUnselected([game, object] {
 					int group = getStore(object)->getInt("unselected");
-					log::info("UNSELECTED group={}", group);
+					log::debug("UNSELECTED group={}", group);
 					if (game && group > 0) {
 						game->spawnGroup(group, false, 0.f, std::vector<int>(), 0, 0);
 					}

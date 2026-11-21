@@ -1,11 +1,11 @@
-#include <Geode/Geode.hpp>
+#include <Geode/binding/ButtonSprite.hpp>
 #include "../../../../include/main.hpp"
 #include "../../../../include/impl.hpp"
-#include <Geode/ui/TextInput.hpp>
-#include <Geode/ui/ScrollLayer.hpp>
-#include <Geode/ui/NineSlice.hpp>
-#include <Geode/binding/ButtonSprite.hpp>
 #include "keyboardTriggerShared.hpp"
+#include <Geode/ui/ScrollLayer.hpp>
+#include <Geode/ui/TextInput.hpp>
+#include <Geode/ui/NineSlice.hpp>
+#include <Geode/Geode.hpp>
 
 using namespace GameObjectsFactory;
 
@@ -49,6 +49,7 @@ public:
 
         m_scroll = ScrollLayer::create(scrollSize);
         m_scroll->setID("pages-scroll"_spr);
+        m_scroll->setAnchorPoint({0.f, 0.f});
         m_scroll->setPosition(scrollPos);
         m_mainLayer->addChild(m_scroll);
 
@@ -216,19 +217,6 @@ public:
         modeBtn->setPosition({70.f, -45.f});
         editMenu->addChild(modeBtn);
 
-        auto hint = CCLabelBMFont::create(
-            "Keys work only AFTER this trigger fires\n"
-            "(Controller & system keys blocked)\n"
-            "Pages are SEQUENTIAL: only current is active\n"
-            "After press → next page unlocks, past locks",
-            "chatFont.fnt"
-        );
-
-        hint->setScale(0.32f);
-        hint->setAlignment(kCCTextAlignmentCenter);
-        hint->setPosition({0.f, -95.f});
-        editBox->addChild(hint);
-
         this->rebuildList();
         this->loadPageToFields();
 
@@ -324,7 +312,7 @@ public:
 
     void captureKey(int code) {
         if (!kbIsKeyboardKey(code)) return;
-        log::info("Key captured: {} ({})", kbKeyName(code), code);
+        log::debug("Key captured: {} ({})", kbKeyName(code), code);
         if (auto d = kbGetData(m_trigger)) {
             if (m_page >= 0 && m_page < (int)d->pages.size()) {
                 d->pages[m_page].keyCode = code;
@@ -412,10 +400,10 @@ static void registerKeyboardTrigger() {
         auto data = kbEnsureData(obj);
         if (p0.size() > 228 && !p0[228].empty()) {
             data->fromString(ZipUtils::base64URLDecode(p0[228].c_str()));
-            log::info("Loaded Keyboard Trigger: {} page(s)", data->pages.size());
+            log::debug("Loaded Keyboard Trigger: {} page(s)", data->pages.size());
             for (size_t i = 0; i < data->pages.size(); ++i) {
                 auto& b = data->pages[i];
-                log::info("  page {}: key={} ({}) group={} mode={}",
+                log::debug("  page {}: key={} ({}) group={} mode={}",
                     i, kbKeyName(b.keyCode), b.keyCode, b.targetGroup,
                     b.activateOnHold ? "Hold" : "Press");
             }
@@ -438,7 +426,7 @@ static void registerKeyboardTrigger() {
     });
 
     config->registerMe();
-    log::info("Keyboard Trigger registered (id={})", KEYBOARD_TRIGGER_ID);
+    log::debug("Keyboard Trigger registered (id={})", KEYBOARD_TRIGGER_ID);
 }
 
 #include <Geode/modify/PlayLayer.hpp>
@@ -498,7 +486,7 @@ class $modify(GJBaseGameLayer) {
             if (b.activateOnHold) {
                 if (pressed) {
                     if (!b.wasPressed) {
-                        log::info("HOLD start [page {}]: {} → group {}",
+                        log::debug("HOLD start [page {}]: {} → group {}",
                             data->currentPage, kbKeyName(b.keyCode), b.targetGroup);
                         this->spawnGroup(b.targetGroup, false, 0.0, std::vector<int>(), -1, -1);
                         fired = true;
@@ -508,12 +496,12 @@ class $modify(GJBaseGameLayer) {
                 b.wasPressed = pressed;
             } else {
                 if (pressed && !b.wasPressed) {
-                    log::info("PRESS [page {}]: {} → group {}",
-                        data->currentPage, kbKeyName(b.keyCode), b.targetGroup);
+                    log::debug("PRESS [page {}]: {} → group {}", data->currentPage, kbKeyName(b.keyCode), b.targetGroup);
                     this->spawnGroup(b.targetGroup, false, 0.0, std::vector<int>(), -1, -1);
                     this->toggleGroup(b.targetGroup, true);
                     fired = true;
                 }
+
                 b.wasPressed = pressed;
             }
 
@@ -522,9 +510,9 @@ class $modify(GJBaseGameLayer) {
                 data->currentPage++;
                 if (data->currentPage < (int)data->pages.size()) {
                     data->pages[data->currentPage].wasPressed = kbIsKeyDown(data->pages[data->currentPage].keyCode);
-                    log::info("Advanced to page {} / {}", data->currentPage, (int)data->pages.size() - 1);
+                    log::debug("Advanced to page {} / {}", data->currentPage, (int)data->pages.size() - 1);
                 } else {
-                    log::info("Sequence finished (was page {})", prev);
+                    log::debug("Sequence finished (was page {})", prev);
                 }
             }
             ++it;
