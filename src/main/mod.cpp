@@ -1,8 +1,6 @@
-#include <Geode/Geode.hpp>
-#include <Geode/ui/GeodeUI.hpp>
-
 using namespace geode::prelude;
 
+#include <Geode/ui/GeodeUI.hpp>
 static void forceToTop(CCNode* item) {
     if (!item) return;
 

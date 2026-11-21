@@ -52,17 +52,19 @@ static std::optional<matjson::Value> locLoadJson(std::string const& fileName) {
     };
 
     for (auto const& path : candidates) {
-        log::info("Loading JSON: {}", path.string());
+        log::debug("Loading JSON: {}", path.string());
         if (!path.exists()) {
             log::warn("JSON not found: {}", path.string());
             continue;
         }
+        
         auto res = file::readJson(path);
         if (!res) {
             log::warn("Failed to parse {}: {}", path.string(), res.unwrapErr());
             continue;
         }
-        log::info("Loaded {}", path.string());
+
+        log::debug("Loaded {}", path.string());
         return *res;
     }
     

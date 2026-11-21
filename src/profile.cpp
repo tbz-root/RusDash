@@ -38,21 +38,18 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
 
     s_globalTasks[accountID].spawn(
         req.post(url),
-        [accountID, onComplete](web::WebResponse res)
-        {
+        [accountID, onComplete](web::WebResponse res) {
             s_pendingRequests.erase(accountID);
             s_globalTasks.erase(accountID);
 
-            if (!res.ok())
-            {
+            if (!res.ok()) {
                 s_userBadgesCache[accountID] = {};
                 onComplete();
                 return;
             }
 
             auto jsonResult = res.json();
-            if (!jsonResult)
-            {
+            if (!jsonResult) {
                 s_userBadgesCache[accountID] = {};
                 onComplete();
                 return;
@@ -61,12 +58,9 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
             auto json = jsonResult.unwrap();
             std::vector<std::string> userBadges;
 
-            if (json.isObject() && json.contains("badges") && json["badges"].isArray())
-            {
-                for (auto const &bVal : json["badges"])
-                {
-                    if (auto idResult = bVal.asString())
-                    {
+            if (json.isObject() && json.contains("badges") && json["badges"].isArray()) {
+                for (auto const &bVal : json["badges"]) {
+                    if (auto idResult = bVal.asString()) {
                         userBadges.push_back(idResult.unwrap());
                     }
                 }
@@ -74,33 +68,32 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
 
             s_userBadgesCache[accountID] = userBadges;
             onComplete();
-        });
+        }
+    );
 }
 
-void handleBadgeCheck(const Badge &badge, const std::string &badgeID, const std::string &spriteName)
-{
+void handleBadgeCheck(const Badge &badge, const std::string &badgeID, const std::string &spriteName) {
     if (!badge.user)
         return;
+
     int accountID = badge.user->m_accountID;
 
-    if (s_userBadgesCache.find(accountID) != s_userBadgesCache.end())
-    {
+    if (s_userBadgesCache.find(accountID) != s_userBadgesCache.end()) {
         auto &badges = s_userBadgesCache[accountID];
-        if (std::find(badges.begin(), badges.end(), badgeID) != badges.end())
-        {
+        if (std::find(badges.begin(), badges.end(), badgeID) != badges.end()) {
             showBadge(badge, CCSprite::create(spriteName.c_str()));
         }
     }
 
-    fetchBadgesForUser(accountID, [badge, badgeID, spriteName]()
-                       {
+    fetchBadgesForUser(accountID, [badge, badgeID, spriteName]() {
         CCNode* targetNode = badge.target.data();
         if (!targetNode) return;
 
         auto& badges = s_userBadgesCache[badge.user->m_accountID];
         if (std::find(badges.begin(), badges.end(), badgeID) != badges.end()) {
             showBadge(badge, CCSprite::create(spriteName.c_str()));
-        } });
+        }}
+    );
 }
 
 class $modify(MyProfilePage, ProfilePage) {
@@ -117,10 +110,8 @@ class $modify(MyProfilePage, ProfilePage) {
         return true;
     }
 
-    void onUpdate(cocos2d::CCObject *sender)
-    {
-        if (m_score)
-        {
+    void onUpdate(CCObject *sender) {
+        if (m_score) {
             s_userBadgesCache.erase(m_score->m_accountID);
             s_pendingRequests.erase(m_score->m_accountID);
             s_userThemeCache.erase(m_score->m_accountID);
@@ -133,10 +124,8 @@ class $modify(MyProfilePage, ProfilePage) {
         ProfilePage::onUpdate(sender);
     }
 
-    void fetchAndApplyProfileTheme(int accountID)
-    {
-        if (s_userThemeCache.find(accountID) != s_userThemeCache.end())
-        {
+    void fetchAndApplyProfileTheme(int accountID) {
+        if (s_userThemeCache.find(accountID) != s_userThemeCache.end()) {
             applyThemeToProfile(s_userThemeCache[accountID]);
             return;
         }
@@ -150,29 +139,26 @@ class $modify(MyProfilePage, ProfilePage) {
         auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJProfileTheme22.php" : "https://www.rustps.online/database/getGJProfileTheme22.php";
         m_fields->profileThemeTask.spawn(
             req.post(url),
-            [this, accountID](web::WebResponse res)
-            {
+            [this, accountID](web::WebResponse res) {
                 std::string themeID = "default";
-                if (res.ok())
-                {
+                if (res.ok()) {
                     std::string responseStr = res.string().unwrapOr("default");
-                    while (!responseStr.empty() && (responseStr.back() == '\n' || responseStr.back() == '\r' || responseStr.back() == ' '))
-                    {
+                    while (!responseStr.empty() && (responseStr.back() == '\n' || responseStr.back() == '\r' || responseStr.back() == ' ')) {
                         responseStr.pop_back();
                     }
-                    if (!responseStr.empty())
-                    {
+                    
+                    if (!responseStr.empty()) {
                         themeID = responseStr;
                     }
                 }
 
                 s_userThemeCache[accountID] = themeID;
                 applyThemeToProfile(themeID);
-            });
+            }
+        );
     }
 
-    void applyThemeToProfile(std::string themeID)
-    {
+    void applyThemeToProfile(std::string themeID) {
         auto profileOriginalCard = this->getChildByIndex(0);
         if (!profileOriginalCard)
             return;
@@ -181,10 +167,8 @@ class $modify(MyProfilePage, ProfilePage) {
             return;
 
         if (profileOriginalCard->getChildren()) {
-            for (auto child : cocos::CCArrayExt<cocos2d::CCNode *>(profileOriginalCard->getChildren()))
-            {
-                if (auto gradient = dynamic_cast<cocos2d::CCLayerGradient *>(child))
-                {
+            for (auto child : cocos::CCArrayExt<CCNode *>(profileOriginalCard->getChildren())) {
+                if (auto gradient = dynamic_cast<CCLayerGradient *>(child)) {
                     gradient->setVisible(false);
                 }
             }
@@ -195,9 +179,8 @@ class $modify(MyProfilePage, ProfilePage) {
             std::string frameName = themeID + "_card.png";
             std::string geodeFrameName = Mod::get()->expandSpriteName(frameName.c_str());
 
-            auto newProfileBack = cocos2d::CCSprite::createWithSpriteFrameName(geodeFrameName.c_str());
-            if (newProfileBack)
-            {
+            auto newProfileBack = CCSprite::createWithSpriteFrameName(geodeFrameName.c_str());
+            if (newProfileBack) {
                 newProfileBack->setPosition(customProfiles->getPosition());
                 newProfileBack->setScale(customProfiles->getScale() + 0.3f);
                 newProfileBack->setZOrder(-6);
@@ -205,28 +188,23 @@ class $modify(MyProfilePage, ProfilePage) {
             }
         }
 
-        auto applyButtonModifications = [themeID](CCNode *container, const std::string &menuName)
-        {
+        auto applyButtonModifications = [themeID](CCNode *container, const std::string &menuName) {
             if (!container || !container->getChildren())
                 return;
-            for (auto child : cocos::CCArrayExt<cocos2d::CCNode *>(container->getChildren()))
-            {
-                if (auto button = dynamic_cast<CCMenuItemSpriteExtra *>(child))
-                {
+
+            for (auto child : cocos::CCArrayExt<CCNode *>(container->getChildren())) {
+                if (auto button = dynamic_cast<CCMenuItemSpriteExtra *>(child)) {
                     if (menuName == "main" && button->getID() == "copy-username-button" || button->getID() == "follow-button" || button->getID() == "info-button")
                         continue;
 
                     std::string frameName = themeID + "_" + button->getID() + ".png";
                     std::string geodeFrameName = Mod::get()->expandSpriteName(frameName.c_str());
 
-                    auto replacement = cocos2d::CCSprite::createWithSpriteFrameName(geodeFrameName.c_str());
+                    auto replacement = CCSprite::createWithSpriteFrameName(geodeFrameName.c_str());
 
-                    if (replacement)
-                    {
-                        if (button->getChildren())
-                        {
-                            for (auto buttonChild : cocos::CCArrayExt<cocos2d::CCNode *>(button->getChildren()))
-                            {
+                    if (replacement) {
+                        if (button->getChildren()) {
+                            for (auto buttonChild : cocos::CCArrayExt<CCNode *>(button->getChildren())) {
                                 buttonChild->setVisible(false);
                             }
                         }

@@ -82,7 +82,7 @@ static void registerStopKeyboardTrigger() {
         [](EffectGameObject* trigger, GJBaseGameLayer* game, int, std::vector<int> const*) {
             if (!trigger || !game) return;
             auto data = stopKbEnsureData(trigger);
-            log::info("Stop Keyboard Trigger fired (target group={})", data->targetGroup);
+            log::debug("Stop Keyboard Trigger fired (target group={})", data->targetGroup);
             kbStopByGroup(game, data->targetGroup);
         },
 
@@ -112,8 +112,9 @@ static void registerStopKeyboardTrigger() {
         auto data = stopKbEnsureData(obj);
         if (p0.size() > 228 && !p0[228].empty()) {
             data->fromString(ZipUtils::base64URLDecode(p0[228].c_str()));
-            log::info("Loaded Stop Keyboard Trigger: group={}", data->targetGroup);
+            log::debug("Loaded Stop Keyboard Trigger: group={}", data->targetGroup);
         }
+
         return obj;
     });
 
@@ -126,7 +127,7 @@ static void registerStopKeyboardTrigger() {
     });
 
     config->registerMe();
-    log::info("Stop Keyboard Trigger registered (id={})", STOP_KEYBOARD_TRIGGER_ID);
+    log::debug("Stop Keyboard Trigger registered (id={})", STOP_KEYBOARD_TRIGGER_ID);
 }
 
 $execute {

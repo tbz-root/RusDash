@@ -53,6 +53,7 @@ public:
         game::restart(true, false);
     }
 };
+
 static ExitTrigger s_exitTrigger;
 
 void showRestartPopup() {
@@ -123,8 +124,7 @@ void createProgressPopup() {
 }
 
 void downloadLatestVersion(std::string const& downloadUrl) {
-    auto modsDir = dirs::getModsDir();
-    auto newModPath = modsDir / (Mod::get()->getID() + ".geode.new");
+    auto newModPath = dirs::getModsDir() / (Mod::get()->getID() + ".geode.new");
 
     Loader::get()->queueInMainThread([]() {
         createProgressPopup();
@@ -158,6 +158,7 @@ void downloadLatestVersion(std::string const& downloadUrl) {
                         s_progressPopup->removeFromParentAndCleanup(true);
                         s_progressPopup = nullptr;
                     }
+
                     Notification::create("Download failed!", NotificationIcon::Error, 3.0f)->show();
                 });
                 return;
@@ -280,13 +281,12 @@ class $modify(MyMenuLayer, MenuLayer) {
     } else {
         openSettingsPopup(Mod::get());
     }
-}
+    }
 };
 
 $on_mod(Loaded) {
-    auto modsDir = dirs::getModsDir();
-    auto currentModPath = modsDir / (Mod::get()->getID() + ".geode");
-    auto stagedModPath = modsDir / (Mod::get()->getID() + ".geode.new");
+    auto currentModPath = dirs::getModsDir() / (Mod::get()->getID() + ".geode");
+    auto stagedModPath = dirs::getModsDir() / (Mod::get()->getID() + ".geode.new");
 
     if (stagedModPath.exists()) {
         if (currentModPath.exists()) {
@@ -320,11 +320,11 @@ class $modify(PlayLayer) {
             return false;
 
         #ifdef GEODE_IS_DESKTOP
-            if (auto ui = this->getChildByID("UILayer")) {
-                if (auto pauseMenu = ui->getChildByID("pause-button-menu")) {
-                    pauseMenu->setVisible(false);
-                }
+        if (auto ui = this->getChildByID("UILayer")) {
+            if (auto pauseMenu = ui->getChildByID("pause-button-menu")) {
+                pauseMenu->setVisible(false);
             }
+        }
         #endif
 
         return true;
@@ -341,6 +341,7 @@ class $modify(LoadingLayer) {
         return true;
     }
 };
+
 #ifdef BDEBUG
 #include <Geode/modify/LevelEditorLayer.hpp>
 #include <Geode/utils/Keyboard.hpp>

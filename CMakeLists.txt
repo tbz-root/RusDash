@@ -10,7 +10,7 @@ endif()
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-project(RusDash VERSION 1.1.0)
+project(RusDash VERSION 1.1.1)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})

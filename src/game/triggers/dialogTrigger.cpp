@@ -1,15 +1,15 @@
 using namespace geode::prelude;
 
-#include "../../../include/main.hpp"
-#include "../../../include/impl.hpp"
-#include "../../nodes/TriggerTemplatePopup.hpp"
-#include <Geode/ui/NineSlice.hpp>
 #include <Geode/ui/Popup.hpp>
-#include <Geode/ui/ScrollLayer.hpp>
+#include <Geode/utils/file.hpp>
+#include <Geode/ui/NineSlice.hpp>
 #include <Geode/ui/Scrollbar.hpp>
 #include <Geode/ui/TextInput.hpp>
+#include <Geode/ui/ScrollLayer.hpp>
+#include "../../../include/main.hpp"
+#include "../../../include/impl.hpp"
 #include <Geode/binding/ButtonSprite.hpp>
-#include <Geode/utils/file.hpp>
+#include "../../nodes/TriggerTemplatePopup.hpp"
 static std::string encodeBase64(std::vector<uint8_t> const& data) {
 	static constexpr char kTbl[] =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -61,7 +61,7 @@ class $modify(MyTextArea, TextArea) {
 	static inline auto ForceWidth = 0.f;
 	static TextArea* create(
 		std::string str, char const* font, float scale,
-		float width, cocos2d::CCPoint anchor, float lineHeight, bool disableColor, int maxEmoji = 0
+		float width, CCPoint anchor, float lineHeight, bool disableColor, int maxEmoji = 0
 	) {
 		return TextArea::create(str, font, scale, ForceWidth ? ForceWidth : width, anchor, lineHeight, disableColor, maxEmoji);
 	};
@@ -157,6 +157,7 @@ protected:
 		auto scroll = ScrollLayer::create(scrollSize, true, true);
 		scroll->setID("frame-scroll"_spr);
 		scroll->setPosition({scrollX, scrollY});
+		scroll->setAnchorPoint({0.f, 0.f});
 		m_mainLayer->addChild(scroll);
 
 		constexpr int cols = 7;
@@ -409,6 +410,7 @@ protected:
 
 		m_scroll = ScrollLayer::create(scrollSize);
 		m_scroll->setID("pages-scroll"_spr);
+		m_scroll->setAnchorPoint({0.f, 0.f});
 		m_scroll->setPosition(scrollPos);
 
 		this->m_mainLayer->addChild(m_scroll);
@@ -585,13 +587,14 @@ protected:
 		auto mkIn = [this, noNl, withNl](float y, bool multi, const char* id) {
 			auto inp = TextInput::create(220.f, "...", "chatFont.fnt");
 			inp->setID(id);
-			inp->setCommonFilter(CommonFilter::Any);
+			inp->setFilter(multi ? withNl : noNl);
 			inp->setPosition({0.f, y});
-			inp->getInputNode()->setUserObject("no-parse", CCNode::create());
-			inp->getInputNode()->m_allowedChars = multi ? withNl : noNl;
+			inp->setUserObject("no-parse", CCNode::create());
 			if (multi) {
 				inp->getBGSprite()->setContentHeight(70.f);
-				inp->getInputNode()->m_textLabel->setWidth(inp->getContentWidth() - 20.f);
+				if (auto* label = inp->getContentLabel()) {
+					label->setMaxWidth(inp->getContentWidth() - 20.f);
+				}
 			}
 			inp->setCallback([this](std::string const&) { this->autoSave(); this->rebuildList(); });
 			m_editBox->addChild(inp);
@@ -680,7 +683,7 @@ protected:
 						m_frame = 1;
 						this->autoSave();
 						this->refreshIconButton();
-						log::info("custom rawIcon set ({} chars)", m_rawIcon.size());
+						log::debug("custom rawIcon set ({} chars)", m_rawIcon.size());
 					}
 				);
 			}
@@ -1262,7 +1265,7 @@ class $modify(DialogLayer) {
 								if (chr.empty()) chr = " ";
 								if (frame <= 0) frame = 1;
 
-								log::info("rawIcon present → characterFrame={}", frame);
+								log::debug("rawIcon present → characterFrame={}", frame);
 							}
 
 							int bg = 1;
@@ -1274,12 +1277,12 @@ class $modify(DialogLayer) {
 								sharedDialogTriggerDelegate->m_defaultBg = bg;
 							}
 
-							log::info("line bg={}", bg);
+							log::debug("line bg={}", bg);
 
 							auto obj = DialogObject::create(chr, txt, frame, 1.f, unsk, ccWHITE);
 							if (!rawIcon.empty()) {
 								sharedDialogTriggerDelegate->m_rawIcons[obj] = rawIcon;
-								log::info("line has rawIcon ({} chars)", rawIcon.size());
+								log::debug("line has rawIcon ({} chars)", rawIcon.size());
 							}
 							sharedDialogTriggerDelegate->m_bgs[obj] = bg;
 							dialogObjectsArr.push_back(obj);
@@ -1718,7 +1721,7 @@ class $modify(DialogLayer) {
 
 		auto name = fmt::format("GJ_square0{}.png", bg);
 
-		log::info("applying dialog bg {}", name);
+		log::debug("applying dialog bg {}", name);
 
 		CCScale9Sprite* target = nullptr;
 		float bestArea = 0.f;
@@ -1752,13 +1755,13 @@ class $modify(DialogLayer) {
 		target->setContentSize(size);
 		target->setVisible(true);
 		target->setOpacity(255);
-		log::info("bg re-inited on Scale9Sprite ({}x{})", size.width, size.height);
+		log::debug("bg re-inited on Scale9Sprite ({}x{})", size.width, size.height);
 	}
 
 	CCSprite* ensurePortraitSprite() {
 		if (m_characterSprite) {
 			m_characterSprite->setVisible(true);
-			log::info("using DialogLayer m_characterSprite");
+			log::debug("using DialogLayer m_characterSprite");
 			return m_characterSprite;
 		}
 
@@ -1766,7 +1769,7 @@ class $modify(DialogLayer) {
 			for (auto* child : CCArrayExt<CCNode*>(m_mainLayer->getChildren())) {
 				if (auto spr = typeinfo_cast<CCSprite*>(child)) {
 					if (spr->getZOrder() == 2) {
-						log::info("found portrait sprite by zOrder 2");
+						log::debug("found portrait sprite by zOrder 2");
 						m_characterSprite = spr;
 						spr->setVisible(true);
 						return spr;
@@ -1775,7 +1778,7 @@ class $modify(DialogLayer) {
 			}
 		}
 
-		log::info("creating custom portrait sprite");
+		log::debug("creating custom portrait sprite");
 
 		auto spr = CCSprite::create();
 
@@ -1808,12 +1811,12 @@ class $modify(DialogLayer) {
 			m_characterSprite->setScaleY(kPortraitH / sz.height);
 		}
 
-		log::info("portrait size normalized to {}x{} (tex {}x{}, scale {}x{})", kPortraitW, kPortraitH, sz.width, sz.height, m_characterSprite->getScaleX(), m_characterSprite->getScaleY());
+		log::debug("portrait size normalized to {}x{} (tex {}x{}, scale {}x{})", kPortraitW, kPortraitH, sz.width, sz.height, m_characterSprite->getScaleX(), m_characterSprite->getScaleY());
 	}
 
 	void applyCustomIcon(DialogObject* object) {
 		if (!object) {
-			log::info("applyCustomIcon: object is null");
+			log::debug("applyCustomIcon: object is null");
 			
 			return;
 		}
@@ -1838,7 +1841,7 @@ class $modify(DialogLayer) {
 			return;
 		}
 
-		log::info("loading rawIcon (base64, {} chars)", b64.size());
+		log::debug("loading rawIcon (base64, {} chars)", b64.size());
 		if (auto pos = b64.find("base64,"); pos != std::string::npos)
 			b64 = b64.substr(pos + 7);
 		for (char& c : b64) {
@@ -1886,10 +1889,10 @@ class $modify(DialogLayer) {
 
 		normalizePortraitSize();
 
-		log::info("rawIcon applied ({}x{})", size.width, size.height);
+		log::debug("rawIcon applied ({}x{})", size.width, size.height);
 	};
 
-	bool init(DialogObject * object, cocos2d::CCArray * objects, int background) {
+	bool init(DialogObject * object, CCArray * objects, int background) {
 		m_delegate = m_delegate ? m_delegate : Delegate::s_pForNextDialogLayer;
 		if (!DialogLayer::init(object, objects, background)) return false;
 		this->runAction(CCSequence::createWithTwoActions(

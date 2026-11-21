@@ -1,7 +1,5 @@
 using namespace geode::prelude;
 
-static const std::string EXTRA_CHARS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯáéíóúüñÁÉÍÓÚÜÑ¿¡";
-
 #include <Geode/modify/CCTextInputNode.hpp>
 class $modify(CCTextInputNode) {
     void applyExtraChars() {
@@ -12,7 +10,7 @@ class $modify(CCTextInputNode) {
             return;
         }
 
-        this->m_allowedChars += EXTRA_CHARS;
+        this->m_allowedChars += "абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯáéíóúüñÁÉÍÓÚÜÑ¿¡";
     }
 
     void setID(std::string const& id) {

@@ -1,14 +1,26 @@
 using namespace geode::prelude;
 
-#include "hpp/selectMenu.hpp"
 #include <sstream>
 #include <vector>
 #include <string>
+#include "hpp/selectMenu.hpp"
 bool ThemePopup::init() {
-    if (!Popup::init(280.f, 220.f))
+    if (!Popup::init(280.f, 220.f, "GJ_square01.png"))
         return false;
 
     this->setTitle("Select Theme");
+
+    m_settingsBtn = Button::createWithSpriteFrameName(
+        "GJ_optionsBtn_001.png",
+        [this](auto btn) {
+            openSettingsPopup(Mod::get());
+        }
+    );
+
+    m_settingsBtn->setID("settings-button");
+    m_settingsBtn->setScale(.8f);
+    m_settingsBtn->setZOrder(100);
+    m_mainLayer->addChildAtPosition(m_settingsBtn, Anchor::TopRight, {-3.f, -3.f});
 
     m_buttonsMenu = CCMenu::create();
     m_buttonsMenu->setContentSize(m_mainLayer->getContentSize());
