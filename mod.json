@@ -1,5 +1,5 @@
 {
-	"geode": "6.0.0-beta.1",
+	"geode": "6.0.0",
 	"early-load": true,
 	"gd": {
 		"win": "2.2091",
@@ -7,11 +7,13 @@
 	},
 	"id": "tabz.rusdash",
 	"name": "\u200BRusDash",
-	"version": "v1.1.1",
+	"version": "v1.1.2",
 	"developers": ["Tabz", "CMDs"],
 	"trailer": false,
 	"description": "Geode modding GDPS project",
 	"dependencies": {
+		"dasshu.badgified": ">=1.0.5",
+		"bitz.customprofiles": ">=1.1.6-beta.1",
 		"geode.node-ids": ">=v1.24.0-beta.1"
 	},
 	"incompatibilities": {
@@ -92,7 +94,10 @@
 			"resources/tabz.rusdash/levels/*.txt",
 			"resources/tabz.rusdash/resources/*.png",
 			"resources/tabz.rusdash/resources/*.fnt",
-			"resources/tabz.rusdash/resources/*.plist"
+			"resources/tabz.rusdash/resources/*.plist",
+			"resources/tabz.rusdash/resources/*.mp3",
+			"resources/tabz.rusdash/resources/geode.loader/*.png",
+			"resources/tabz.rusdash/resources/geode.loader/*.fnt"
 		]
 	},
 	"tags": [

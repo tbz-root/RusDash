@@ -1,12 +1,12 @@
 using namespace geode::prelude;
 
-/* #include <matjson.hpp>
+#include <matjson.hpp>
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
 #include <Geode/modify/ProfilePage.hpp>
-#include "hpp/server.hpp"
+#include "../hpp/server.hpp"
 #include <future>
-#include <dasshu.badgified/include/Badgified.hpp>
+#include <dasshu.badgified/Badgified.hpp>
 
 using namespace dasshu::badgified;
 
@@ -32,7 +32,7 @@ void fetchBadgesForUser(int accountID, std::function<void()> onComplete) {
 
     auto req = web::WebRequest();
     req.bodyString(reqBody);
-    req.timeout(std::chrono::seconds(15));
+    req.timeout(asp::Duration::fromSecs(15));
 
     auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJUserBadges22.php" : "https://www.rustps.online/database/getGJUserBadges22.php";
 
@@ -134,7 +134,7 @@ class $modify(MyProfilePage, ProfilePage) {
 
         auto req = web::WebRequest();
         req.bodyString(body);
-        req.timeout(std::chrono::seconds(15));
+        req.timeout(asp::Duration::fromSecs(15));
 
         auto url = Mod::get()->getSettingValue<bool>("enable-mirror") ? "https://rustps.online/database/getGJProfileTheme22.php" : "https://www.rustps.online/database/getGJProfileTheme22.php";
         m_fields->profileThemeTask.spawn(
@@ -349,4 +349,4 @@ $execute {
         "tt01"_spr, "TickToker Badge", "The badge for the RusDash ticktoker. Must have > 1000 subscribers on tiktok and invite > 50 players by your videos!",
         [](const Badge &badge)
         { handleBadgeCheck(badge, "tt01", "tt01_badge.png"_spr); });
-} */
+}

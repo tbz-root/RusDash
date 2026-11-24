@@ -8,6 +8,7 @@ Geode based GDPS project!
 - Switch To The RusDash Endpoints Automaticly!
 - Replacement Of The Main Levels!
 - Custom Badges!
+- Custom Triggers!
 
 # Credits
 * [lil2kki](https://github.com/lil2kki) - Explained Something

@@ -3,6 +3,10 @@
         "text": "Введите уровень, пользователя или айди",
         "scale": -0.175
     },
+    "searchlist.quick-placeholder": {
+        "text": "Введите лист или айди",
+        "scale": -0.175
+    },
     
     "search.quick-search-label": {
         "text": "Быстрый Поиск"
@@ -31,11 +35,19 @@
     },
     "search.quick-search-magic": {
         "text": "Магические",
-        "scale": -0.1
+        "scale": -0.17,
+        "x": -6
     },
     "search.quick-search-awarded": {
         "text": "Награждённые",
         "scale": -0.2
+    },
+    "search.quick-search-followed": {
+        "text": "Подписки",
+        "scale": -0.01
+    },
+    "search.quick-search-friends": {
+        "text": "Друзья"
     },
 
 

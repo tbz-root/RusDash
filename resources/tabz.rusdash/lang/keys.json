@@ -4,6 +4,11 @@
         "parent": "search-bar",
         "layer": "LevelSearchLayer"
     },
+    "searchlist.quick-placeholder": {
+        "text": "Enter a list or id",
+        "parent": "search-bar",
+        "layer": "LevelSearchLayer"
+    },
 
     "search.quick-search-label": {
         "text": "Quick Search",
@@ -38,6 +43,14 @@
     },
     "search.quick-search-awarded": {
         "text": "Awarded",
+        "layer": "LevelSearchLayer"
+    },
+    "search.quick-search-followed": {
+        "text": "Followed",
+        "layer": "LevelSearchLayer"
+    },
+    "search.quick-search-friends": {
+        "text": "Friends",
         "layer": "LevelSearchLayer"
     },
 
