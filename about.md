@@ -1,14 +1,16 @@
 # RusDash
-Geode modding GDPS project
+GDPS проект на основе Geode!
 
 ## Функции
-- Auto URL replacing! (from boomlings to RusDash servers)
-- Main levels replace!
-- Custom badges and profile themes!
+- Автоматическое Переключение На Сервера RusDash!
+- Замена Официальных Уровней!
+- Кастомные Бейджики!
+- Кастомные Триггеры!
 
 ## Кредиты
-* [lil2kki](https://github.com/lil2kki) - Explain something
+* [lil2kki](https://github.com/lil2kki) - Объяснил всякое
+* [km7dev](https://github.com/Kingminer7) - Server API
 * [DasshuDev](https://github.com/DasshuDev/Badgified) - Badgified API
-* [CMDxsus](https://t.me/CMDxsus) - The best contributor <3
+* [CMDxsus](https://t.me/CMDxsus) - Помог с разработкой мода (сделал почти всё хд)
 
-Enjoy the game! <3
+Приятной игры <3

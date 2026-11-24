@@ -241,10 +241,11 @@ class $modify(MyMenuLayer, MenuLayer) {
         if (!MenuLayer::init()) return false;
         
         auto winSize = CCDirector::sharedDirector()->getWinSize();
-        auto themesButton = CCMenuItemSpriteExtra::create(
+        auto themesButton = Button::createWithNode(
             CircleButtonSprite::createWithSpriteFrameName("tabsek.png"_spr, 0.85f, CircleBaseColor::Blue, CircleBaseSize::MediumAlt),
-            this,
-            menu_selector(MyMenuLayer::onOpenSettings)
+            [this](Button* sender) {
+                onOpenSettings(nullptr);
+            }
         );
 
         themesButton->setID("themes-button"_spr);
@@ -252,8 +253,8 @@ class $modify(MyMenuLayer, MenuLayer) {
         this->getChildByID("bottom-menu")->addChild(themesButton);
         this->getChildByID("bottom-menu")->updateLayout();
 
-        auto versionLabel = CCLabelBMFont::create(
-            modVersion.c_str(),
+        auto versionLabel = Label::create(
+            modVersion,
             "bigFont.fnt"
         );
 
@@ -261,7 +262,7 @@ class $modify(MyMenuLayer, MenuLayer) {
         versionLabel->setID("version"_spr);
         versionLabel->setPosition({winSize.width / 2.f, winSize.height - versionLabel->getContentSize().height / 2.f - 2.f});
         versionLabel->setOpacity(100);
-        
+
         this->addChild(versionLabel);
 
         return true;
@@ -275,12 +276,11 @@ class $modify(MyMenuLayer, MenuLayer) {
     }
 
     void onOpenSettings(CCObject *) {
-        int myAccountID = GJAccountManager::sharedState()->m_accountID;
-        if (myAccountID > 0) {
+        if (GJAccountManager::sharedState()->m_accountID > 0) {
             ThemePopup::create()->show();
-    } else {
-        openSettingsPopup(Mod::get());
-    }
+        } else {
+            openSettingsPopup(Mod::get());
+        }
     }
 };
 
@@ -350,8 +350,7 @@ class $modify(LevelEditorLayer) {
         if (!LevelEditorLayer::init(level, noUI))
             return false;
 
-        this->addEventListener(
-            "",
+        this->addEventListener("",
             KeyboardInputEvent(KEY_K),
             [this](KeyboardInputData& data) {
                 if (data.action == KeyboardInputData::Action::Press) {
